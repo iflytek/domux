@@ -114,19 +114,6 @@ domux/
         └── example_grpo.jsonl
 ```
 
-## Citation
-
-If you use this model or training code, please cite:
-
-```bibtex
-@software{domux_gemma_2026,
-  title = {Domux-Gemma-4-E2B-it: Slot Filling Model with GRPO},
-  author = {Your Name},
-  year = {2026},
-  url = {https://github.com/iflytek/domux}
-}
-```
-
 ## License
 
 [Your chosen license - currently using the LICENSE file in the repo]
