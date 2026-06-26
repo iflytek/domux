@@ -1,0 +1,37 @@
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Training outputs
+output/
+checkpoints/
+logs/
+runs/
+wandb/
+swanlab/
+
+# Model weights (do not commit large files)
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+
+# Data
+*.jsonl
+!**/example*.jsonl
+data/
+!training/data/example*.jsonl
+
+# System
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
