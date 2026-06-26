@@ -1,4 +1,9 @@
 
+
+### Fields
+1. **action**: One of the valid actions above
+2. **device**: Device type (e.g., light, air conditioner, curtain)
+3. **attribute**: Property to control (e.g., temperature, brightness)
 4. **value**: Numeric or string value
 5. **unit**: Unit of measurement (e.g., celsius, percent)
 6. **room**: Room location (e.g., living room, bedroom)
