@@ -35,3 +35,7 @@ Thumbs.db
 # Jupyter
 .ipynb_checkpoints/
 *.ipynb
+
+# Python
+__pycache__/
+*.py[cod]
