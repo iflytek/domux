@@ -9,7 +9,7 @@
 ---
 <div align="center">
   <h1>Domux</h1>
-  <p><b>A lightweight multimodal model for pipe-delimited slot filling in smart-home control.</b></p>
+  <p><b>A lightweight, low-latency command understanding model for smart-home control.</b></p>
 
   <p>
     <a href="#-model-download"><img src="https://img.shields.io/badge/🤗%20Hugging%20Face-Model-yellow"></a>
@@ -27,12 +27,12 @@
 
 > 🚀 **An experiment, and an open invitation.** Domux explores a new idea: how far can text semantic parsing go under an aggressive latency budget — keeping end-to-end response under **150ms**? This is an early-stage exploration, and we're sharing it in the hope that others will try it too. If this direction interests you, we'd love for you to follow along and explore it together.
 
-Domux (`Domux-Gemma-4-E2B-it`) is a fine-tuned multimodal language model built on **Gemma-4-E2B-it**. It turns natural-language smart-home commands into structured, pipe-delimited slots. Training combines supervised fine-tuning (SFT) with reinforcement learning via Group Relative Policy Optimization (GRPO) and custom reward functions.
+Domux (`Domux-Gemma-4-E2B-it`) is a fine-tuned language model built on **Gemma-4-E2B-it**. It turns natural-language smart-home commands into structured, pipe-delimited slots. Training combines supervised fine-tuning (SFT) with reinforcement learning via Group Relative Policy Optimization (GRPO) and custom reward functions.
 
 ## 📰 News
 
-- **2026.06** — Released training code, reward plugins, and example datasets.
-- **2026.06** — Initial release of Domux based on Gemma-4-E2B-it.
+- **2026.06.29** — Released training code, reward plugins, and example datasets.
+- **2026.06.25** — Initial release of Domux based on Gemma-4-E2B-it.
 
 ## ✨ Key Features
 
@@ -61,13 +61,11 @@ Domux is built on a generalist base model, so device names are **not a closed li
 
 ### Roadmap
 
-This is an early exploration, and we plan to keep expanding it:
+As an early exploration, Domux is still evolving. We're focusing on three directions:
 
-- 🔜 **More devices** — broader device categories beyond lighting, climate, window, and audio
-- 🔜 **More scenes** — richer scene/mode coverage
-- 🔜 **Fuzzy intent** — better handling of vague, implicit, and context-dependent commands
-
-For data format and how to extend coverage, see [training/data/README.md](training/data/README.md).
+- 🔜 **Broader device coverage** — more categories beyond lighting, climate, window, and audio
+- 🔜 **Richer scenes** — support for more scenes and modes
+- 🔜 **Stronger fuzzy-intent understanding** — better handling of vague, implicit, and context-dependent commands
 
 ## 🎬 Demo
 
@@ -121,7 +119,7 @@ set|Curtain|openness|50|Percent|Dining Room|*
 
 Use `*` for unspecified or don't-care fields.
 
-## 📊 Performance
+## 📊 Benchmark Evaluation
 
 Evaluated on a comprehensive test set of **4,057 samples** across 4 dimensions (single intent, multi-intent, omitted attributes, non-standard naming), benchmarked against **11 mainstream models** including Qwen3.5 series (2B-27B), Gemma 4 series, and leading closed-source APIs (DeepSeek-V4, Claude Haiku 4.5, Gemini 3.5 Flash).
 
@@ -148,7 +146,7 @@ Evaluated on a comprehensive test set of **4,057 samples** across 4 dimensions (
 - **Latency**: Single intent 130ms, multi-intent 210ms (pure inference)
 - **Zero Failure Rate**: 100% success across 124,116 concurrent requests
 
-📄 **Full Report**: [Technical Evaluation Report (EN)](Domux_Technical_Evaluation_Report_EN.pdf) | [评测技术报告 (中文)](Domux_评测技术报告_ZH.pdf)
+📄 **Full Report**: [Domux_Technical_Evaluation_Report](Domux_Technical_Evaluation_Report.pdf) | [评测技术报告 (中文)](Domux_Technical_Evaluation_Report_zh.pdf)
 
 ## 📥 Model Download
 
@@ -160,16 +158,16 @@ Evaluated on a comprehensive test set of **4,057 samples** across 4 dimensions (
 
 ### Hardware
 
-The model runs in **BF16 precision** and requires **20GB+ GPU memory**.
+The model runs in **BF16 precision** and requires **20GB+ of VRAM** for single-GPU deployment.
 
 ### Installation
 
 ```bash
 # Option 1: vLLM
-pip install vllm
+pip install "vllm==0.22.0"
 
 # Option 2: SGLang
-pip install "sglang[all]"
+pip install "sglang[all]==0.5.12"
 ```
 
 ### Inference
@@ -255,61 +253,6 @@ set|Light|mode|Reading|*|Master Bedroom|Second Floor
 '''
 ```
 
-## 🧩 Output Parser
-
-The model emits raw pipe-delimited text. A lightweight offline parser ([parser/](parser/)) turns it into validated, structured JSON — **pure Python standard library, zero dependencies**.
-
-```bash
-# Single or multi-line command → pretty JSON
-echo "turnOn|Light|*|*|*|Living Room|*" | python parser/domux_parser.py
-
-# Batch mode: one prediction per line → one JSON object per line
-python parser/domux_parser.py --jsonl predictions.txt > parsed.jsonl
-```
-
-As a library:
-
-```python
-from parser.domux_parser import parse
-
-res = parse("set|AC|temperature|22|Celsius|Bedroom|*")
-res.valid          # True
-res.slots[0].value # 22 (int)
-res.to_json()      # structured JSON string
-```
-
-Validation rules (action enum, `*` semantics, line splitting) stay consistent with training. See [parser/README.md](parser/README.md) for output conventions and scope.
-
-## 📂 Repository Structure
-
-```
-domux/
-├── LICENSE
-├── README.md
-├── README_zh.md
-├── Domux_Technical_Evaluation_Report_EN.pdf
-├── Domux_评测技术报告_ZH.pdf
-├── assets/
-│   ├── iflytek.png
-│   └── domux.png
-├── parser/
-│   ├── README.md
-│   ├── domux_parser.py
-│   └── test_domux_parser.py
-└── training/
-    ├── README.md
-    ├── requirements.txt
-    ├── rewards/
-    │   └── reward_plugin_slot.py
-    ├── scripts/
-    │   ├── train_sft.sh
-    │   └── train_grpo.sh
-    └── data/
-        ├── README.md
-        ├── example_sft.jsonl
-        └── example_grpo.jsonl
-```
-
 ## 📄 License
 
 See the [LICENSE](LICENSE) file in this repository.
@@ -319,16 +262,3 @@ See the [LICENSE](LICENSE) file in this repository.
 - Base model: [Gemma](https://ai.google.dev/gemma)
 - Training framework: [ModelScope-Swift](https://github.com/modelscope/swift)
 - Experiment tracking: [SwanLab](https://swanlab.cn/)
-
-## 📌 Citation
-
-If you find Domux useful in your research or applications, please consider citing:
-
-```bibtex
-@misc{domux2026,
-  title  = {Domux: Slot Filling for Smart-Home Control via SFT and GRPO},
-  author = {iFLYTEK},
-  year   = {2026},
-  howpublished = {\url{https://github.com/iflytek/domux}}
-}
-```
