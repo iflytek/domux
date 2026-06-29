@@ -2,7 +2,7 @@
 
 > This document covers both **input command recognition rules** and **output command generation rules**.
 >
-> 简体中文版本见 [COMMAND_SPEC_zh.md](COMMAND_SPEC_zh.md).
+> Chinese version: [COMMAND_SPEC_zh.md](COMMAND_SPEC_zh.md)
 
 ---
 
@@ -26,8 +26,8 @@ Input commands are generally composed of the following parts:
 
 **Location** includes:
 
-- **Room**: living room, bedroom, kitchen, bathroom, etc.
-- **Floor**: 1st floor, 2nd floor, upstairs, downstairs, etc.
+- **Room**: Living Room, Master Bedroom, Kitchen, Bathroom, Balcony, etc.
+- **Floor**: Ground Floor, First Floor, Second Floor, Upstairs, Downstairs, etc.
 
 **Examples:**
 
@@ -39,8 +39,8 @@ Input commands are generally composed of the following parts:
 
 **Note:**
 
-- Location may appear in the input, but it is **not explicitly represented** in the 7 output fields of the current format.
-- Location is used to understand the command scope and matters in multi-intent scenarios.
+- Location information **IS explicitly represented** in the output format fields 6 (room) and 7 (floor).
+- Room and floor fields use the exact location names from the input (e.g., "Living Room", "Master Bedroom").
 
 ---
 
@@ -104,15 +104,16 @@ Input commands are generally composed of the following parts:
 | --- | --- |
 | decrease | "decrease the desk lamp brightness" |
 | dim | "dim the desk lamp" |
-| lower | "lower the music volume" |
+| lower | "lower the AC fan speed" |
 | turn down | "turn it down" |
-| bring ... down | "bring the music down a notch" |
-| take ... down | "take the volume down on the music" |
+| bring ... down | "bring the brightness down a notch" |
+| take ... down | "take the wind speed down on the AC" |
 
 **Contextual expressions:**
 
-- `... is too loud, turn it down` — "The music is too loud, turn it down"
-- `... down a notch` — "bring the music down a notch"
+- `... is too loud, turn it down` — "The AC fan is too loud, turn it down" (→ AC windSpeed)
+- `... is too bright, turn it down` — "It's too bright, turn it down" (→ Light brightness)
+- `... down a notch` — "bring the brightness down a notch"
 
 ---
 
@@ -122,29 +123,29 @@ Input commands are generally composed of the following parts:
 
 | Action | Example |
 | --- | --- |
-| switch to | "switch to presentation mode" |
-| switch ... to | "switch the room to presentation mode" |
-| set | "set the presentation mode" |
+| switch to | "switch to relax mode" |
+| switch ... to | "switch the room to relax mode" |
+| set | "set the romantic mode" |
 | change ... to | "change the mode to movie mode" |
-| I want | "I want a movie mode" |
-| I need ... on | "I need presentation mode on" |
+| I want | "I want party mode" |
+| I need ... on | "I need reading mode on" |
 
 **Intent variants:**
 
-- `Let's go into ...` — "Let's go into presentation mode"
-- `... please` — "Presentation mode, please"
-- `Pull up ...` — "Pull up presentation mode"
-- `Get ... into ...` — "Get the room into presentation mode"
-- `... needs to be ...` — "The room needs to be in presentation mode"
+- `Let's go into ...` — "Let's go into movie mode"
+- `... please` — "Romantic mode, please"
+- `Pull up ...` — "Pull up party mode"
+- `Get ... into ...` — "Get the room into relax mode"
+- `... needs to be ...` — "The room needs to be in sleeping mode"
 
 **Maintaining a scene:**
 
 | Pattern | Example |
 | --- | --- |
-| keep ... in | "keep the room in presentation mode" |
-| stay in | "The room should stay in presentation mode" |
-| hold ... in | "Let's hold the room in presentation mode" |
-| leave ... as it is | "Leave the room as it is in presentation mode" |
+| keep ... in | "keep the room in relax mode" |
+| stay in | "The room should stay in sleeping mode" |
+| hold ... in | "Let's hold the room in romantic mode" |
+| leave ... as it is | "Leave the room as it is in movie mode" |
 
 ---
 
@@ -152,33 +153,57 @@ Input commands are generally composed of the following parts:
 
 ### 3.1 Standard Device Names
 
+**Lighting Devices:**
+
 | Possible input form | Normalized form |
 | --- | --- |
+| light / lights | Light |
 | strip light | Strip Light |
 | floor lamp | Floor Lamp |
-| spotlight / spot light | Spot Light |
+| spot light / spotlight | Spot Light |
 | desk lamp | Desk Lamp |
+| ceiling light | Ceiling Light |
+| wall light | Wall Light |
+| recessed light | Recessed Light |
+| downlight | Downlight |
+| chandelier | Chandelier |
+| track light | Track Light |
+| ambient light | Ambient Light |
+| reading light | Reading Light |
+| vanity light | Vanity Light |
+| night light | Night Light |
+| LED strip / led strip | LED Strip |
 | tv light strip | TV Light Strip |
+
+**Environmental Control:**
+
+| Possible input form | Normalized form |
+| --- | --- |
 | AC / ac | AC |
 | curtain | Curtain |
-| music | Music |
+| sheer curtain | Sheer Curtain |
+| blind | Blind |
 
 ---
 
-### 3.2 Numbered Devices
+### 3.2 Numbered and Lettered Devices
 
-**Format:** `device name + number`
+**Format:** `device name + number` or `device name + letter`
 
 **Examples:**
 
+- `light 1`, `light 2`, `light 3`, `light 5`
 - `strip light 1`, `strip light 3`, `strip light 5`
-- `spotlight 1`, `spotlight 2`, `spotlight 10`
-- `desk lamp 1`
+- `spot light 1`, `spot light 2`, `spot light 10`
+- `light A`, `light B`, `light C`, `light F`
+- `curtain A`, `curtain B`, `curtain 1`
+- `AC 1`, `AC 2`
 
 **Input characteristics:**
 
-- The number follows the device name directly.
-- It can be a single or double digit.
+- The number or letter follows the device name directly.
+- Numbers can be single or double digit.
+- Letters are typically A, B, C, etc.
 
 ---
 
@@ -252,7 +277,7 @@ The vast majority of commands use the definite article `the`:
 | --- | --- |
 | to [number]k / [number]K | "set the spotlight 1 color temperature to 3500k" |
 
-**Supported values:** 3500K, 4000K, 5000K, 6000K
+**Supported values:** 1000-10000 K (continuous range)
 
 **Fuzzy adjustment:**
 
@@ -311,7 +336,8 @@ The vast majority of commands use the definite article `the`:
 | fan mode / to fan | Fan |
 | dry / to dry | Dry |
 | heat mode / mode to heat | Heat |
-| cool / mode to cool | Cool |
+| cool / mode to cool / cooling mode | Cool |
+| auto mode / to auto | Auto |
 
 **Examples:**
 
@@ -319,35 +345,78 @@ The vast majority of commands use the definite article `the`:
 - "switch the AC to dry"
 - "set the AC mode to heat"
 - "change the AC mode to cool"
+- "set the AC to auto mode"
 
 **Scene modes:**
 
+Scenes actually present in the training data (by frequency):
+
 | Input expression | Scene name |
 | --- | --- |
-| presentation mode | Presentation Mode |
+| romantic mode | Romantic Mode |
+| party mode | Party Mode |
+| reading mode | Reading Mode |
+| sleeping mode | Sleeping Mode |
+| relax mode | Relax Mode |
+| wakeup mode | Wakeup Mode |
+| home mode | Home Mode |
 | movie mode | Movie Mode |
-| music video mode | Music Video Mode |
-| favorite movie mode | Favorite Movie Mode |
-| volume down mode | Volume Down Mode |
+| away mode | Away Mode |
+| holiday mode | Holiday Mode |
+| guest mode | Guest Mode |
+| dining mode | Dining Mode |
+| meeting mode | Meeting Mode |
+| cinema mode | Cinema Mode |
+| leisure mode | Leisure Mode |
+
+**Light modes (scene presets):**
+
+| Input expression | Mode |
+| --- | --- |
+| reading mode | Reading |
+| romance mode | Romance |
+| eco mode | Eco |
+| soft mode | Soft |
+
+> These are light scene presets set with `turnOn` + `mode` attribute (e.g. `turnOn|Light|mode|Reading|*|room|*`), not AC modes.
 
 **Examples:**
 
-- "switch to presentation mode"
-- "I want a movie mode"
-- "set the music video mode"
+- "activate romantic mode"
+- "I want party mode"
+- "switch to relax mode in the living room"
+- "turn on reading mode in the bedroom"
 
 ---
 
-### 4.7 Volume
+### 4.7 Wind Speed (AC)
+
+**Explicit values:**
+
+| Input expression | Value |
+| --- | --- |
+| low wind / low speed | Low |
+| medium wind / medium speed | Medium |
+| high wind / high speed | High |
+
+**Examples:**
+
+- "set the AC wind speed to high"
+- "change AC to medium wind"
 
 **Fuzzy adjustment:**
 
-- "lower the music volume"
-- "bring the music down a notch"
-- "take the volume down on the music"
-- "The music is too loud, turn it down"
+- "increase the wind speed" → adjustUp
+- "lower the fan speed" → adjustDown
 
-> **Note:** No volume setting with an explicit numeric value was observed in the test data.
+---
+
+### 4.8 "Too loud / too bright" expressions
+
+These descriptive complaints do **not** map to a volume control (there is no Music device or volume attribute in the data). They map to whichever device is actually causing the discomfort:
+
+- "The AC fan is too loud / blowing too hard" → `adjustDown|AC|windSpeed|*|*|...`
+- "It's too bright, turn it down" → `adjustDown|Light|brightness|*|*|...`
 
 ---
 
@@ -405,7 +474,7 @@ Meaning: turn on + set color
 | please | "Blue for the strip light, please" |
 | I'd like | "I'd like the strip light on" |
 | I want | "I want the strip light in blue" |
-| I need | "I need presentation mode on" |
+| I need | "I need reading mode on" |
 
 ---
 
@@ -414,7 +483,7 @@ Meaning: turn on + set color
 | Pattern | Example |
 | --- | --- |
 | ... should be | "The strip light should be on" |
-| ... needs to be | "The room needs to be in presentation mode" |
+| ... needs to be | "The room needs to be in sleeping mode" |
 
 ---
 
@@ -494,9 +563,9 @@ set + the + [device] + [attribute] + to + [value] + [unit]
 
 **Examples:**
 
-- switch to presentation mode
-- I want a movie mode
-- change the mode to music video mode
+- activate romantic mode
+- I want party mode
+- switch to relax mode
 
 ---
 
@@ -552,7 +621,8 @@ Some commands use descriptive language rather than direct commands:
 
 | Descriptive expression | Actual intent |
 | --- | --- |
-| "The music is too loud" | lower the volume |
+| "The AC fan is too loud" | lower the AC wind speed (adjustDown windSpeed) |
+| "It's too bright" | lower the brightness (adjustDown brightness) |
 | "warm up the spotlights" | lower the color temperature (make it warmer) |
 | "Give the spotlights a warm tone" | set to a warm color |
 
@@ -572,11 +642,11 @@ Some commands use descriptive language rather than direct commands:
 
 ### 9.2 Top 5 Devices
 
-1. **Strip Light** (including Strip Light 1/3/5)
-2. **Spot Light** (including Spot Light 1/2/10)
-3. **Floor Lamp**
-4. **Desk Lamp**
-5. **AC**
+1. **Light** (generic light, including numbered/lettered variants)
+2. **AC** (air conditioner)
+3. **Curtain** (including Sheer Curtain)
+4. **Strip Light**
+5. **Spot Light**
 
 ---
 
@@ -585,8 +655,10 @@ Some commands use descriptive language rather than direct commands:
 1. **brightness** — brightness adjustment (most common)
 2. **color** — color setting
 3. **temperature** — temperature setting (AC)
-4. **color temperature** — color temperature adjustment
-5. **position** — position control (curtain)
+4. **colorTemperature** — color temperature adjustment
+5. **windSpeed** — wind speed control (AC)
+6. **position** — position control (curtain)
+7. **mode** — mode switching (AC and scenes)
 
 ---
 
@@ -619,10 +691,10 @@ Some commands use descriptive language rather than direct commands:
 
 | Input | Actual scene |
 | --- | --- |
-| "presentation mode" | Presentation Mode |
-| "the presentation mode" | Presentation Mode |
-| "I want a presentation mode" | Presentation Mode |
-| "set the presentation mode" | Presentation Mode |
+| "romantic mode" | Romantic Mode |
+| "the romantic mode" | Romantic Mode |
+| "I want a romantic mode" | Romantic Mode |
+| "set the romantic mode" | Romantic Mode |
 
 > Note: Whether or not an article is used, and whichever verb is used, they all point to the same scene.
 
@@ -661,21 +733,25 @@ When parsing an input command, check the following elements:
 ### 1.1 Basic Format
 
 ```
-action|device|attribute|value|unit|*|*
+action|device|attribute|value|unit|room|floor
 ```
 
 The 7 fields are, in order: `action|device|attribute|value|unit|room|floor`.
 
+**Field 6 (room):** Room name (e.g., "Living Room", "Master Bedroom", "Kitchen") or `*` if not specified
+**Field 7 (floor):** Floor identifier (e.g., "Ground Floor", "First Floor") or `*` if not specified
+
 ### 1.2 Joining Multiple Commands
 
 - Join multiple commands with a newline `\n`.
-- **Do not use** the `&` symbol.
 
 ### 1.3 Example
 
 ```
-turnOn|Strip Light|*|*|*|*|*
-set|Strip Light|color|Blue|*|*|*
+turnOn|Strip Light|*|*|*|Living Room|*
+set|Strip Light|color|Blue|*|Living Room|*
+set|Light|brightness|70|Percent|Master Bedroom|*
+activate|Party Mode|*|*|*|Living Room|*
 ```
 
 ---
@@ -689,15 +765,17 @@ set|Strip Light|color|Blue|*|*|*
 | `turnOn` | Turn on a device | Turn on a light, AC, or open a curtain |
 | `turnOff` | Turn off a device | Turn off a light, AC, or close a curtain |
 | `set` | Set to a specific value | Set brightness, color, temperature, etc. |
-| `adjustUp` | Increase an attribute value | Raise brightness, increase volume |
-| `adjustDown` | Decrease an attribute value | Lower brightness, reduce volume |
-| `activate` | Activate a scene mode | Enable presentation mode, movie mode |
-| `deactivate` | Cancel a scene mode | Exit presentation mode, movie mode |
+| `adjustUp` | Increase an attribute value | Raise brightness, increase color temperature |
+| `adjustDown` | Decrease an attribute value | Lower brightness, decrease wind speed |
+| `activate` | Activate a scene mode | Enable party mode, romantic mode |
+| `deactivate` | Cancel a scene mode | Exit a scene mode |
+| `pause` | Pause a device in motion | Stop a curtain/blind mid-travel |
 
 **Action selection principles:**
 
 - When the command contains an **explicit numeric value**, you must use `set`.
 - When the command contains fuzzy words such as "a little" / "a bit", use `adjustUp` / `adjustDown` and leave the value empty.
+- `pause` is used for curtain-type devices (Curtain / Blind / Sheer Curtain) to stop them mid-travel — e.g. "stop the curtain", "pause the blind".
 
 ---
 
@@ -705,41 +783,63 @@ set|Strip Light|color|Blue|*|*|*
 
 #### 2.2.1 Lighting Devices
 
-| Device name | Meaning | Numbered example |
+| Device name | Meaning | Numbered/Lettered example |
 | --- | --- | --- |
+| `Light` | Generic light | Light 1, Light 2, Light A, Light F |
 | `Strip Light` | Strip light | Strip Light 1, Strip Light 3 |
 | `Floor Lamp` | Floor lamp | Floor Lamp 1 |
 | `Spot Light` | Spotlight | Spot Light 1, Spot Light 10 |
 | `Desk Lamp` | Desk lamp | Desk Lamp 1 |
+| `Ceiling Light` | Ceiling light | Ceiling Light 1 |
+| `Wall Light` | Wall light | Wall Light 1 |
+| `Recessed Light` | Recessed light | Recessed Light 1 |
+| `Downlight` | Downlight | Downlight 1 |
+| `Chandelier` | Chandelier | Chandelier 1 |
+| `Track Light` | Track light | Track Light 1 |
+| `Ambient Light` | Ambient light | - |
+| `Reading Light` | Reading light | - |
+| `Vanity Light` | Vanity light | - |
+| `Night Light` | Night light | - |
+| `LED Strip` | LED strip | LED Strip 1 |
 | `TV Light Strip` | TV light strip | TV Light Strip 1 |
 
 **⚠️ Important rule:**
 
-- `Spot Light` must be written as **two words**; `Spotlight` is forbidden.
+- `Spot Light` is written as **two words**.
 - Whether the input is "spotlight" or "spot light", the output is always `Spot Light`.
 
 #### 2.2.2 Environmental Control Devices
 
 | Device name | Meaning | Description |
 | --- | --- | --- |
-| `AC` | Air conditioner | Supports temperature and mode control |
+| `AC` | Air conditioner | Supports temperature, mode, and wind speed control |
 | `Curtain` | Curtain | Controls open/close position |
+| `Sheer Curtain` | Sheer curtain | Controls open/close position |
 | `Blind` | Blind | Controls open/close position |
-| `Sheer` | Sheer curtain | Controls open/close position |
 
 **⚠️ Important rule:**
 
-- For curtain-type devices, `Drape` is **forbidden**.
-- Only `Curtain`, `Blind`, and `Sheer` are allowed.
+- For curtain-type devices, use only `Curtain`, `Sheer Curtain`, and `Blind`.
 
-#### 2.2.3 Entertainment and Scene
+#### 2.2.3 Scene Modes
 
 | Device name | Meaning | Description |
 | --- | --- | --- |
-| `Music` | Music | Controls volume |
-| `Presentation Mode` | Presentation mode | Scene mode |
+| `Romantic Mode` | Romantic mode | Scene mode |
+| `Party Mode` | Party mode | Scene mode |
+| `Reading Mode` | Reading mode | Scene mode |
+| `Sleeping Mode` | Sleeping mode | Scene mode |
+| `Relax Mode` | Relax mode | Scene mode |
+| `Wakeup Mode` | Wakeup mode | Scene mode |
+| `Home Mode` | Home mode | Scene mode |
 | `Movie Mode` | Movie mode | Scene mode |
-| `Music Video Mode` | Music video mode | Scene mode |
+| `Away Mode` | Away mode | Scene mode |
+| `Holiday Mode` | Holiday mode | Scene mode |
+| `Guest Mode` | Guest mode | Scene mode |
+| `Dining Mode` | Dining mode | Scene mode |
+| `Meeting Mode` | Meeting mode | Scene mode |
+| `Cinema Mode` | Cinema mode | Scene mode |
+| `Leisure Mode` | Leisure mode | Scene mode |
 
 ---
 
@@ -749,12 +849,12 @@ set|Strip Light|color|Blue|*|*|*
 | --- | --- | --- | --- |
 | `brightness` | Brightness | All lights | 0–100 |
 | `color` | Color | All lights | See color table |
-| `colorTemperature` | Color temperature | Spot Light | 3500/4000/5000/6000 |
-| `volume` | Volume | Music | 0–100 |
+| `colorTemperature` | Color temperature | Lights (especially Spot Light) | 1000-10000 |
 | `temperature` | Temperature | AC | 16–29 |
-| `position` | Open/close position | Curtain/Blind/Sheer | 0–100 |
-| `mode` | Operating mode | AC | Fan/Dry/Heat/Cool |
-| `*` | No attribute | turnOn/turnOff/activate/deactivate | - |
+| `position` | Open/close position | Curtain/Blind/Sheer Curtain | 0–100 |
+| `mode` | Operating mode | AC, Light | Fan/Dry/Heat/Cool/Auto (AC); Reading/Romance/Eco/Soft (Light) |
+| `windSpeed` | Wind speed | AC | Low/Medium/High |
+| `*` | No attribute | turnOn/turnOff/activate/deactivate/pause | - |
 
 ---
 
@@ -765,10 +865,10 @@ set|Strip Light|color|Blue|*|*|*
 | Type | Range | Unit |
 | --- | --- | --- |
 | Brightness | 0–100 | Percent |
-| Volume | 0–100 | Percent |
 | Position | 0–100 | Percent |
-| Color temperature | 3500, 4000, 5000, 6000 | Kelvin |
+| Color temperature | 1000-10000 | Kelvin |
 | Temperature | 16–29 | Celsius |
+| Wind speed | Low, Medium, High | Level |
 
 #### 2.4.2 Color Names
 
@@ -782,6 +882,7 @@ set|Strip Light|color|Blue|*|*|*
 - `Pink`
 - `Purple`
 - `Cyan`
+- `Magenta`
 - `Lavender`
 
 **White family:**
@@ -799,8 +900,17 @@ set|Strip Light|color|Blue|*|*|*
 | `Dry` | Dehumidify |
 | `Heat` | Heat |
 | `Cool` | Cool |
+| `Auto` | Auto |
 
-#### 2.4.4 Placeholder
+#### 2.4.4 Wind Speed Levels
+
+| Level | Description |
+| --- | --- |
+| `Low` | Low speed |
+| `Medium` | Medium speed |
+| `High` | High speed |
+
+#### 2.4.5 Placeholder
 
 - When the action is `turnOn/turnOff/adjustUp/adjustDown/activate/deactivate`,
 - or when the attribute does not need a specific value,
@@ -812,10 +922,57 @@ set|Strip Light|color|Blue|*|*|*
 
 | Unit | Applicable attribute |
 | --- | --- |
-| `Percent` | brightness, volume, position |
+| `Percent` | brightness, position |
 | `Kelvin` | colorTemperature |
 | `Celsius` | temperature |
+| `Level` | windSpeed |
 | `*` | other cases (color, mode, or no attribute) |
+
+---
+
+### 2.6 Room (Field 6)
+
+Room names are capitalized with proper spacing. Rooms actually present in the training data (by frequency):
+
+**High-frequency rooms:**
+- `Living Room`
+- `Master Bedroom`
+- `Dining Room`
+- `Majlis` (Arabic-style reception/sitting room)
+- `Kitchen`
+- `Home Office`
+- `Balcony`
+- `Bathroom` / `Master Bathroom`
+- `Prayer Room`
+- `Patio`
+
+**Numbered/lettered bedrooms and rooms:**
+- `First Bedroom` / `Second Bedroom` / `Third Bedroom` ...
+- `Bedroom 1` / `Bedroom 2` / `Bedroom 3` ...
+- `Bedroom A` / `Bedroom B` / `Bedroom C` ...
+- `Room A` / `Room B` / `Room 1` / `Room 2` ...
+
+**Other rooms:**
+- `Nanny's Quarter`, `Closet`, `Entrance Hall`
+- `Movie Theater`, `Laundry Room`, `Gym`
+- `Corridor`, `Garage`, `Swimming Pool Area`
+- `*` (when no room is specified)
+
+---
+
+### 2.7 Floor (Field 7)
+
+Floor identifiers. Values actually present in the training data (by frequency):
+
+- `*` (when no floor is specified - most common)
+- `Ground Floor`
+- `First Floor`
+- `Upstairs`
+- `Downstairs`
+- `Second Floor`
+- `Third Floor`
+
+> **Note:** British-style floor naming is used — `Ground Floor` is the entry level and `First Floor` is the level above it. Do **not** use `1st Floor` / `2nd Floor` style.
 
 ---
 
@@ -829,6 +986,20 @@ set|Strip Light|color|Blue|*|*|*
 | turn off, switch off | `turnOff` | "turn off the floor lamp" |
 | close | `turnOff` | "close the curtain" |
 | open (curtain) | `turnOn` | "open the blind" |
+| stop, pause, halt | `pause` | "stop the curtain" |
+
+**Pause rule:**
+
+- `pause` applies only to curtain-type devices (Curtain / Blind / Sheer Curtain) to stop them mid-travel.
+- The attribute and all later fields are `*`.
+
+```
+Input:  "stop the curtain in the living room"
+Output: pause|Curtain|*|*|*|Living Room|*
+
+Input:  "pause the blind"
+Output: pause|Blind|*|*|*|*|*
+```
 
 ---
 
@@ -873,8 +1044,8 @@ Output: set|AC|temperature|24|Celsius|*|*
 **Examples:**
 
 ```
-Input:  "increase the volume a little"
-Output: adjustUp|Music|volume|*|*|*|*
+Input:  "lower the AC fan speed a little"
+Output: adjustDown|AC|windSpeed|*|*|*|*
 
 Input:  "dim the light a bit"
 Output: adjustDown|Desk Lamp|brightness|*|*|*|*
@@ -897,8 +1068,8 @@ Output: adjustDown|Desk Lamp|brightness|*|*|*|*
 **Example:**
 
 ```
-Input:  "switch to presentation mode"
-Output: activate|Presentation Mode|*|*|*|*|*
+Input:  "activate romantic mode"
+Output: activate|Romantic Mode|*|*|*|*|*
 ```
 
 **Exiting a scene:**
@@ -920,17 +1091,22 @@ Output: deactivate|Movie Mode|*|*|*|*|*
 
 **⚠️ Special rule:**
 
-- **Light mode**: use the `turnOn` action.
-- **AC mode**: use the `set` action.
+- **Light mode**: For light scene presets (Reading, Romance, Eco, Soft), use `turnOn` action with mode attribute:
+  - `turnOn|Light|mode|Reading|*|room|*`
+- **AC mode**: use the `set` action:
+  - `set|AC|mode|Cool|*|room|*`
 
 **Examples:**
 
 ```
 Input:  "set AC to cool mode"
-Output: set|AC|mode|Cool|*|*|*
+Output: set|AC|mode|Cool|*|Living Room|*
 
 Input:  "turn on reading mode" (light)
-Output: turnOn|Desk Lamp|*|*|*|*|*
+Output: turnOn|Light|mode|Reading|*|Master Bedroom|*
+
+Input:  "switch on reading mode in the master bedroom"
+Output: turnOn|Light|mode|Reading|*|Master Bedroom|*
 ```
 
 ---
@@ -950,7 +1126,6 @@ Output: turnOn|Desk Lamp|*|*|*|*|*
 **Join rules:**
 
 - Join multiple commands with `\n`.
-- **Do not use** the `&` symbol.
 
 **Examples:**
 
@@ -985,16 +1160,14 @@ Note:  all lights default to the same room (living room)
 
 ### 4.2 Device Name Normalization
 
-#### Rule 1: Spot Light must be split
+#### Rule 1: Spot Light is two words
 
-- ✅ Correct: `Spot Light`
-- ❌ Wrong: `Spotlight`
+- Standard form: `Spot Light`
 - Whether the input is "spotlight" or "spot light", the output is always `Spot Light`.
 
-#### Rule 2: No `Drape` for curtains
+#### Rule 2: Curtain device naming
 
-- ✅ Allowed: `Curtain`, `Blind`, `Sheer`
-- ❌ Forbidden: `Drape`
+- Standard forms: `Curtain`, `Sheer Curtain`, `Blind`
 
 ---
 
@@ -1008,6 +1181,8 @@ Note:  all lights default to the same room (living room)
 | Close the curtain | `turnOff\|Curtain\|*\|*\|*\|*\|*` |
 | Set the strip light to blue | `set\|Strip Light\|color\|Blue\|*\|*\|*` |
 | Set AC temperature to 24 | `set\|AC\|temperature\|24\|Celsius\|*\|*` |
+| Turn on the living room lights | `turnOn\|Light\|*\|*\|*\|Living Room\|*` |
+| Set master bedroom lights to 70 percent | `set\|Light\|brightness\|70\|Percent\|Master Bedroom\|*` |
 
 ---
 
@@ -1017,7 +1192,7 @@ Note:  all lights default to the same room (living room)
 | --- | --- |
 | Increase spotlight 10 brightness | `adjustUp\|Spot Light 10\|brightness\|*\|*\|*\|*` |
 | Dim the desk lamp | `adjustDown\|Desk Lamp\|brightness\|*\|*\|*\|*` |
-| Lower the music volume | `adjustDown\|Music\|volume\|*\|*\|*\|*` |
+| Lower the AC fan speed | `adjustDown\|AC\|windSpeed\|*\|*\|*\|*` |
 | Turn down the brightness a bit | `adjustDown\|Strip Light\|brightness\|*\|*\|*\|*` |
 
 ---
@@ -1026,30 +1201,46 @@ Note:  all lights default to the same room (living room)
 
 | Input command | Output command |
 | --- | --- |
-| Switch to presentation mode | `activate\|Presentation Mode\|*\|*\|*\|*\|*` |
+| Activate romantic mode | `activate\|Romantic Mode\|*\|*\|*\|*\|*` |
 | Exit movie mode | `deactivate\|Movie Mode\|*\|*\|*\|*\|*` |
-| I want music video mode | `activate\|Music Video Mode\|*\|*\|*\|*\|*` |
+| I want party mode | `activate\|Party Mode\|*\|*\|*\|*\|*` |
+| Activate party mode in the living room | `activate\|Party Mode\|*\|*\|*\|Living Room\|*` |
+| Turn on reading mode in master bedroom | `turnOn\|Light\|mode\|Reading\|*\|Master Bedroom\|*` |
 
 ---
 
-### 5.4 Compound Commands
+### 5.4 Wind Speed Operations
+
+| Input command | Output command |
+| --- | --- |
+| Set AC wind speed to high | `set\|AC\|windSpeed\|High\|Level\|*\|*` |
+| Change living room AC to medium wind | `set\|AC\|windSpeed\|Medium\|Level\|Living Room\|*` |
+| Lower the fan speed | `adjustDown\|AC\|windSpeed\|*\|*\|*\|*` |
+
+---
+
+### 5.5 Compound Commands
 
 | Input command | Output command |
 | --- | --- |
 | Turn on strip light and set to blue | `turnOn\|Strip Light\|*\|*\|*\|*\|*\nset\|Strip Light\|color\|Blue\|*\|*\|*` |
 | Set brightness to 50 and color to warm white | `set\|Strip Light\|brightness\|50\|Percent\|*\|*\nset\|Strip Light\|color\|Warm White\|*\|*\|*` |
+| Set kitchen lights to warm white and 80 percent | `set\|Light\|color\|Warm White\|*\|Kitchen\|*\nset\|Light\|brightness\|80\|Percent\|Kitchen\|*` |
+| Activate party mode and turn on light F | `activate\|Party Mode\|*\|*\|*\|Living Room\|*\nturnOn\|Light F\|*\|*\|*\|Living Room\|*` |
 
 ---
 
-## 6. Common Mistakes
+## 6. Standard Form Reference
 
-| Error type | ❌ Wrong | ✅ Correct |
-| --- | --- | --- |
-| Device name spelling | `Spotlight` | `Spot Light` |
-| Curtain naming | `Drape` | `Curtain` / `Blind` / `Sheer` |
-| Command separator | using `&` | using `\n` |
-| Action for numeric value | `adjustUp` when a value is present | `set` when a value is present |
-| Fuzzy adjustment | `adjustUp\|...\|brightness\|10\|...` | `adjustUp\|...\|brightness\|*\|...` |
+| Aspect | Standard form |
+| --- | --- |
+| Device name spelling | `Spot Light` |
+| Curtain naming | `Curtain` / `Blind` / `Sheer Curtain` |
+| Command separator | use `\n` |
+| Action for numeric value | use `set` |
+| Fuzzy adjustment | `adjustUp\|...\|brightness\|*\|...` (value left as `*`) |
+| room/floor | room in field 6, floor in field 7 (or `*`) |
+| Wind speed unit | `windSpeed\|High\|Level` |
 
 ---
 
@@ -1061,25 +1252,18 @@ Note:  all lights default to the same room (living room)
 Does it contain an explicit value?
 ├─ Yes → set
 └─ No
-   ├─ Turn device on/off? → turnOn / turnOff
-   ├─ Increase/decrease?  → adjustUp / adjustDown
-   └─ Scene mode?         → activate / deactivate
+   ├─ Turn device on/off?  → turnOn / turnOff
+   ├─ Stop a curtain mid-travel? → pause
+   ├─ Increase/decrease?   → adjustUp / adjustDown
+   └─ Scene mode?          → activate / deactivate
 ```
 
 ### 7.2 Unit Quick Reference
 
 | Attribute | Unit |
 | --- | --- |
-| brightness, volume, position | Percent |
+| brightness, position | Percent |
 | colorTemperature | Kelvin |
 | temperature | Celsius |
+| windSpeed | Level |
 | color, mode, on/off operations | * |
-
----
-
-## Version History
-
-- **Document version**: v3.0
-- **Last updated**: 2026-06-26
-- **Notes**: Consolidates the input recognition rules and the output generation rules.
-- **Data source**: based on analysis of 168 test cases.
