@@ -84,7 +84,7 @@ Open `run_eval.py` and fill in the API configuration near the top:
 
 ```python
 API_KEY  = "your api key"        # e.g. "sk-..."
-BASE_URL = "your api base url"   # OpenAI-compatible base, e.g. "http://localhost:8000/v1/"
+BASE_URL = "your api base url"   # OpenAI-compatible base, no trailing slash, e.g. "http://localhost:8000/v1"
 MODEL    = "your model name"     # served model name
 ```
 
@@ -105,7 +105,8 @@ python run_eval.py
 ```
 
 The script reads `smart_home_control_test_set.jsonl` (relative path) and writes
-per-sample results to `eval_results.jsonl`.
+per-sample results to `eval_results.jsonl` and a metrics summary to
+`eval_summary.json`.
 
 ### Metrics
 
@@ -129,6 +130,21 @@ multi-intent commands.
 ```json
 {"idx": 1, "category": "single_intent", "query": "...", "model_output": "...", "gold": "...", "latency": 0.21, "format_valid": true, "result_correct": true, "error": null}
 ```
+
+`eval_summary.json` — aggregated metrics per category and overall:
+
+```json
+{
+  "model": "your model name",
+  "categories": [
+    {"category": "single_intent", "total": 1122, "format_compliance": 1.0, "result_accuracy": 0.9964, "slot_f1": 0.9994, "intent_f1": 0.9964, "avg_latency": 0.268, "slot": [c, p, g], "intent": [c, p, g]}
+  ],
+  "overall": {"total": 4057, "format_compliance": 0.9998, "result_accuracy": 0.9835, "slot_f1": 0.997, "intent_f1": 0.9874, "avg_latency": 0.31, "slot": [c, p, g], "intent": [c, p, g]}
+}
+```
+
+The `slot` / `intent` triples are raw `[correct, predicted, gold]` counts, kept so
+the F1 metrics can be recomputed or merged across runs.
 
 Console output shows a per-category and overall summary table.
 
