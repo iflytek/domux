@@ -47,7 +47,7 @@ import requests
 # ==================== API configuration ====================
 # Fill in your model API details before running.
 API_KEY = "your api key"          # e.g. "sk-..."
-BASE_URL = "your api base url"     # OpenAI-compatible base, e.g. "http://localhost:8000/v1/"
+BASE_URL = "your api base url"     # OpenAI-compatible base, no trailing slash, e.g. "http://localhost:8000/v1"
 MODEL = "your model name"         # served model name
 
 # ==================== Paths (relative to this script) ====================
@@ -56,6 +56,7 @@ MODEL = "your model name"         # served model name
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 INPUT_FILE = os.path.join(SCRIPT_DIR, "smart_home_control_test_set.jsonl")
 OUTPUT_FILE = os.path.join(SCRIPT_DIR, "eval_results.jsonl")
+SUMMARY_FILE = os.path.join(SCRIPT_DIR, "eval_summary.json")
 
 # ==================== Tuning ====================
 MAX_WORKERS = 20            # concurrent requests (1-20 recommended)
@@ -372,7 +373,41 @@ def main():
               f"{overall_slot_f1 * 100:>8.2f}%"
               f"{overall_intent_f1 * 100:>9.2f}%")
 
+    # Write metrics summary (per-category + overall) as JSON
+    overall_lat = [r["latency"] for r in all_results
+                   if r["error"] is None and r["idx"] > WARMUP_SAMPLES]
+    summary_data = {
+        "model": MODEL,
+        "categories": [
+            {
+                "category": s["category"],
+                "total": s["total"],
+                "format_compliance": round(s["format_valid"] / s["total"], 4) if s["total"] else 0.0,
+                "result_accuracy": round(s["result_correct"] / s["total"], 4) if s["total"] else 0.0,
+                "slot_f1": round(s["slot_f1"], 4),
+                "intent_f1": round(s["intent_f1"], 4),
+                "avg_latency": round(s["avg_latency"], 3),
+                "slot": list(s["slot"]),
+                "intent": list(s["intent"]),
+            }
+            for s in summary
+        ],
+        "overall": {
+            "total": tot,
+            "format_compliance": round(tot_fmt / tot, 4) if tot else 0.0,
+            "result_accuracy": round(tot_cor / tot, 4) if tot else 0.0,
+            "slot_f1": round(overall_slot_f1, 4),
+            "intent_f1": round(overall_intent_f1, 4),
+            "avg_latency": round(sum(overall_lat) / len(overall_lat), 3) if overall_lat else 0.0,
+            "slot": tot_slot,
+            "intent": tot_intent,
+        },
+    }
+    with open(SUMMARY_FILE, "w", encoding="utf-8") as f:
+        json.dump(summary_data, f, ensure_ascii=False, indent=2)
+
     print(f"\nDone. Per-sample results saved to: {OUTPUT_FILE}")
+    print(f"Metrics summary saved to:        {SUMMARY_FILE}")
 
 
 if __name__ == "__main__":
