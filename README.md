@@ -31,8 +31,11 @@ Domux (`Domux-Gemma-4-E2B-it`) is a fine-tuned language model built on **Gemma-4
 
 ## 📰 News
 
+- **2026.06.30** — 🎉 Released **v0.1.0**, the first open-source release. See [CHANGELOG](CHANGELOG.md).
 - **2026.06.29** — Released training code, reward plugins, and example datasets.
 - **2026.06.25** — Initial release of Domux based on Gemma-4-E2B-it.
+
+> Full version history: [CHANGELOG.md](CHANGELOG.md)
 
 ## ✨ Key Features
 

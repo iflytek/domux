@@ -31,8 +31,11 @@ Domux (`Domux-Gemma-4-E2B-it`) 是基于 **Gemma-4-E2B-it** 微调的语言模�
 
 ## 📰 更新动态
 
+- **2026.06.30** — 🎉 发布 **v0.1.0**，首个开源版本。详见 [CHANGELOG](CHANGELOG.md)。
 - **2026.06.29** — 发布训练代码、奖励插件和示例数据集。
 - **2026.06.25** — 基于 Gemma-4-E2B-it 的 Domux 首次发布。
+
+> 完整版本历史：[CHANGELOG.md](CHANGELOG.md)
 
 ## ✨ 核心特性
 
