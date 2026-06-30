@@ -1,11 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
 .venv/
+venv/
+env/
 
 # IDE
 .vscode/
 .idea/
+.claude/
 *.swp
 *.swo
 *~
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
 
 # Training outputs
 output/
@@ -22,7 +33,7 @@ swanlab/
 *.pth
 *.ckpt
 
-# Data
+# Data files
 *.jsonl
 !**/example*.jsonl
 data/
@@ -32,10 +43,6 @@ data/
 .DS_Store
 Thumbs.db
 
-# Jupyter
-.ipynb_checkpoints/
-*.ipynb
-
-# Python
-__pycache__/
-*.py[cod]
+# Environment variables
+.env
+.env.local
