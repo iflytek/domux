@@ -12,8 +12,8 @@
   <p><b>A lightweight, low-latency command understanding model for smart-home control.</b></p>
 
   <p>
-    <a href="#-model-download"><img src="https://img.shields.io/badge/🤗%20Hugging%20Face-Model-yellow"></a>
-    <a href="#-model-download"><img src="https://img.shields.io/badge/🔧%20ModelScope-Model-blue"></a>
+    <a href="https://huggingface.co/iFlytekOpenSource/Domux"><img src="https://img.shields.io/badge/🤗%20Hugging%20Face-Model-yellow"></a>
+    <a href="https://modelscope.cn/models/iflytek/domux"><img src="https://img.shields.io/badge/🔧%20ModelScope-Model-blue"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-See%20LICENSE-green"></a>
     <a href="#-quick-start"><img src="https://img.shields.io/badge/Inference-vLLM%20%7C%20SGLang-orange"></a>
   </p>
@@ -43,21 +43,41 @@ Domux (`Domux-Gemma-4-E2B-it`) is a fine-tuned language model built on **Gemma-4
 - **Multi-action support** — Handles compound commands that map to multiple slot lines.
 - **Generalizes across devices** — Handles arbitrary device names within each category, not a fixed whitelist.
 
-## 🏠 Supported Devices
+## 🏠 Supported Control Capabilities
 
-Domux is built on a generalist base model, so device names are **not a closed list** — it handles arbitrary names within each category by generalization. The devices below are representative examples, not the full set: any kind of light (ceiling light, strip light, floor lamp, desk lamp, spotlight, reading light…) works the same way.
+Domux is built on a generalist base model that **does not rely on a fixed device whitelist** — the model handles diverse device names through semantic understanding. The tables below show core capabilities; full specification at [Output Format Documentation](docs/output-spec.md).
 
-| Category | Example Devices | Actions | Attributes (range) |
+### Device Types & Attributes
+
+| Device Type | Naming Examples | Controllable Attributes | Value Range |
 | --- | --- | --- | --- |
-| **Lighting** | any light — strip light, floor lamp, desk lamp, spot light, ceiling light… | turnOn, turnOff, set, adjustUp, adjustDown | brightness (0–100%), color, colorTemperature (3500/4000/5000/6000 K) |
-| **Climate** | AC | turnOn, turnOff, set | temperature (16–29 °C), mode (Fan / Dry / Heat / Cool) |
-| **Window** | curtain, blind, sheer | turnOn, turnOff, set, adjustUp, adjustDown | position (0–100%) |
-| **Audio** | music | turnOn, turnOff, adjustUp, adjustDown | volume (0–100%) |
-| **Scene** | presentation mode, movie mode, music video mode… | activate, deactivate | — |
+| **Light** | Light、Strip Light、Spot Light、Desk Lamp | `brightness`<br>`color`<br>`colorTemperature`<br>`mode` | 0–100%<br>Blue、Red、Green、Yellow、White, etc.<br>3000–6500 K<br>Reading、Romance、Soft, etc. |
+| **AC** | AC、AC 1 | `temperature`<br>`mode`<br>`windSpeed` | 16–30 °C<br>Cool、Heat、Dry、Fan、Auto<br>Low、Medium、High |
+| **Curtain** / **Blind** | Curtain、Blind、Sheer Curtain | `position` | 0–100% |
+| **Scene Mode** | Romantic Mode、Party Mode、Sleeping Mode | — | — |
 
-**Colors**: Blue, Red, Green, Yellow, Orange, Pink, Purple, Cyan, Lavender, White, Warm White, Cool White, Sky Blue, and more.
+### Control Actions
 
-**Fuzzy adjustment**: commands without an explicit value (e.g. *"dim the lamp"*, *"turn it down a bit"*) map to `adjustUp` / `adjustDown` with the value left as `*`, to be resolved downstream.
+| Action | Description | Example Commands |
+| --- | --- | --- |
+| `turnOn` | Turn on device | *"Turn on the living room light"* |
+| `turnOff` | Turn off device | *"Turn off the AC"* |
+| `set` | Set to specific value | *"Set brightness to 80%"*、*"Set AC to 24 degrees"* |
+| `adjustUp` | Increase attribute | *"Make it brighter"*、*"Increase the temperature a bit"* |
+| `adjustDown` | Decrease attribute | *"Dim the light"*、*"Turn down the AC"* |
+| `activate` | Activate scene mode | *"Activate romantic mode"* |
+| `deactivate` | Deactivate scene mode | *"Deactivate party mode"* |
+| `pause` | Pause curtain movement | *"Stop the curtain"* |
+
+### Spatial Context
+
+**Room Support**: Living Room、Bedroom、Kitchen、Bathroom、Home Office、Balcony、Master Bedroom, etc. Supports numbering (Bedroom 1、Room A) and culturally specific rooms (Majlis、Prayer Room).
+
+**Floor Support**: Ground Floor、First Floor、Second Floor、Upstairs、Downstairs, etc.
+
+### Fuzzy Command Handling
+
+Adjustment commands without explicit values (e.g., *"make it brighter"*, *"turn it down a bit"*) map to `adjustUp` / `adjustDown` with the value field left empty (`*`), allowing downstream systems to determine the adjustment magnitude based on current state.
 
 ### Roadmap
 
@@ -119,40 +139,49 @@ set|Curtain|openness|50|Percent|Dining Room|*
 
 Use `*` for unspecified or don't-care fields.
 
-## 📊 Benchmark Evaluation
+## 📊 Benchmark
 
 Evaluated on a comprehensive test set of **4,057 samples** across 4 dimensions (single intent, multi-intent, omitted attributes, non-standard naming), benchmarked against **11 mainstream models** including Qwen3.5 series (2B-27B), Gemma 4 series, and leading closed-source APIs (DeepSeek-V4, Claude Haiku 4.5, Gemini 3.5 Flash).
 
-### Key Results
+---
 
-| Metric | Domux (E2B) | Qwen3.5-27B | Gemma 4-31B | DeepSeek-V4 | Claude Haiku 4.5 | Gemini 3.5 Flash |
-| --- | --- | --- | --- | --- | --- | --- |
-| **Result Accuracy** | **98.37%** | 81.4% | 85.2% | 90.3% | 91.4% | 88.7% |
-| Format Compliance | **100.00%** | 97.2% | 97.8% | 99.0% | 99.5% | 98.5% |
-| Slot F1 | **99.64%** | 92.8% | 94.5% | 96.1% | 96.8% | 95.3% |
-| Intent F1 (Multi) | **98.96%** | 86.7% | 90.5% | 93.5% | 93.7% | 91.5% |
-| Latency (Single/Multi) | **130/210 ms** | 1660/2320 ms | 1860/2600 ms | 1200/1680 ms | 900/1260 ms | 700/980 ms |
+<div align="center">
+  <img src="assets/benchmark.png" alt="Domux Benchmark" width="90%">
+</div>
 
-### Performance by Category
+📄 **Full technical report**: [English Report](docs/benchmark-report.pdf) ・ [中文报告](docs/benchmark-report.zh.pdf)
 
-- **Single Intent**: 99.64% accuracy
-- **Multi-Intent**: 98.05% accuracy
-- **Omitted Attributes**: 99.05% accuracy
-- **Non-Standard Naming**: 95.89% accuracy
+## 🧪 Open Dataset & Evaluation
 
-### Inference Performance (NVIDIA A100)
+We've open-sourced the **test set** and **evaluation script** behind the benchmark above, so you can reproduce our results or evaluate your own model.
 
-- **Throughput**: Peak ~5,500 token/s at concurrency 60-80
-- **Latency**: Single intent 130ms, multi-intent 210ms (pure inference)
-- **Zero Failure Rate**: 100% success across 124,116 concurrent requests
+- **Test set** — [`eval/smart_home_control_test_set.jsonl`](eval/smart_home_control_test_set.jsonl): 4,057 samples across four dimensions (single-intent, multi-intent, omitted attributes, non-standard naming), spanning three device categories (Light / AC / Curtain) with 67 device-name variants.
+- **Evaluation script** — [`eval/run_eval.py`](eval/run_eval.py): sends each query to any OpenAI-compatible endpoint and reports format compliance, result accuracy, Slot F1, Intent F1, and average latency.
+- **Docs** — see [`eval/DATASET_README.md`](eval/DATASET_README.md) for data format, metric definitions, and how to run.
 
-📄 **Full Report**: [Domux_Technical_Evaluation_Report](Domux_Technical_Evaluation_Report.pdf) | [评测技术报告 (中文)](Domux_Technical_Evaluation_Report_zh.pdf)
+```bash
+pip install requests
+# Fill in API_KEY / BASE_URL / MODEL in run_eval.py, then run
+python eval/run_eval.py
+```
 
 ## 📥 Model Download
 
 | Model | Base | Hugging Face | ModelScope |
 | --- | --- | --- | --- |
-| Domux-Gemma-4-E2B-it | Gemma-4-E2B-it | [🤗 Link](#) | [🔧 Link](#) |
+| Domux-Gemma-4-E2B-it | Gemma-4-E2B-it | [🤗 iFlytekOpenSource/Domux](https://huggingface.co/iFlytekOpenSource/Domux) | [🔧 iflytek/domux](https://modelscope.cn/models/iflytek/domux) |
+
+**Download via**:
+
+```bash
+# Option 1: Hugging Face
+git lfs install
+git clone https://huggingface.co/iFlytekOpenSource/Domux
+
+# Option 2: ModelScope
+pip install modelscope
+python -c "from modelscope import snapshot_download; snapshot_download('iflytek/domux', cache_dir='./models')"
+```
 
 ## 🚀 Quick Start
 
@@ -177,7 +206,8 @@ Offline inference with vLLM. Pass the user command directly as the query:
 ```python
 from vllm import LLM, SamplingParams
 
-llm = LLM(model="path/to/model", dtype="bfloat16")
+# Point to your downloaded model directory
+llm = LLM(model="Domux", dtype="bfloat16")  # or "models/iflytek/domux"
 sampling = SamplingParams(temperature=0.0, max_tokens=256)
 
 prompt = "Turn on the Master Light in the Master Bedroom on the Second Floor, set brightness to 80%, color temperature to 4000K, color to Blue, and mode to Reading."
@@ -200,7 +230,7 @@ Serve the model as an OpenAI-compatible API with either vLLM or SGLang.
 
 ```bash
 python -m vllm.entrypoints.openai.api_server \
-  --model path/to/model \
+  --model Domux \
   --served-model-name domux \
   --host 0.0.0.0 \
   --port 8000 \
@@ -213,7 +243,7 @@ python -m vllm.entrypoints.openai.api_server \
 
 ```bash
 python -m sglang.launch_server \
-  --model-path path/to/model \
+  --model-path Domux \
   --host 0.0.0.0 \
   --port 8000 \
   --dtype bfloat16 \

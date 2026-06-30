@@ -12,8 +12,8 @@
   <p><b>面向智能家居控制的轻量级低延迟指令理解模型</b></p>
 
   <p>
-    <a href="#-模型下载"><img src="https://img.shields.io/badge/🤗%20Hugging%20Face-模型-yellow"></a>
-    <a href="#-模型下载"><img src="https://img.shields.io/badge/🔧%20ModelScope-模型-blue"></a>
+    <a href="https://huggingface.co/iFlytekOpenSource/Domux"><img src="https://img.shields.io/badge/🤗%20Hugging%20Face-模型-yellow"></a>
+    <a href="https://modelscope.cn/models/iflytek/domux"><img src="https://img.shields.io/badge/🔧%20ModelScope-模型-blue"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-查看%20LICENSE-green"></a>
     <a href="#-快速开始"><img src="https://img.shields.io/badge/推理-vLLM%20%7C%20SGLang-orange"></a>
   </p>
@@ -43,21 +43,41 @@ Domux (`Domux-Gemma-4-E2B-it`) 是基于 **Gemma-4-E2B-it** 微调的语言模�
 - **多动作支持** — 处理映射到多个槽位行的复合指令。
 - **跨设备泛化** — 处理每个类别下的任意设备名，而非固定白名单。
 
-## 🏠 支持的设备
+## 🏠 支持的控制能力
 
-Domux 基于具备泛化能力的基座模型，因此设备名**不是一份封闭清单** —— 模型靠泛化能力处理每个类别下的各种设备名。下表只是**代表性举例，并非全部**：各种各样的灯（吸顶灯、灯带、落地灯、台灯、射灯、阅读灯……）都能同样处理。
+Domux 基于具备泛化能力的基座模型，**不依赖固定的设备白名单** —— 模型通过语义理解处理各类设备名称。下表展示核心控制能力，完整规范见 [输出格式文档](docs/output-spec.zh.md)。
 
-| 类别 | 设备举例 | 动作 | 属性（取值范围） |
+### 设备类型与属性
+
+| 设备类型 | 命名示例 | 可控属性 | 取值范围 |
 | --- | --- | --- | --- |
-| **灯具** | 任意灯具 —— 灯带、落地灯、台灯、射灯、吸顶灯…… | turnOn, turnOff, set, adjustUp, adjustDown | brightness 亮度（0–100%）、color 颜色、colorTemperature 色温（3500/4000/5000/6000 K） |
-| **温控** | AC（空调） | turnOn, turnOff, set | temperature 温度（16–29 °C）、mode 模式（Fan / Dry / Heat / Cool） |
-| **窗饰** | 窗帘、百叶窗、纱帘 | turnOn, turnOff, set, adjustUp, adjustDown | position 开合位置（0–100%） |
-| **音频** | 音乐 | turnOn, turnOff, adjustUp, adjustDown | volume 音量（0–100%） |
-| **场景** | 演示模式、电影模式、音乐视频模式…… | activate, deactivate | — |
+| **灯具** `Light` | Light、Strip Light、Spot Light、Desk Lamp | `brightness` 亮度<br>`color` 颜色<br>`colorTemperature` 色温<br>`mode` 灯光模式 | 0–100%<br>Blue、Red、Green、Yellow、White 等<br>3000–6500 K<br>Reading、Romance、Soft 等 |
+| **空调** `AC` | AC、AC 1 | `temperature` 温度<br>`mode` 空调模式<br>`windSpeed` 风速 | 16–30 °C<br>Cool、Heat、Dry、Fan、Auto<br>Low、Medium、High |
+| **窗饰** `Curtain` / `Blind` | Curtain、Blind、Sheer Curtain | `position` 开合位置 | 0–100% |
+| **场景模式** | Romantic Mode、Party Mode、Sleeping Mode | — | — |
 
-**颜色**：Blue、Red、Green、Yellow、Orange、Pink、Purple、Cyan、Lavender、White、Warm White、Cool White、Sky Blue 等。
+### 控制动作
 
-**模糊调整**：不带明确数值的指令（如 *"dim the lamp"*、*"turn it down a bit"*）会映射为 `adjustUp` / `adjustDown`，值字段留空为 `*`，交由下游解析。
+| 动作 | 说明 | 典型指令示例 |
+| --- | --- | --- |
+| `turnOn` | 打开设备 | *"Turn on the living room light"* |
+| `turnOff` | 关闭设备 | *"Turn off the AC"* |
+| `set` | 设置到具体值 | *"Set brightness to 80%"*、*"Set AC to 24 degrees"* |
+| `adjustUp` | 增加属性值 | *"Make it brighter"*、*"Increase the temperature a bit"* |
+| `adjustDown` | 减少属性值 | *"Dim the light"*、*"Turn down the AC"* |
+| `activate` | 激活场景模式 | *"Activate romantic mode"* |
+| `deactivate` | 取消场景模式 | *"Deactivate party mode"* |
+| `pause` | 暂停窗帘运动 | *"Stop the curtain"* |
+
+### 空间定位
+
+**房间支持**：Living Room、Bedroom、Kitchen、Bathroom、Home Office、Balcony、Master Bedroom 等，支持编号（Bedroom 1、Room A）和文化特色房间（Majlis、Prayer Room）。
+
+**楼层支持**：Ground Floor、First Floor、Second Floor、Upstairs、Downstairs 等。
+
+### 模糊指令处理
+
+不带明确数值的调整指令（如 *"make it brighter"*、*"turn it down a bit"*）会映射为 `adjustUp` / `adjustDown`，值字段留空（`*`），由下游系统根据当前状态决定调整幅度。
 
 ### 路线图
 
@@ -121,40 +141,49 @@ set|Curtain|openness|50|Percent|Dining Room|*
 
 使用 `*` 表示未指定或无关字段。
 
-## 📊 Benchmark 评估
+## 📊 Benchmark
 
 在涵盖 4 个维度（单意图、多意图、属性省略、非标准命名）的 **4,057 个样本**的综合测试集上进行评估，与 **11 个主流模型**进行基准对比，包括 Qwen3.5 系列（2B-27B）、Gemma 4 系列以及领先的闭源 API（DeepSeek-V4、Claude Haiku 4.5、Gemini 3.5 Flash）。
 
-### 核心结果
+---
 
-| 指标 | Domux (E2B) | Qwen3.5-27B | Gemma 4-31B | DeepSeek-V4 | Claude Haiku 4.5 | Gemini 3.5 Flash |
-| --- | --- | --- | --- | --- | --- | --- |
-| **结果准确率** | **98.37%** | 81.4% | 85.2% | 90.3% | 91.4% | 88.7% |
-| 格式合规性 | **100.00%** | 97.2% | 97.8% | 99.0% | 99.5% | 98.5% |
-| Slot F1 | **99.64%** | 92.8% | 94.5% | 96.1% | 96.8% | 95.3% |
-| Intent F1 (多意图) | **98.96%** | 86.7% | 90.5% | 93.5% | 93.7% | 91.5% |
-| 延迟 (单/多) | **130/210 ms** | 1660/2320 ms | 1860/2600 ms | 1200/1680 ms | 900/1260 ms | 700/980 ms |
+<div align="center">
+  <img src="assets/benchmark.zh.png" alt="Domux Benchmark" width="90%">
+</div>
 
-### 分类性能
+📄 **完整技术报告**：[中文报告](docs/benchmark-report.zh.pdf) ・ [English Report](docs/benchmark-report.pdf)
 
-- **单意图**：99.64% 准确率
-- **多意图**：98.05% 准确率
-- **属性省略**：99.05% 准确率
-- **非标准命名**：95.89% 准确率
+## 🧪 开源数据集与评测
 
-### 推理性能（NVIDIA A100）
+我们开源了用于上述评测的**测试集**与**评测脚本**，方便你独立复现结果或评估自己的模型。
 
-- **吞吐量**：并发 60-80 时峰值约 5,500 token/s
-- **延迟**：单意图 130ms，多意图 210ms（纯推理）
-- **零失败率**：124,116 个并发请求中 100% 成功
+- **测试集** —— [`eval/smart_home_control_test_set.jsonl`](eval/smart_home_control_test_set.jsonl)：4,057 条样本，覆盖单意图、多意图、属性省略、非标准命名四个维度，含灯具 / 空调 / 窗帘三大类共 67 种设备名变体。
+- **评测脚本** —— [`eval/run_eval.py`](eval/run_eval.py)：向任意 OpenAI 兼容接口发送指令，自动计算格式合规率、结果准确率、Slot F1、Intent F1 与平均延迟。
+- **使用说明** —— 数据格式、指标定义和运行方式详见 [`eval/DATASET_README.md`](eval/DATASET_README.md)。
 
-📄 **完整报告**：[Technical Evaluation Report (EN)](Domux_Technical_Evaluation_Report.pdf) | [评测技术报告 (中文)](Domux_Technical_Evaluation_Report_zh.pdf)
+```bash
+pip install requests
+# 在 run_eval.py 中填入 API_KEY / BASE_URL / MODEL 后运行
+python eval/run_eval.py
+```
 
 ## 📥 模型下载
 
 | 模型 | 基座 | Hugging Face | ModelScope |
 | --- | --- | --- | --- |
-| Domux-Gemma-4-E2B-it | Gemma-4-E2B-it | [🤗 链接](#) | [🔧 链接](#) |
+| Domux-Gemma-4-E2B-it | Gemma-4-E2B-it | [🤗 iFlytekOpenSource/Domux](https://huggingface.co/iFlytekOpenSource/Domux) | [🔧 iflytek/domux](https://modelscope.cn/models/iflytek/domux) |
+
+**下载方式**：
+
+```bash
+# 方式 1：从 Hugging Face 下载
+git lfs install
+git clone https://huggingface.co/iFlytekOpenSource/Domux
+
+# 方式 2：从 ModelScope 下载
+pip install modelscope
+python -c "from modelscope import snapshot_download; snapshot_download('iflytek/domux', cache_dir='./models')"
+```
 
 ## 🚀 快速开始
 
@@ -179,7 +208,8 @@ pip install "sglang[all]==0.5.12"
 ```python
 from vllm import LLM, SamplingParams
 
-llm = LLM(model="path/to/model", dtype="bfloat16")
+# 指向你下载的模型目录
+llm = LLM(model="Domux", dtype="bfloat16")  # 或 "models/iflytek/domux"
 sampling = SamplingParams(temperature=0.0, max_tokens=256)
 
 prompt = "Turn on the Master Light in the Master Bedroom on the Second Floor, set brightness to 80%, color temperature to 4000K, color to Blue, and mode to Reading."
@@ -202,7 +232,7 @@ print(output[0].outputs[0].text)
 
 ```bash
 python -m vllm.entrypoints.openai.api_server \
-  --model path/to/model \
+  --model Domux \
   --served-model-name domux \
   --host 0.0.0.0 \
   --port 8000 \
@@ -215,7 +245,7 @@ python -m vllm.entrypoints.openai.api_server \
 
 ```bash
 python -m sglang.launch_server \
-  --model-path path/to/model \
+  --model-path Domux \
   --host 0.0.0.0 \
   --port 8000 \
   --dtype bfloat16 \

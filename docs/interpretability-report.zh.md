@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="GRPO_Interpretability_Report.md">English</a> | <b>简体中文</b>
+  <a href="interpretability-report.md">English</a> | <b>简体中文</b>
 </div>
 
 ---
@@ -52,13 +52,13 @@
 
 ## 🎯 1. 引言：从工程结果回看
 
-Domux 的训练分两步：先用带标注数据做 LoRA 监督微调（SFT），再用自定义奖励函数做 GRPO 强化学习（细节见 [`training/README.md`](training/README.md)）。这套组合在工程上跑通了、指标也不错，但"为什么有效"一直停留在直觉层面。
+Domux 的训练分两步：先用带标注数据做 LoRA 监督微调（SFT），再用自定义奖励函数做 GRPO 强化学习（细节见 [`training/README.md`](../training/README.md)）。这套组合在工程上跑通了、指标也不错，但"为什么有效"一直停留在直觉层面。
 
 本报告的目标是把"设计选择 → 训练动力学 → 可观测结果"这条因果链补齐，并且**只采信能被日志或测试数据证实的部分**。凡是数据不支持的推断，会明确标注为推测或留作未来工作，不会伪装成结论。
 
 需要特别说明的是：我们最初的假设之一（"双奖励会形成由易到难的隐式课程"）在看到训练曲线后被**推翻**了——曲线显示两个奖励从一开始就饱和，并不存在"先学格式、再学语义"的过程。本报告保留这个修正过程，因为它本身就是"用证据约束解释"的一个例子。
 
-> ⚠️ **数据来源声明**：本报告的测试数据来自一套**内部 family 评测集**（6733 条，按户型 fy001~fy006 分组），与本仓库 [`eval/`](eval/) 目录下随发布提供的**官方测试集**（`smart_home_control_test_set.jsonl`，按 category 分组）是**两套不同的数据**——两者 query 几乎不重叠（交集仅 36 条）。二者的打分口径也不同：官方脚本 [`eval/run_eval.py`](eval/run_eval.py) 报告 Result accuracy（顺序无关的集合匹配）与 Slot F1，本报告使用整句精确匹配（EM）与按字段位置统计的平均准确率。**因此本报告的数字不可与官方 eval 的指标直接横向比较。** 本报告的价值在于 SFT 与 GRPO 在**同一份数据上的逐样本配对差异**，这一比较不受口径差异影响。
+> ⚠️ **数据来源声明**：本报告的测试数据来自一套**内部 family 评测集**（6733 条，按户型 fy001~fy006 分组），与本仓库 [`eval/`](../eval/) 目录下随发布提供的**官方测试集**（`smart_home_control_test_set.jsonl`，按 category 分组）是**两套不同的数据**——两者 query 几乎不重叠（交集仅 36 条）。二者的打分口径也不同：官方脚本 [`eval/run_eval.py`](../eval/run_eval.py) 报告 Result accuracy（顺序无关的集合匹配）与 Slot F1，本报告使用整句精确匹配（EM）与按字段位置统计的平均准确率。**因此本报告的数字不可与官方 eval 的指标直接横向比较。** 本报告的价值在于 SFT 与 GRPO 在**同一份数据上的逐样本配对差异**，这一比较不受口径差异影响。
 
 ---
 
@@ -66,7 +66,7 @@ Domux 的训练分两步：先用带标注数据做 LoRA 监督微调（SFT）�
 
 ### 2.1 训练曲线说了什么
 
-GRPO 训练过程中，两个奖励函数（`SlotAccuracy` 与 `SlotFormat`，定义见 [`training/rewards/reward_plugin_slot.py`](training/rewards/reward_plugin_slot.py)）的均值曲线呈现出一个鲜明特征：
+GRPO 训练过程中，两个奖励函数（`SlotAccuracy` 与 `SlotFormat`，定义见 [`training/rewards/reward_plugin_slot.py`](../training/rewards/reward_plugin_slot.py)）的均值曲线呈现出一个鲜明特征：
 
 - **`SlotAccuracy/mean`**：从 step 0 起就在 **~0.999**，全程贴近 1.0，仅有偶发的向下尖刺（掉到 0.99~0.992）后迅速弹回。
 - **`SlotFormat/mean`**：从 step 0 起就在 **~0.9998**，几乎是一条直线，偶发尖刺掉到 0.998。
@@ -74,8 +74,8 @@ GRPO 训练过程中，两个奖励函数（`SlotAccuracy` 与 `SlotFormat`，�
 > 📈 *图 1：GRPO 训练期间的奖励曲线（SwanLab）。两条曲线均在 GRPO 起点即饱和，仅有偶发的向下尖刺后迅速弹回。*
 
 <div align="center">
-  <img src="assets/SwanLab-Chart_SlotAccuracy.png" alt="SlotAccuracy/mean 训练曲线" width="48%">
-  <img src="assets/SwanLab-Chart_SlotFormat.png" alt="SlotFormat/mean 训练曲线" width="48%">
+  <img src="../assets/chart_slotaccuracy.png" alt="SlotAccuracy/mean 训练曲线" width="48%">
+  <img src="../assets/chart_slotformat.png" alt="SlotFormat/mean 训练曲线" width="48%">
 </div>
 
 这意味着：**在 GRPO 开始之前，SFT 模型就已经把格式合规性和槽位准确率都做到了接近天花板的水平。** 因此 GRPO 阶段并不存在"能力从无到有"的学习过程，它面对的是一个已经很强的初始策略。
@@ -183,7 +183,7 @@ A_i = (r_i − mean(r_1..r_G)) / std(r_1..r_G)
 | room | 0.08 | 0.9114 | 0.9207 | **+0.94 pp** |
 | floor | 0.02 | 0.9970 | 0.9993 | +0.22 pp |
 
-> 字段权重见 [`reward_plugin_slot.py`](training/rewards/reward_plugin_slot.py)（`FIELD_WEIGHTS`）。
+> 字段权重见 [`reward_plugin_slot.py`](../training/rewards/reward_plugin_slot.py)（`FIELD_WEIGHTS`）。
 
 ### 4.2 一个需要诚实对待的细节
 
@@ -210,7 +210,7 @@ A_i = (r_i − mean(r_1..r_G)) / std(r_1..r_G)
 
 机制解释很清楚：
 
-> GRPO 从训练数据里学到了一条强先验——**多词设备名要带空格**（`Strip Light`、`Shower Light`、`Spot Light`…，这也是 [`COMMAND_SPEC`](COMMAND_SPEC_zh.md) 的规范）。这条先验在绝大多数情况下是对的，正是 3.2 里大量修复的来源。但它**过度泛化**了，把 fy006 里罕见的紧凑命名 `LightA / LightC` 也"规范化"成了 `Light A / Light`。
+> GRPO 从训练数据里学到了一条强先验——**多词设备名要带空格**（`Strip Light`、`Shower Light`、`Spot Light`…，这也是 [`output-spec`](output-spec.zh.md) 的规范）。这条先验在绝大多数情况下是对的，正是 3.2 里大量修复的来源。但它**过度泛化**了，把 fy006 里罕见的紧凑命名 `LightA / LightC` 也"规范化"成了 `Light A / Light`。
 
 这正是 mode-seeking（reverse-KL）策略改进的**已知代价**：收敛到主流模式时，会牺牲罕见的例外模式。值得强调的是——**GRPO 弄坏东西的方式，反过来证明了它学对了什么**：它的回退不是随机噪声，而是"把规范化规则用过了头"，这与它带来收益的机制是同一个。
 
@@ -222,7 +222,7 @@ A_i = (r_i − mean(r_1..r_G)) / std(r_1..r_G)
 
 ### 5.3 一个值得留意的口径张力：训练在意顺序，评测不在意
 
-有一个设计细节值得记下来：**奖励函数 [`reward_plugin_slot.py`](training/rewards/reward_plugin_slot.py) 是顺序敏感的**——它用 LCS 对齐保留命令段的先后（注释明确写了 `turnOff→turnOn` 与 `turnOn→turnOff` 不同），而官方评测脚本 [`eval/run_eval.py`](eval/run_eval.py) 的 Result accuracy 是**顺序无关的集合匹配**。也就是说，训练时模型因"段顺序错"被扣分，但评测时同样的顺序错却可能被判对。
+有一个设计细节值得记下来：**奖励函数 [`reward_plugin_slot.py`](../training/rewards/reward_plugin_slot.py) 是顺序敏感的**——它用 LCS 对齐保留命令段的先后（注释明确写了 `turnOff→turnOn` 与 `turnOn→turnOff` 不同），而官方评测脚本 [`eval/run_eval.py`](../eval/run_eval.py) 的 Result accuracy 是**顺序无关的集合匹配**。也就是说，训练时模型因"段顺序错"被扣分，但评测时同样的顺序错却可能被判对。
 
 这对当前任务影响有限（绝大多数指令的多段之间本就无强制先后），但它是一个真实的"奖励—评测"不一致点。如果未来引入对顺序敏感的指令（如"先关再开"），需要让评测口径与奖励口径对齐。本报告记录这一点，不将其作为已观测到的问题。
 
@@ -231,7 +231,7 @@ A_i = (r_i − mean(r_1..r_G)) / std(r_1..r_G)
 本报告的结论受限于现有数据，以下几点尚未验证，留作未来工作，**不作为已成立的结论**：
 
 - **缺少消融实验**：未单独验证"移除 `SlotFormat` 只留 `SlotAccuracy`"对收敛的影响。因此关于两个奖励各自贡献的论断仅停留在机制推断层面。
-- **字段级准确率为事后解析口径，与官方 Slot F1 不同**：本报告的字段级准确率是从配对输出**事后解析**得到的（段数匹配子集，按字段位置统计平均准确率），与官方脚本 [`eval/run_eval.py`](eval/run_eval.py) 的 **Slot F1**（贪心对齐 + 2PR/(P+R)）在算法和口径上都不同，两者数字不可直接对比。
+- **字段级准确率为事后解析口径，与官方 Slot F1 不同**：本报告的字段级准确率是从配对输出**事后解析**得到的（段数匹配子集，按字段位置统计平均准确率），与官方脚本 [`eval/run_eval.py`](../eval/run_eval.py) 的 **Slot F1**（贪心对齐 + 2PR/(P+R)）在算法和口径上都不同，两者数字不可直接对比。
 - **fy006 的过泛化可被针对性缓解**：例如在 SFT/GRPO 数据中加入紧凑命名样本，或在奖励里对"无依据改写设备名"加惩罚。这是一个明确的、由本报告发现驱动的改进方向。
 - **单次运行，无随机种子重复**：±0.65 pp 量级的增益尚未做多次重跑的显著性检验。
 
@@ -251,6 +251,6 @@ python analyze_eval.py <SFT_eval.json> <GRPO_eval.json>
 
 <div align="center">
 
-**相关文档**：[训练指南](training/README.md) · [指令规范](COMMAND_SPEC_zh.md) · [主页 README](README_zh.md)
+**相关文档**：[训练指南](../training/README.md) · [输出规范](output-spec.zh.md) · [主页 README](../README_zh.md)
 
 </div>

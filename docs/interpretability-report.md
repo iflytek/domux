@@ -1,5 +1,5 @@
 <div align="center">
-  <b>English</b> | <a href="GRPO_Interpretability_Report_zh.md">简体中文</a>
+  <b>English</b> | <a href="interpretability-report.zh.md">简体中文</a>
 </div>
 
 ---
@@ -52,13 +52,13 @@ Three findings worth remembering:
 
 ## 🎯 1. Introduction: Reasoning Backward from the Result
 
-Domux is trained in two stages: LoRA supervised fine-tuning (SFT) on labeled data, then GRPO reinforcement learning with custom reward functions (see [`training/README.md`](training/README.md)). The combination works in practice and the metrics are good, but "why it works" has so far lived at the level of intuition.
+Domux is trained in two stages: LoRA supervised fine-tuning (SFT) on labeled data, then GRPO reinforcement learning with custom reward functions (see [`training/README.md`](../training/README.md)). The combination works in practice and the metrics are good, but "why it works" has so far lived at the level of intuition.
 
 The goal here is to complete the causal chain "design choice → training dynamics → observable result," **trusting only the parts that logs or test data can confirm**. Where the data does not support an inference, it is explicitly flagged as speculation or future work, not dressed up as a conclusion.
 
 One caveat worth stating up front: one of our early hypotheses — that the dual reward would form an easy-to-hard *implicit curriculum* — was **falsified** once we looked at the training curves. The curves show both rewards saturated from the start; there is no "learn format first, then semantics" phase. We keep this correction in the report because it is itself an example of letting evidence constrain the explanation.
 
-> ⚠️ **Data-source disclaimer**: The test data in this report comes from an **internal family eval set** (6,733 samples, grouped by layout fy001–fy006), which is a **different dataset** from the **official test set** shipped with this repository under [`eval/`](eval/) (`smart_home_control_test_set.jsonl`, grouped by category) — the two share almost no queries (only 36 in common). Their scoring conventions also differ: the official script [`eval/run_eval.py`](eval/run_eval.py) reports Result accuracy (order-independent set match) and Slot F1, while this report uses exact-match (EM) and per-field-position average accuracy. **The numbers here are therefore not directly comparable to the official eval metrics.** The value of this report lies in the **per-sample paired difference between SFT and GRPO on the same data**, a comparison unaffected by the convention gap.
+> ⚠️ **Data-source disclaimer**: The test data in this report comes from an **internal family eval set** (6,733 samples, grouped by layout fy001–fy006), which is a **different dataset** from the **official test set** shipped with this repository under [`eval/`](../eval/) (`smart_home_control_test_set.jsonl`, grouped by category) — the two share almost no queries (only 36 in common). Their scoring conventions also differ: the official script [`eval/run_eval.py`](../eval/run_eval.py) reports Result accuracy (order-independent set match) and Slot F1, while this report uses exact-match (EM) and per-field-position average accuracy. **The numbers here are therefore not directly comparable to the official eval metrics.** The value of this report lies in the **per-sample paired difference between SFT and GRPO on the same data**, a comparison unaffected by the convention gap.
 
 ---
 
@@ -66,7 +66,7 @@ One caveat worth stating up front: one of our early hypotheses — that the dual
 
 ### 2.1 What the Training Curves Say
 
-During GRPO training, the mean curves of the two reward functions (`SlotAccuracy` and `SlotFormat`, defined in [`training/rewards/reward_plugin_slot.py`](training/rewards/reward_plugin_slot.py)) share a striking feature:
+During GRPO training, the mean curves of the two reward functions (`SlotAccuracy` and `SlotFormat`, defined in [`training/rewards/reward_plugin_slot.py`](../training/rewards/reward_plugin_slot.py)) share a striking feature:
 
 - **`SlotAccuracy/mean`**: sits at **~0.999** from step 0, hugging 1.0 throughout, with only occasional downward spikes (to 0.99–0.992) that snap back quickly.
 - **`SlotFormat/mean`**: sits at **~0.9998** from step 0, essentially a flat line, with rare spikes down to 0.998.
@@ -74,8 +74,8 @@ During GRPO training, the mean curves of the two reward functions (`SlotAccuracy
 > 📈 *Figure 1: Reward curves during GRPO training (SwanLab). Both are already saturated at GRPO's starting point, with only occasional downward spikes that snap back quickly.*
 
 <div align="center">
-  <img src="assets/SwanLab-Chart_SlotAccuracy.png" alt="SlotAccuracy/mean training curve" width="48%">
-  <img src="assets/SwanLab-Chart_SlotFormat.png" alt="SlotFormat/mean training curve" width="48%">
+  <img src="../assets/chart_slotaccuracy.png" alt="SlotAccuracy/mean training curve" width="48%">
+  <img src="../assets/chart_slotformat.png" alt="SlotFormat/mean training curve" width="48%">
 </div>
 
 The implication: **before GRPO even begins, the SFT model has already pushed both format compliance and slot accuracy close to the ceiling.** So the GRPO stage contains no "capability from scratch" learning — it faces an already-strong initial policy.
@@ -183,7 +183,7 @@ Computing accuracy per field position on the paired data (segment-count-matched 
 | room | 0.08 | 0.9114 | 0.9207 | **+0.94 pp** |
 | floor | 0.02 | 0.9970 | 0.9993 | +0.22 pp |
 
-> Field weights are in [`reward_plugin_slot.py`](training/rewards/reward_plugin_slot.py) (`FIELD_WEIGHTS`).
+> Field weights are in [`reward_plugin_slot.py`](../training/rewards/reward_plugin_slot.py) (`FIELD_WEIGHTS`).
 
 ### 4.2 A Detail That Must Be Handled Honestly
 
@@ -210,7 +210,7 @@ The most interpretively valuable part is precisely the 9 samples GRPO broke. The
 
 The mechanism is clear:
 
-> GRPO learned a strong prior from the training data — **multi-word device names take a space** (`Strip Light`, `Shower Light`, `Spot Light`…, which is also the [`COMMAND_SPEC`](COMMAND_SPEC.md) convention). This prior is correct in the vast majority of cases and is the source of the many fixes in §3.2. But it **over-generalized**, "normalizing" the rare compact names `LightA / LightC` in fy006 into `Light A / Light`.
+> GRPO learned a strong prior from the training data — **multi-word device names take a space** (`Strip Light`, `Shower Light`, `Spot Light`…, which is also the [`output-spec`](output-spec.md) convention). This prior is correct in the vast majority of cases and is the source of the many fixes in §3.2. But it **over-generalized**, "normalizing" the rare compact names `LightA / LightC` in fy006 into `Light A / Light`.
 
 This is a **known cost** of mode-seeking (reverse-KL) policy improvement: converging on the dominant mode sacrifices rare exception modes. Worth emphasizing — **the way GRPO breaks things is itself proof of what it learned right**: its regressions are not random noise but "applying the canonicalization rule too far," the very same mechanism that produces its gains.
 
@@ -222,7 +222,7 @@ For a **command-parsing** task, this tail matters more than it appears: one wron
 
 ### 5.3 A Convention Tension Worth Noting: Training Cares About Order, Evaluation Does Not
 
-One design detail is worth recording: **the reward function [`reward_plugin_slot.py`](training/rewards/reward_plugin_slot.py) is order-sensitive** — it uses LCS alignment to preserve the order of command segments (the comments explicitly note that `turnOff→turnOn` differs from `turnOn→turnOff`), whereas the Result accuracy in the official eval script [`eval/run_eval.py`](eval/run_eval.py) is an **order-independent set match**. In other words, the model is penalized at training time for getting segment order wrong, yet the same ordering error may be scored as correct at eval time.
+One design detail is worth recording: **the reward function [`reward_plugin_slot.py`](../training/rewards/reward_plugin_slot.py) is order-sensitive** — it uses LCS alignment to preserve the order of command segments (the comments explicitly note that `turnOff→turnOn` differs from `turnOn→turnOff`), whereas the Result accuracy in the official eval script [`eval/run_eval.py`](../eval/run_eval.py) is an **order-independent set match**. In other words, the model is penalized at training time for getting segment order wrong, yet the same ordering error may be scored as correct at eval time.
 
 The impact on the current task is limited (most instructions have no mandatory ordering among their segments), but it is a genuine reward–eval mismatch. If order-sensitive instructions are introduced in the future (e.g. "turn off, then on"), the eval convention should be aligned with the reward convention. We record this point without claiming it as an observed problem.
 
@@ -231,7 +231,7 @@ The impact on the current task is limited (most instructions have no mandatory o
 The conclusions are bounded by the available data. The following are not yet verified and are left as future work — **not presented as established conclusions**:
 
 - **No ablation study**: the effect of "removing `SlotFormat`, keeping only `SlotAccuracy`" on convergence was not isolated. Claims about each reward's individual contribution therefore remain at the level of mechanistic inference.
-- **Field-level accuracy is a post-hoc parse, different from the official Slot F1**: the field-level accuracy here is **parsed post-hoc** from paired outputs (segment-count-matched subset, average accuracy per field position). It differs in both algorithm and convention from the **Slot F1** (greedy alignment + 2PR/(P+R)) in the official script [`eval/run_eval.py`](eval/run_eval.py); the two numbers are not directly comparable.
+- **Field-level accuracy is a post-hoc parse, different from the official Slot F1**: the field-level accuracy here is **parsed post-hoc** from paired outputs (segment-count-matched subset, average accuracy per field position). It differs in both algorithm and convention from the **Slot F1** (greedy alignment + 2PR/(P+R)) in the official script [`eval/run_eval.py`](../eval/run_eval.py); the two numbers are not directly comparable.
 - **fy006's over-generalization is targetable**: e.g. add compact-naming samples to the SFT/GRPO data, or penalize "rewriting a device name without grounding" in the reward. This is a concrete improvement direction driven by this report's finding.
 - **Single run, no seed repeats**: a ±0.65 pp gain has not undergone significance testing across multiple reruns.
 
@@ -251,6 +251,6 @@ python analyze_eval.py <SFT_eval.json> <GRPO_eval.json>
 
 <div align="center">
 
-**Related**: [Training Guide](training/README.md) · [Command Spec](COMMAND_SPEC.md) · [Main README](README.md)
+**Related**: [Training Guide](../training/README.md) · [Output Spec](output-spec.md) · [Main README](../README.md)
 
 </div>

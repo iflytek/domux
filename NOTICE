@@ -1,0 +1,44 @@
+Domux
+Copyright 2026 iFLYTEK CO., LTD.
+
+This product includes software developed at iFLYTEK CO., LTD.
+(https://github.com/iflytek/domux).
+
+================================================================================
+Source code, training scripts, and evaluation tooling
+================================================================================
+
+The source code in this repository (training scripts, reward plugins, and
+evaluation tooling) is licensed under the Apache License, Version 2.0.
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+================================================================================
+Model weights — Gemma derivative
+================================================================================
+
+Domux (Domux-Gemma-4-E2B-it) is a fine-tuned derivative of Google's Gemma
+model (Gemma-4-E2B-it).
+
+  Gemma is provided under and subject to the Gemma Terms of Use:
+      https://ai.google.dev/gemma/terms
+  Gemma Prohibited Use Policy:
+      https://ai.google.dev/gemma/prohibited_use_policy
+
+As a derivative of Gemma, the Domux model weights are made available under,
+and your use of them is governed by, the Gemma Terms of Use. By using,
+reproducing, modifying, or distributing the Domux model weights, you agree to
+be bound by the Gemma Terms of Use, including the Prohibited Use Policy.
+
+"Gemma" is a trademark of Google LLC. Gemma is Copyright Google LLC.
+
+If you distribute or make available the Domux model weights (or any further
+derivative of them), you must:
+  - provide a copy of, or a working link to, the Gemma Terms of Use; and
+  - prominently display a notice that the model is built from / based on
+    Gemma and is subject to the Gemma Terms of Use; and
+  - pass through the same use restrictions to downstream recipients.
