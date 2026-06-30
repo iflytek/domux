@@ -292,6 +292,6 @@ See the [LICENSE](LICENSE) file in this repository.
 
 ## 🙏 Acknowledgments
 
-- Base model: [Gemma](https://ai.google.dev/gemma)
-- Training framework: [ModelScope-Swift](https://github.com/modelscope/swift)
+- Base model: [Gemma](https://deepmind.google/models/gemma/)
+- Training framework: [ModelScope-Swift](https://github.com/modelscope/ms-swift)
 - Experiment tracking: [SwanLab](https://swanlab.cn/)

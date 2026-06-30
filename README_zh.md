@@ -294,6 +294,6 @@ set|Light|mode|Reading|*|Master Bedroom|Second Floor
 
 ## 🙏 致谢
 
-- 基座模型：[Gemma](https://ai.google.dev/gemma)
-- 训练框架：[ModelScope-Swift](https://github.com/modelscope/swift)
+- 基座模型：[Gemma](https://deepmind.google/models/gemma/)
+- 训练框架：[ModelScope-Swift](https://github.com/modelscope/ms-swift)
 - 实验跟踪：[SwanLab](https://swanlab.cn/)
