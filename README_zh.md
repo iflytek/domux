@@ -297,3 +297,9 @@ set|Light|mode|Reading|*|Master Bedroom|Second Floor
 - 基座模型：[Gemma](https://deepmind.google/models/gemma/)
 - 训练框架：[ModelScope-Swift](https://github.com/modelscope/ms-swift)
 - 实验跟踪：[SwanLab](https://swanlab.cn/)
+
+## 💬 社区交流
+
+欢迎加入 Astron 开源交流群（企业微信），与我们交流与合作：
+
+<img src="https://github.com/iflytek/astron-agent/raw/main/docs/imgs/WeCom_Group.png" alt="加入 Astron 开源交流群" width="300" />

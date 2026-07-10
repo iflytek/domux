@@ -295,3 +295,9 @@ See the [LICENSE](LICENSE) file in this repository.
 - Base model: [Gemma](https://deepmind.google/models/gemma/)
 - Training framework: [ModelScope-Swift](https://github.com/modelscope/ms-swift)
 - Experiment tracking: [SwanLab](https://swanlab.cn/)
+
+## 💬 Community
+
+Join the Astron Open Source Community (WeCom Group) to discuss and collaborate:
+
+<img src="https://github.com/iflytek/astron-agent/raw/main/docs/imgs/WeCom_Group.png" alt="WeCom Group" width="300" />
