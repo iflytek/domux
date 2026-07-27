@@ -14,6 +14,7 @@
   <p>
     <a href="https://huggingface.co/iFlytekOpenSource/Domux"><img src="https://img.shields.io/badge/🤗%20Hugging%20Face-Model-yellow"></a>
     <a href="https://modelscope.cn/models/iflytek/domux"><img src="https://img.shields.io/badge/🔧%20ModelScope-Model-blue"></a>
+    <a href="https://deepwiki.com/iflytek/domux"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-See%20LICENSE-green"></a>
     <a href="#-quick-start"><img src="https://img.shields.io/badge/Inference-vLLM%20%7C%20SGLang-orange"></a>
   </p>
