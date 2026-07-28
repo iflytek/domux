@@ -1,0 +1,32 @@
+name: Question
+description: Ask for help using or understanding Domux
+title: "[Question]: "
+labels: [question]
+body:
+  - type: markdown
+    attributes:
+      value: Please check the README, documentation, and existing issues first.
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What are you trying to accomplish, and where are you blocked?
+    validations:
+      required: true
+  - type: textarea
+    id: attempted
+    attributes:
+      label: What have you tried?
+      description: Include relevant commands, configuration, or documentation.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Domux version, operating system, Python version, and relevant dependencies.
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Remove credentials and sensitive information before posting logs.
