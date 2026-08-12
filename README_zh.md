@@ -190,6 +190,20 @@ python -c "from modelscope import snapshot_download; snapshot_download('iflytek/
 
 ## 🚀 快速开始
 
+### 本地 GGUF / Ollama
+
+无需加载张量权重即可检查本地 GGUF，或连接 Ollama：
+
+```bash
+python -m domux_runtime.cli inspect /models/domux-q4_k_m.gguf
+python -m domux_runtime.cli pull gemma3 --load
+python -m domux_runtime.cli run gemma3 "Turn on the living room light"
+```
+
+支持 GGUF v2/v3 元数据，以及 Q4_0、Q4_K_M、Q5_K_M、Q6_K、Q8_0
+量化标识。关于本地导入、远程服务、进度显示和存储隔离，参见
+[Ollama 与 GGUF 指南](docs/ollama-gguf.md)。
+
 ### 硬件
 
 模型以 **BF16 精度**运行，单卡部署需要 **20GB 及以上显存**。
