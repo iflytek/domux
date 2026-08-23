@@ -36,16 +36,28 @@ labels: ['HER Hack-Astron']
 ## 交付与验收
 
 - 按仓库规范提交数据、训练 / 推理配置、评测脚本或模型改进
+- 复制 cases/TEMPLATE/ 到 cases/<case-id>/，提交真实运行案例
 - 训练集与测试集无泄漏；报告类别、设备、人群和语言分布
 - 在固定测试集提供总体与分组指标、混淆 / 失败案例
 - 报告模型大小、CPU 延迟和内存；说明复现实验环境
 - 高风险或歧义指令进入确认 / 拒绝，不产生静默危险动作
 - 更新模型卡 / 数据卡，说明许可、偏差、限制和隐私
 
+## Hugging Face 下载与公开发布
+
+- 必须从 iFlytekOpenSource/Domux 下载并运行模型，记录完整 commit revision
+- 唯一有效的公开发布渠道是 Domux 官方 Discussions：
+  https://huggingface.co/iFlytekOpenSource/Domux/discussions
+- 案例 frontmatter 的 channels 必须附 Discussion 直达链接；其他平台不能替代
+- Discussion 须包含可复制的 HF 下载命令、环境、输入、原始输出与复现证据
+- 不接受仅从其他镜像下载、没有真实运行证据或只有 GitHub 文案的提交
+- 禁止循环下载、清缓存重下或自动请求刷量；下载数只观察趋势，不作为评奖指标
+
 ## 提交与参与
 
-- PR 标题：`[HER Hack-Astron #期号] 作品名称 + 家居语义能力`
-- PR 附数据说明、复现实验、指标表和典型错误分析
+- Discussion 标题：[HER Hack-Astron #期号] 案例名称
+- 案例 PR 标题：[case] <case-id> - <一句话结果>
+- PR 附 HF Discussion 链接、数据说明、复现实验、指标表和典型错误分析
 - 女性贡献者占实际 commit / `Co-authored-by:` **≥ 50%**
 
 ## 评审重点
