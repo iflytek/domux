@@ -63,21 +63,6 @@ Every submission must satisfy all of the following:
 7. **Original work.** The run and evidence must be the submitter's own. AI may
    help edit prose, but it cannot replace an actual download and experiment.
 
-## Download impact and anti-abuse
-
-The campaign is designed to create useful reasons to download and run Domux:
-
-- the model download is a prerequisite for a valid case;
-- all public stories live beside the Hugging Face model;
-- each Discussion should include a copyable Hugging Face download command;
-- reproducible cases help the next reader decide whether to download and test.
-
-Hugging Face download statistics are request-based. They are useful as an
-aggregate trend, but they are not proof of a unique user or a full-weight
-download and are not an award criterion. Repeated downloads, automated HEAD or
-GET loops, cache deletion, or any other attempt to inflate the counter will
-disqualify a submission.
-
 ## How to submit
 
 1. Accept the Gemma access terms on the Domux model page.
@@ -137,17 +122,6 @@ https://huggingface.co/iFlytekOpenSource/Domux/discussions
 2. 确实运行了所下载的 snapshot，或基于该 snapshot 生成的量化/微调产物；
 3. 记录 Hugging Face revision、运行框架、硬件、输入、原始输出和复现命令；
 4. 在官方 Discussion 发布有实质内容的完整案例，并在 GitHub 案例文件中回链。
-
-## 下载量促进机制
-
-- 有效参赛必须完成一次真实 Hugging Face 下载与运行；
-- Discussion 固定写在模型页，持续承接后续读者与潜在下载者；
-- 每篇案例都提供可复制的官方 HF 下载命令和固定 revision；
-- 优先展示能帮助别人复现、选型或发现边界的内容。
-
-Hugging Face 的公开下载数按指定查询文件的 GET/HEAD 请求统计，不等于唯一用户数，
-也不自动证明完整权重已下载。因此下载数只观察活动趋势，不直接决定评选结果。重复
-下载、脚本循环请求、清缓存重下或其他刷量行为会导致取消资格。
 
 ## 提交步骤
 

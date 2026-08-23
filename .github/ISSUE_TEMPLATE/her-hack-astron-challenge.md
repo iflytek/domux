@@ -51,7 +51,6 @@ labels: ['HER Hack-Astron']
 - 案例 frontmatter 的 channels 必须附 Discussion 直达链接；其他平台不能替代
 - Discussion 须包含可复制的 HF 下载命令、环境、输入、原始输出与复现证据
 - 不接受仅从其他镜像下载、没有真实运行证据或只有 GitHub 文案的提交
-- 禁止循环下载、清缓存重下或自动请求刷量；下载数只观察趋势，不作为评奖指标
 
 ## 提交与参与
 
