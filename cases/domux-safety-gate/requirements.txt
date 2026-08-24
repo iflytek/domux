@@ -1,0 +1,5 @@
+transformers>=5.0.0
+accelerate>=1.10.0
+bitsandbytes>=0.49.0
+huggingface_hub>=1.0.0
+torch>=2.8.0
