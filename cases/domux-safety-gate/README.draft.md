@@ -1,7 +1,7 @@
 # DRAFT — Domux 执行前安全闸门
 
-> 本文件是实验草稿，不是参赛结果。所有带 `待真实运行` 的字段必须由固定
-> Hugging Face revision 的真实 GPU 输出替换后，才能发布 Discussion 或提交 PR。
+> 本文件已填入 2026-08-25 的固定 Hugging Face revision 真实 GPU 运行结果，
+> 但尚未发布 Hugging Face Discussion，也尚未提交 PR。
 
 ## Task / 真实任务
 
@@ -30,8 +30,9 @@ Domux 把自然语言转换成可执行的七字段家居控制指令，但结�
 - Model: `iFlytekOpenSource/Domux`
 - Revision: `6c71a32f4d624cadfd9fce9d10240d8068e53456`
 - Source: Hugging Face `snapshot_download`，固定 revision
-- Snapshot size: 待真实运行
-- Precision: 默认 NF4 4-bit；实际 GPU 与 compute dtype 待真实运行
+- Snapshot size: 10,279,032,574 bytes
+- Precision: NF4 4-bit，`torch.bfloat16` compute dtype
+- Runtime: Google Colab 免费 Tesla T4；Python 3.13.15；PyTorch 2.11.0+cu128
 
 模型权重、HF token、个人缓存路径和私有端点不会进入 GitHub。
 
@@ -51,20 +52,24 @@ Domux 把自然语言转换成可执行的七字段家居控制指令，但结�
 | Metric | Result | Method |
 |---|---:|---|
 | Sample count | 48 | 固定原创数据集 |
-| Domux format compliance | 待真实运行 | 七字段与动作枚举校验 |
-| Gate decision accuracy | 待真实运行 | 48 条人工标签 |
-| Macro F1 | 待真实运行 | allow / confirm / block |
-| Safety intercept recall | 待真实运行 | 32 条 confirm + block |
-| Unsafe pass rate | 待真实运行 | 高风险样本被判 allow 的比例 |
-| False intervention rate | 待真实运行 | 16 条 allow 被干预的比例 |
-| Gate latency mean / P95 | 待真实运行 | `perf_counter_ns`，不含模型推理 |
+| Domux format compliance | 81.25% (39/48) | 七字段与动作枚举校验 |
+| Gate decision accuracy | 93.75% (45/48) | 48 条人工标签 |
+| Macro F1 | 0.9369 | allow / confirm / block |
+| Safety intercept recall | 100% (32/32) | 32 条 confirm + block |
+| Unsafe pass rate | 0% (0/32) | 高风险样本被判 allow 的比例 |
+| False intervention rate | 0% (0/16) | 16 条 allow 被干预的比例 |
+| Gate latency mean / P95 | 18.02 / 32.52 μs | `perf_counter_ns`，不含模型推理 |
+
+类别混淆矩阵：allow 为 16/16 allow；confirm 为 13/16 confirm、3/16 block；
+block 为 16/16 block。三条 confirm 被更保守地升级为 block，因此没有产生危险放行。
 
 ## Evidence / 运行证据
 
-- GPU、运行时、量化、snapshot 大小：待真实运行；
-- 原始输出：待真实运行；
-- 日志／截图：待真实运行；
-- 失败案例：待真实运行。
+- GPU、运行时、量化、snapshot 大小：已在免费 Tesla T4 上运行并记录；
+- 原始输出与 `safety_report.json`：已由 Colab 打包为
+  `domux-safety-gate-results.zip`（仅日志与指标，不含模型权重或 token）；
+- smoke test：两条 allow 指令分别在 1600.5 ms、1517.8 ms 解析完成；
+- 失败模式：9/48 条模型输出未通过七字段格式／动作枚举校验；安全闸门将不合规输出阻断。
 
 ## Safety, privacy, and licensing / 安全、隐私与许可
 
