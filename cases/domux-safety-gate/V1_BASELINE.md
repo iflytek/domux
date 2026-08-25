@@ -1,6 +1,8 @@
 # Frozen v1 baseline
 
-- Commit: `63f60d1884059379784c06ae35e84838d5525f9d`
+- Commit at freeze: `63f60d1884059379784c06ae35e84838d5525f9d`
+- Canonical DCO-signed equivalent: `16161aef1c4457f9b233d71cf28a6b6e074efc67`
+- Identical tree: `5034aa0877fc1d2912d2a35a66f6db910f73a678`
 - Implementation: `safety_gate_v1.py`
 - Characterization: input-aware rule-based gate with a fail-closed structured-output parser.
 - The v1 policy reasons over the natural-language input. It does not inspect output-field

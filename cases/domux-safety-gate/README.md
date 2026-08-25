@@ -100,9 +100,12 @@ mismatch。它模拟输出错绑定，不是原 48 条的模型分布。
 
 ## Independent held-out / 冻结后一次性独立测试
 
-v2 在 commit `ad243f999d75bce3f1be35667ff3eaa734ef70e5` 冻结后，一个被明确禁止
+v2 在原始 commit `ad243f999d75bce3f1be35667ff3eaa734ef70e5` 冻结后，一个被明确禁止
 读取代码、regex、tests、旧数据和 evidence 的独立生成器创建了 84 条新的
 synthetic gate held-out。评测只运行一次，结果出现后没有再改 gate。
+为满足 DCO，PR 提交前仅重写了 commit message；远端可解析的等价冻结 commit 是
+`f7186768855398d13ecb5a0b205db02f68190708`，两者 tree hash 均为
+`b97f29f78d95630196e1298e565148e08ef61517`。
 
 | Held-out metric | Result |
 |---|---:|

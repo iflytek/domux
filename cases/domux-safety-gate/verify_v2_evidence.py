@@ -10,7 +10,11 @@ import sys
 import tempfile
 from pathlib import Path
 
-from evaluate_heldout import FROZEN_GATE_COMMIT, evaluate as evaluate_heldout
+from evaluate_heldout import (
+    CANONICAL_FROZEN_GATE_COMMIT,
+    FROZEN_GATE_COMMIT,
+    evaluate as evaluate_heldout,
+)
 from run_v2_experiments import read_jsonl, sha256
 
 
@@ -46,7 +50,7 @@ def current_gate_matches_frozen_commit() -> str:
     ).stdout.strip())
     relative = Path.cwd().resolve().relative_to(repo_root) / "safety_gate.py"
     frozen = subprocess.run(
-        ["git", "show", f"{FROZEN_GATE_COMMIT}:{relative.as_posix()}"],
+        ["git", "show", f"{CANONICAL_FROZEN_GATE_COMMIT}:{relative.as_posix()}"],
         check=True,
         capture_output=True,
     ).stdout
@@ -90,7 +94,8 @@ def main() -> int:
 
     print(json.dumps({
         "status": "ok",
-        "frozen_gate_commit": FROZEN_GATE_COMMIT,
+        "frozen_gate_commit_at_run": FROZEN_GATE_COMMIT,
+        "canonical_frozen_gate_commit_after_dco": CANONICAL_FROZEN_GATE_COMMIT,
         "gate_sha256": gate_sha256,
         "original_evidence_files_verified": len(ORIGINAL_HASHES),
         "v2_experiment_files_recomputed": len(EXPERIMENT_FILES),

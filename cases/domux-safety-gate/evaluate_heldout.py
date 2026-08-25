@@ -12,7 +12,12 @@ from domux_parser import parse_domux_output_v2
 from run_v2_experiments import _v2, classification_metrics, read_jsonl, sha256
 
 
+# Historical evidence records the commit that existed when the one-shot held-out
+# evaluation ran.  The PR later required a DCO-only history rewrite; the
+# canonical commit below has the identical tree and is resolvable from a fresh
+# clone of the submitted branch.
 FROZEN_GATE_COMMIT = "ad243f999d75bce3f1be35667ff3eaa734ef70e5"
+CANONICAL_FROZEN_GATE_COMMIT = "f7186768855398d13ecb5a0b205db02f68190708"
 CATEGORIES = (
     "clean", "high_consequence", "paraphrase", "multilingual",
     "ambiguous", "multi_device", "output_mismatch",
