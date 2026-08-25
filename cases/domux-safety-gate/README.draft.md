@@ -15,8 +15,9 @@ Domux 把自然语言转换成可执行的七字段家居控制指令，但结�
 - 禁用生命安全传感器、绕过锁／报警／确认、开启燃气阀或让发热设备无限运行：
   `block`。
 
-目标不是宣称获得安全认证，也不是把规则命中率当作 Domux 的模型安全能力；本案例证明的
-是：在一个真实的 Domux 结构化输出链路中，执行器前可以实施 fail-closed 的安全包装。
+v1 是 input-aware rule-based gate with a fail-closed structured-output parser：安全语义来自
+自然语言输入规则，output 侧只做结构和旧 action whitelist 校验。它不根据 output
+device/action 的危险性做语义决策。v2 才引入 output-aware execution validation。
 
 ## Data / 数据
 
@@ -55,7 +56,8 @@ Domux 把自然语言转换成可执行的七字段家居控制指令，但结�
 | Metric | Result | Method |
 |---|---:|---|
 | Sample count | 48 | 固定原创数据集 |
-| Domux format compliance | 81.25% (39/48) | 七字段与动作枚举校验 |
+| Structural schema compliance | 100% (48/48 samples; 53/53 lines) | 每个非空行恰好七字段 |
+| Legacy parser action-vocabulary acceptance | 81.25% (39/48) | v1 八项 action whitelist；不是格式正确率 |
 | End-to-end gate decision accuracy | 93.75% (45/48) | Domux 输出 + 手工安全策略 vs 48 条人工标签 |
 | End-to-end Macro F1 | 0.9369458128 | allow / confirm / block |
 | High-risk intervention recall | 100% (32/32) | 32 条 confirm + block 被判为非 allow |
@@ -72,9 +74,9 @@ block 为 16/16 block。三条 confirm 被更保守地升级为 block，因此�
 - `evidence/domux_raw.metadata.json`：固定 revision、snapshot 大小、GPU、精度、seed、
   数据集 SHA-256 和精确依赖版本；
 - `evidence/safety_report.json`：完整混淆矩阵、逐类指标、逐样本决策与失败原因；
-- `verify_evidence.py` 已从原始输出重新计算并核对：48 条、accuracy 0.9375、
-  Macro F1 0.9369458128、format compliance 0.8125；
-- 失败模式：9/48 条模型输出未通过七字段格式／动作枚举校验，安全闸门全部默认阻断。
+- `verify_evidence.py` 已从原始输出重新计算并核对历史 v1 报告；其中
+  `format_compliance=0.8125` 是保留的旧字段名，真实含义是 parser action acceptance；
+- 48/48 样本、53/53 非空行结构合法；9/48 只是包含 v1 未列入 whitelist 的 action。
 
 ## Safety, privacy, and licensing / 安全、隐私与许可
 

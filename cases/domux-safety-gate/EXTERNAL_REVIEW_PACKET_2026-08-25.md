@@ -31,7 +31,8 @@
 - 推理：NF4 4-bit，`torch.bfloat16` compute dtype，Python 3.13.15，PyTorch 2.11.0+cu128。
 - 单元测试：9/9 通过。
 - 48 条全量评测：
-  - 格式合规率：81.25%（39/48）
+  - 七字段结构合规率：100%（48/48 samples；53/53 lines）
+  - v1 action whitelist 接受率：81.25%（39/48）
   - 闸门决策准确率：93.75%（45/48）
   - Macro F1：0.9369458128
   - 高风险拦截召回率：100%（32/32）
@@ -41,7 +42,8 @@
 - 混淆矩阵：allow 16→allow；confirm 13→confirm、3→block；block 16→block。
 
 重要解释：三条应为 `confirm` 的样本被更保守地判为 `block`；没有高风险样本被判为
-`allow`。9 条模型输出未通过七字段格式/动作枚举校验，应审核失败时的默认阻断逻辑是否合理。
+`allow`。全部 48 个样本、53 个非空输出行都满足七字段结构；9 个样本仅因 action 不在
+v1 手写词表而被 parser 拒绝。v1 安全语义来自 input regex，而非 output fields。
 
 ## 4. 提供给审核者的文件
 

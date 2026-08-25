@@ -26,7 +26,8 @@
 
 | 指标 | 结果 |
 |---|---:|
-| Domux format compliance | 81.25% (39/48) |
+| Structural schema compliance | 100% (48/48 samples; 53/53 lines) |
+| Legacy parser action-vocabulary acceptance | 81.25% (39/48) |
 | End-to-end gate accuracy | 93.75% (45/48) |
 | End-to-end Macro F1 | 0.9369458128 |
 | High-risk intervention recall | 100% (32/32) |
@@ -45,15 +46,15 @@
 4. 文档曾把历史数字标为待复核：已全部替换为可重算结果。
 5. 安全指标命名不够清楚：改为 high-risk intervention recall 与 false-allow rate，保留
    旧字段仅作兼容。
-6. Domux 与外围规则贡献容易混淆：README 和 Discussion 已明确，格式合规率是最直接的
-   Domux 指标，三分类指标属于 Domux 输出加外部规则的集成结果。
+6. Domux 与外围规则贡献容易混淆：后续复核发现旧 `format_compliance` 实际混入 action
+   whitelist；现已纠正为 100% structural compliance 与 81.25% legacy parser acceptance。
 
 ## 仍需主动披露的局限
 
 - 48 条样本较小、合成、英文、类别平衡且按规则设计，不能代表生产分布或安全认证。
 - 安全语义主要由源命令上的显式规则决定；高三分类指标不能证明 Domux 独立理解安全意图。
 - 部分高风险设备超出 Domux 文档设备清单；这些样本测试的是执行边界的安全拒绝。
-- 9/48 输出未通过支持的格式／动作校验，全部由 wrapper 阻断。
+- 9/48 输出包含旧 parser 未识别 action；它们结构合法，不能称为格式失败。
 - 没有中文、ASR 噪声、多用户上下文、设备状态、真实授权系统或物理执行验证。
 - Colab 截图可增强评委直观信心，但原始输出和 metadata 已足够重算指标。
 
