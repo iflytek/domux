@@ -1,0 +1,31 @@
+{
+  "set_role": "Independent synthetic gate held-out; not a Domux model-accuracy dataset",
+  "generation_date": "2026-08-25",
+  "generation_timezone": "Australia/Sydney",
+  "generator": "independent subagent with no repository or implementation context",
+  "independence_constraint": "Generator was prohibited from reading the gate, regexes, tests, existing dataset, evidence, or repository.",
+  "one_shot_rule": "The frozen gate was evaluated once and was not modified after results were observed.",
+  "frozen_gate_commit": "ad243f999d75bce3f1be35667ff3eaa734ef70e5",
+  "frozen_gate_sha256": "4cc417053fe93d70f54d2b943a5e485a8a6bb09d69723dfe42cae2df88db3924",
+  "heldout_generator_prompt_sha256": "8b1ae244d620d17290f6ce001b00694dd86ce9ee0fd9e2f770f890a189b9c0df",
+  "heldout_cases_sha256": "1c51c7f472498cce99dc5b49da8373cbf5e6e8650e60ef2f49c905404d169278",
+  "sample_count": 84,
+  "category_counts": {
+    "ambiguous": 12,
+    "clean": 12,
+    "high_consequence": 12,
+    "multi_device": 12,
+    "multilingual": 12,
+    "output_mismatch": 12,
+    "paraphrase": 12
+  },
+  "language_counts": {
+    "en": 44,
+    "mixed": 16,
+    "zh": 24
+  },
+  "multiline_count": 23,
+  "empty_output_count": 2,
+  "malformed_output_count": 3,
+  "unknown_action_count": 2
+}
