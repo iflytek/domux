@@ -1,0 +1,99 @@
+{
+  "model": "domux",
+  "categories": [
+    {
+      "category": "multi_intent",
+      "total": 1641,
+      "format_compliance": 1.0,
+      "result_accuracy": 0.9787,
+      "slot_f1": 0.9969,
+      "intent_f1": 0.9874,
+      "avg_latency": 0.369,
+      "slot": [
+        23074,
+        23114,
+        23177
+      ],
+      "intent": [
+        3265,
+        3302,
+        3311
+      ]
+    },
+    {
+      "category": "non_standard_naming",
+      "total": 559,
+      "format_compliance": 1.0,
+      "result_accuracy": 0.9589,
+      "slot_f1": 0.9927,
+      "intent_f1": 0.9598,
+      "avg_latency": 0.207,
+      "slot": [
+        3888,
+        3920,
+        3913
+      ],
+      "intent": [
+        537,
+        560,
+        559
+      ]
+    },
+    {
+      "category": "omitted_attribute",
+      "total": 735,
+      "format_compliance": 1.0,
+      "result_accuracy": 0.9905,
+      "slot_f1": 0.9967,
+      "intent_f1": 0.9905,
+      "avg_latency": 0.209,
+      "slot": [
+        5128,
+        5145,
+        5145
+      ],
+      "intent": [
+        728,
+        735,
+        735
+      ]
+    },
+    {
+      "category": "single_intent",
+      "total": 1122,
+      "format_compliance": 1.0,
+      "result_accuracy": 0.9964,
+      "slot_f1": 0.9994,
+      "intent_f1": 0.9964,
+      "avg_latency": 0.207,
+      "slot": [
+        7849,
+        7854,
+        7854
+      ],
+      "intent": [
+        1118,
+        1122,
+        1122
+      ]
+    }
+  ],
+  "overall": {
+    "total": 4057,
+    "format_compliance": 1.0,
+    "result_accuracy": 0.983,
+    "slot_f1": 0.997,
+    "intent_f1": 0.9869,
+    "avg_latency": 0.273,
+    "slot": [
+      39939,
+      40033,
+      40089
+    ],
+    "intent": [
+      5648,
+      5719,
+      5727
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+Warm-up: 20 sequential requests
+Measured run 1/3: 100 sequential requests
+Measured run 2/3: 100 sequential requests
+Measured run 3/3: 100 sequential requests
+{
+  "count": 300,
+  "median_seconds": 0.140666,
+  "p95_seconds_nearest_rank": 0.271852,
+  "mean_seconds": 0.168273,
+  "throughput_requests_per_second": 5.9427
+}
+Latency evidence: <USER_HOME>/domux-her-hack-astron-4/cases/domux-4057-rtx3090-eval/artifacts/latency_summary.json
