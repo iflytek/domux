@@ -4,8 +4,11 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import importlib.metadata
 import json
 import platform
+import random
 import time
 from pathlib import Path
 
@@ -26,6 +29,21 @@ def directory_size(path: Path) -> int:
     return sum(item.stat().st_size for item in path.rglob("*") if item.is_file())
 
 
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def package_version(name: str) -> str | None:
+    try:
+        return importlib.metadata.version(name)
+    except importlib.metadata.PackageNotFoundError:
+        return None
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", type=Path, required=True)
@@ -33,10 +51,20 @@ def main() -> int:
     parser.add_argument("--quantization", choices=("nf4", "none"), default="nf4")
     parser.add_argument("--limit", type=int)
     parser.add_argument("--warmup", type=int, default=2)
+    parser.add_argument("--seed", type=int, default=20260825)
+    parser.add_argument("--max-new-tokens", type=int, default=256)
     args = parser.parse_args()
 
     if not torch.cuda.is_available():
         raise RuntimeError("This reproducible experiment requires a CUDA GPU runtime")
+    if args.warmup < 0:
+        raise ValueError("--warmup must be non-negative")
+    if args.max_new_tokens <= 0:
+        raise ValueError("--max-new-tokens must be positive")
+
+    random.seed(args.seed)
+    torch.manual_seed(args.seed)
+    torch.cuda.manual_seed_all(args.seed)
 
     snapshot = Path(snapshot_download(MODEL_ID, revision=MODEL_REVISION))
     quantization = None
@@ -75,7 +103,11 @@ def main() -> int:
             torch.cuda.synchronize()
         started = time.perf_counter()
         with torch.inference_mode():
-            output_ids = model.generate(**inputs, max_new_tokens=256, do_sample=False)
+            output_ids = model.generate(
+                **inputs,
+                max_new_tokens=args.max_new_tokens,
+                do_sample=False,
+            )
         if torch.cuda.is_available():
             torch.cuda.synchronize()
         elapsed_ms = (time.perf_counter() - started) * 1_000
@@ -104,12 +136,22 @@ def main() -> int:
         "compute_dtype": str(dtype),
         "torch_version": torch.__version__,
         "transformers_runtime": "AutoModelForMultimodalLM",
+        "transformers_version": package_version("transformers"),
+        "accelerate_version": package_version("accelerate"),
+        "bitsandbytes_version": package_version("bitsandbytes"),
+        "huggingface_hub_version": package_version("huggingface_hub"),
         "python_version": platform.python_version(),
         "platform": platform.platform(),
         "cuda_available": torch.cuda.is_available(),
         "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
         "warmup_count": min(args.warmup, len(rows)),
         "sample_count": len(results),
+        "dataset_sha256": sha256_file(args.dataset),
+        "generation": {
+            "do_sample": False,
+            "max_new_tokens": args.max_new_tokens,
+            "seed": args.seed,
+        },
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(
