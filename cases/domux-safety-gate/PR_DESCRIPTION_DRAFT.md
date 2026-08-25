@@ -18,7 +18,7 @@ Ref #20
 
 ### Public Discussion
 
-[INSERT_PUBLIC_DOMUX_DISCUSSION_URL]
+https://huggingface.co/iFlytekOpenSource/Domux/discussions/4
 
 ### Safety and scope
 

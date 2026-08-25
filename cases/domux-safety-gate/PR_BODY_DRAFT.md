@@ -42,4 +42,4 @@ No model weights, HF tokens, private cache paths, or private household data are 
 
 ## Published Discussion
 
-[INSERT_PUBLIC_DOMUX_DISCUSSION_URL]
+https://huggingface.co/iFlytekOpenSource/Domux/discussions/4

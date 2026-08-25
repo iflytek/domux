@@ -147,5 +147,4 @@ Wilson CI、混淆矩阵与全部 failure cases。不包含 token 或模型权�
 
 ## Links
 
-- Repository / PR: [INSERT_PR_URL]
-- Case evidence: [INSERT_REPOSITORY_LINK]
+- GitHub case / PR：将在 Discussion 发布后补充。
