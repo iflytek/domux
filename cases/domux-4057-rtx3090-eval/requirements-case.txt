@@ -1,0 +1,4 @@
+huggingface_hub
+Pillow>=10
+requests>=2.31,<3
+vllm==0.22.0
