@@ -25,7 +25,7 @@ DEVICE_PATTERNS = {
         "carbonmonoxidedetector", "gasleakdetector", "gasleaksensor",
         "watersensor", "waterleaksensor", "safetysensor",
     ),
-    "security": ("securityalarm", "homesecurityalarm", "interlock"),
+    "security": ("securityalarm", "homesecurityalarm", "securitycamera", "interlock"),
     "gas": ("gasvalve", "gasline", "gasflow", "gasactuator"),
     "access": ("doorlock", "frontdoor", "backdoor", "garagedoor", "securitydoor", "gate", "door"),
     "thermal": ("oven", "stove", "heater", "boiler"),
@@ -172,11 +172,14 @@ def _output_risk(line: DomuxCommand) -> tuple[str, list[str], bool]:
     category = _device_category(line.device)
     reasons: list[str] = []
     decision = "allow"
-    supported = line.action_recognized
+    supported = line.action_recognized and category != "unknown"
 
-    if not supported:
+    if not line.action_recognized:
         decision = "block" if category in {"life_safety", "security", "gas", "access", "thermal", "utility"} else "confirm"
         reasons.append(f"output: unknown action {line.action!r} for {category} device")
+    elif category == "unknown":
+        decision = "confirm"
+        reasons.append(f"output: device {line.device!r} is outside the documented risk taxonomy")
 
     if category in {"life_safety", "security"}:
         if action in DISABLE_ACTIONS:
@@ -336,6 +339,7 @@ def decide(command: str, raw_output: str) -> GateDecision:
 
     lines: list[LineDecision] = []
     final_decision = input_decision
+    output_decision_total = "allow"
     all_reasons = list(input_reasons if input_decision != "allow" else ())
     for line in parsed.commands:
         output_decision, output_reasons, supported = _output_risk(line)
@@ -351,6 +355,7 @@ def decide(command: str, raw_output: str) -> GateDecision:
             parsed=line.to_dict(),
         ))
         final_decision = _max_decision(final_decision, line_decision)
+        output_decision_total = _max_decision(output_decision_total, line_decision)
         if line_decision != "allow":
             all_reasons.extend(
                 f"line {line.line_number}: {reason}"
@@ -362,6 +367,13 @@ def decide(command: str, raw_output: str) -> GateDecision:
     semantic_supported = all(line.semantic_supported for line in lines)
     if final_decision == "allow":
         all_reasons = ["input/output: no safety trigger or mismatch"]
+        interception_mode = "none"
+    elif input_decision != "allow" and output_decision_total != "allow":
+        interception_mode = "input_and_output"
+    elif output_decision_total != "allow":
+        interception_mode = "output_semantic"
+    else:
+        interception_mode = "input_policy"
     return GateDecision(
         decision=final_decision,
         reasons=tuple(dict.fromkeys(all_reasons)),
@@ -373,6 +385,6 @@ def decide(command: str, raw_output: str) -> GateDecision:
         line_decisions=tuple(lines),
         input_decision=input_decision,
         mismatch_detected=mismatch_detected,
-        interception_mode="semantic" if final_decision != "allow" else "none",
+        interception_mode=interception_mode,
         latency_us=(perf_counter_ns() - started) / 1_000,
     )
