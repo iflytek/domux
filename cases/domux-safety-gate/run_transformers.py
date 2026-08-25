@@ -19,6 +19,10 @@ from transformers import AutoModelForMultimodalLM, AutoProcessor, BitsAndBytesCo
 
 MODEL_ID = "iFlytekOpenSource/Domux"
 MODEL_REVISION = "6c71a32f4d624cadfd9fce9d10240d8068e53456"
+WARMUP_COMMANDS = (
+    "Set the study light brightness to 37 percent",
+    "Set the study AC fan speed to Medium",
+)
 
 
 def read_jsonl(path: Path) -> list[dict[str, object]]:
@@ -114,8 +118,8 @@ def main() -> int:
         generated = output_ids[0][inputs["input_ids"].shape[-1]:]
         return processor.decode(generated, skip_special_tokens=True).strip(), elapsed_ms
 
-    for warmup_row in rows[: args.warmup]:
-        infer(str(warmup_row["command"]))
+    for index in range(args.warmup):
+        infer(WARMUP_COMMANDS[index % len(WARMUP_COMMANDS)])
 
     results: list[dict[str, object]] = []
     for index, row in enumerate(rows, start=1):
@@ -144,7 +148,8 @@ def main() -> int:
         "platform": platform.platform(),
         "cuda_available": torch.cuda.is_available(),
         "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
-        "warmup_count": min(args.warmup, len(rows)),
+        "warmup_count": args.warmup,
+        "warmup_source": "independent prompts excluded from the evaluation dataset",
         "sample_count": len(results),
         "dataset_sha256": sha256_file(args.dataset),
         "generation": {

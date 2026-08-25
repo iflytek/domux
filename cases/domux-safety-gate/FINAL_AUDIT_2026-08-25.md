@@ -1,85 +1,71 @@
-# Domux safety-gate 最终提交前审计（2026-08-25）
+# Domux Safety Gate 最终提交前审计（2026-08-25）
 
 ## 结论
 
-**CONDITIONAL PASS（证据与方法已通过；仅待公开发布步骤）**。
+**CONDITIONAL PASS**。真实性、本地可重算性、方法披露和权重/secret 边界已达到
+可公开审核状态。但安全稳健性只能评为研究原型：冻结后独立 held-out 仅 `51/84`，
+误干预 `18/28`。它适合作为“主动发现失败并公开局限”的比赛案例，
+不适合声称产品安全。
 
-当前代码、48 条真实模型输出、运行 metadata、指标报告和公开文案已形成闭环，并通过
-本地重算。按照当前任务边界，尚未发布 Hugging Face Discussion、未 push、未创建 PR；
-因此正式 `README.md` 的 `channels` 仍缺真实 Discussion URL，官方 case validator 不能在
-公开发布前完成最终通过。
+尚未发布 Hugging Face Discussion，因此真实 Discussion URL 不存在，正式 `README.md`
+与官方 full validator 必须留到发布步骤。本轮没有 push，没有创建 PR。
 
-## 已核实事实
+## 根因
 
-- 模型：`iFlytekOpenSource/Domux`
-- 固定 revision：`6c71a32f4d624cadfd9fce9d10240d8068e53456`
-- 真实环境：Google Colab 免费 Tesla T4，NF4，`torch.bfloat16`
-- 版本：Python 3.13.15，PyTorch 2.11.0+cu128，transformers 5.15.0，
-  accelerate 1.14.0，bitsandbytes 0.50.1，huggingface_hub 1.27.0
-- 数据：48 条，allow / confirm / block 各 16 条；SHA-256
-  `c124529599fc13664fbe2018e141b6c95c269e4cdd60c4b8d4b87a466d8a277a`
-- 原始输出：`evidence/domux_raw.jsonl`
-- 环境与生成参数：`evidence/domux_raw.metadata.json`
-- 完整评测：`evidence/safety_report.json`
+1. **Parser metric bug**：`81.25%` 是 v1 action-vocabulary acceptance，不是 format compliance。
+2. **Input-only safety bug**：v1 安全决策检查 input，不检查待执行 output semantics。
+3. **Evaluation circularity**：48 条与规则高度同构；constant valid output 下 v1 仍是 48/48。
+4. **Metric degeneracy**：null output 可以给出 32/32 risky interception，但完全来自 fail closed，
+   并同时误拦 16/16 allow。
 
-## 最终指标
+## 修复与冻结
 
-| 指标 | 结果 |
+- v1 baseline commit: `63f60d1884059379784c06ae35e84838d5525f9d`
+- v2 pre-held-out frozen commit: `ad243f999d75bce3f1be35667ff3eaa734ef70e5`
+- frozen `safety_gate.py` SHA-256:
+  `4cc417053fe93d70f54d2b943a5e485a8a6bb09d69723dfe42cae2df88db3924`
+- held-out 结果出现后没有修改 v2。
+
+v2 分离 syntax / action recognition / semantic support，逐行使用七字段，并增加 output risk、
+input-output mismatch、range/unit/location checks 和明确 interception mode。
+
+## 可重算数字
+
+| 层 | 结果 |
 |---|---:|
-| Structural schema compliance | 100% (48/48 samples; 53/53 lines) |
-| Legacy parser action-vocabulary acceptance | 81.25% (39/48) |
-| End-to-end gate accuracy | 93.75% (45/48) |
-| End-to-end Macro F1 | 0.9369458128 |
-| High-risk intervention recall | 100% (32/32) |
-| High-risk false-allow rate | 0% (0/32) |
-| Safe false-intervention rate | 0% (0/16) |
-| Gate latency mean / P95 | 12.09 / 25.07 us |
+| Structural schema | 48/48 samples; 53/53 lines |
+| Legacy action acceptance | 39/48 |
+| v2 semantic support | 47/48 samples; 52/53 lines |
+| v1 / parser-fixed / v2 frozen-48 exact | 45/48 / 48/48 / 47/48 |
+| Real-output cross-pair dangerous allow | 160/256 / 256/256 / 0/256 |
+| Development fault suite exact | 10/20 / 7/20 / 20/20 |
+| Independent held-out exact | v2 51/84; Macro F1 0.6152 |
+| Held-out risky intervention | 49/56; Wilson 95% CI 76.37–93.81% |
+| Held-out block passed as allow | 0/23 |
+| Held-out false intervention | 18/28; Wilson 95% CI 45.83–79.29% |
 
-混淆矩阵：allow `16/16 allow`；confirm `13/16 confirm, 3/16 block`；block
-`16/16 block`。三条错误是 confirm 被保守升级为 block，没有高风险误放行。
+## 仍未解决
 
-## 已发现并修复
+- `set|device|power|off` 可将“关闭”编码到 attribute/value，v2 的 action-centric 禁用语义
+  对此覆盖不足；8 条 block 标签在 held-out 中被降为 confirm。
+- 同义改写、中文歧义和 room/floor 同义词仍有召回缺口。
+- `set` vs `turnOn/turnOff` 和自定义设备 taxonomy 导致较多保守误干预。
+- held-out 已是最终 test set，不得用来调 v2；如建 v3，必须再生成新 test set。
+- 没有身份、授权、设备状态、确认 UI、rate limit、审计日志或物理设备验证。
 
-1. 历史原始输出未落盘：已用相同固定 revision 在免费 T4 最小补跑，恢复三份 evidence。
-2. metadata 缺依赖、seed 和数据散列：推理脚本与新 metadata 已补齐。
-3. 评测器未拒绝重复／缺失／额外 ID：已 fail closed，并增加回归测试。
-4. 文档曾把历史数字标为待复核：已全部替换为可重算结果。
-5. 安全指标命名不够清楚：改为 high-risk intervention recall 与 false-allow rate，保留
-   旧字段仅作兼容。
-6. Domux 与外围规则贡献容易混淆：后续复核发现旧 `format_compliance` 实际混入 action
-   whitelist；现已纠正为 100% structural compliance 与 81.25% legacy parser acceptance。
+## 已删除/收紧的 claim
 
-## 仍需主动披露的局限
+- `81.25% format compliance` -> legacy action-vocabulary acceptance。
+- `unsupported output/device` 导致 v1 生命安全 block -> 实际是 input regex。
+- NF4 导致 parser failure -> 没有 BF16 对照，删除因果归因。
+- `100% safe` / `production-safe` / `Domux safety accuracy` -> 禁止使用。
 
-- 48 条样本较小、合成、英文、类别平衡且按规则设计，不能代表生产分布或安全认证。
-- 安全语义主要由源命令上的显式规则决定；高三分类指标不能证明 Domux 独立理解安全意图。
-- 部分高风险设备超出 Domux 文档设备清单；这些样本测试的是执行边界的安全拒绝。
-- 9/48 输出包含旧 parser 未识别 action；它们结构合法，不能称为格式失败。
-- 没有中文、ASR 噪声、多用户上下文、设备状态、真实授权系统或物理执行验证。
-- Colab 截图可增强评委直观信心，但原始输出和 metadata 已足够重算指标。
+## 审计判定
 
-## 最值得写进 Discussion 的三个亮点
+- Methodological credibility: **91/100**
+- Reproducibility: **94/100**
+- Safety robustness: **62/100**
+- Competition differentiation: **89/100**
 
-1. 固定 revision、真实免费 T4、NF4、完整依赖版本与 dataset SHA-256，可追溯。
-2. 48 条逐项原始输出和严格 ID 完整性校验，代码到指标可自动重算。
-3. fail-closed 边界没有危险误放行，并明确区分 Domux 格式表现与外围安全规则贡献。
-
-## 验证记录
-
-- `python3 -m unittest -v ...`：9/9 通过。
-- `verify_evidence.py`：`status=ok`，48 条和主要指标完全一致。
-- `py_compile`：通过。
-- `scripts/validate_cases.py --self-test`：通过。
-- `git diff --check`：通过。
-- 长效 HF token 模式扫描：0 命中。
-- 模型权重／超过 20 MB 文件扫描：0 命中。
-
-## 发布前剩余动作
-
-1. 发布标题严格为 `[HER Hack-Astron #4] Domux execution safety gate: fail closed on malformed and high-risk commands`。
-2. 将真实 Discussion URL 填入 `README.SUBMISSION_DRAFT.md` 的 `channels` 和正文，改名为
-   `README.md`。
-3. 运行官方 case validator。
-4. push fork 并创建 PR；PR description 必须包含 `Ref #20`，不得使用 `Closes #20`。
-
-以上动作尚未执行。
+今天是否建议作为诚实的研究案例提交：**YES**。
+是否建议将 v2 接入真实设备：**NO**。

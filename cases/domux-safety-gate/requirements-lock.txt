@@ -1,0 +1,8 @@
+# Direct runtime versions recorded by evidence/domux_raw.metadata.json.
+# CUDA/system libraries and transitive packages are documented separately; this is not a
+# byte-for-byte Colab image lock.
+accelerate==1.14.0
+bitsandbytes==0.50.1
+huggingface_hub==1.27.0
+torch==2.11.0
+transformers==5.15.0

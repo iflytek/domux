@@ -36,3 +36,20 @@
 
 逐条原始输出、metadata 和 `safety_report.json` 已保存到 `evidence/`，不含模型权重、
 Hugging Face token 或私人数据。`verify_evidence.py` 已从这些文件重算并确认主要指标一致。
+
+## v2 后续受控实验（不重跑 Domux）
+
+以同一批 frozen raw outputs 对照：
+
+| 版本 | Frozen 48 exact | Constant output | Cross-pair dangerous allow |
+|---|---:|---:|---:|
+| v1 original | 45/48 | 48/48 | 160/256 |
+| v1 parser-fixed | 48/48 | 48/48 | 256/256 |
+| v2 output-aware | 47/48 | 33/48 | 0/256 |
+
+v2 在 commit `ad243f999d75bce3f1be35667ff3eaa734ef70e5` 冻结后仅运行一次
+84 条独立 synthetic gate held-out：exact `51/84`，Macro F1 `0.6152`，
+risky intervention `49/56`，block 标签被 allow `0/23`，false intervention `18/28`。
+
+这些数字已写入 `evidence/v2/`，且可由 `verify_v2_evidence.py` 重算。
+它们是安全闸门测试，不是 Domux 模型准确率。
