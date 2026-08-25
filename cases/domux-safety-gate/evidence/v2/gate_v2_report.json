@@ -1,0 +1,1264 @@
+{
+  "provenance": {
+    "dataset": "example_safety_commands.jsonl",
+    "dataset_sha256": "c124529599fc13664fbe2018e141b6c95c269e4cdd60c4b8d4b87a466d8a277a",
+    "responses": "evidence/domux_raw.jsonl",
+    "responses_sha256": "a2bc81052d5422e9fb1419ab94060f8b77d49f5b6d1276e69342ef7df077b454",
+    "fault_suite": "fault_injection_suite.jsonl",
+    "fault_suite_sha256": "3cb59334eb925113717f83b97b8990a9a288f2602e8fa01ec173c94b857c7eca",
+    "code_commit_at_run": "ad243f999d75bce3f1be35667ff3eaa734ef70e5"
+  },
+  "parser": {
+    "sample_count": 48,
+    "nonempty_line_count": 53,
+    "structurally_valid_sample_count": 48,
+    "structural_schema_compliance": 1.0,
+    "structurally_valid_line_count": 53,
+    "line_structural_schema_compliance": 1.0,
+    "legacy_action_accepted_sample_count": 39,
+    "legacy_action_vocabulary_acceptance": 0.8125,
+    "recognized_action_sample_count": 48,
+    "recognized_action_rate": 1.0,
+    "semantic_supported_sample_count": 47,
+    "semantic_supported_sample_rate": 0.9791666666666666,
+    "semantic_supported_line_count": 52,
+    "semantic_supported_line_rate": 0.9811320754716981,
+    "action_distribution": {
+      "activate": 1,
+      "adjustDown": 1,
+      "adjustUp": 1,
+      "bypass": 1,
+      "deactivate": 2,
+      "disable": 2,
+      "keep": 1,
+      "lock": 1,
+      "override": 1,
+      "pause": 2,
+      "set": 13,
+      "turnOff": 11,
+      "turnOn": 13,
+      "unlock": 3
+    },
+    "device_distribution": {
+      "AC": 7,
+      "Back Door": 2,
+      "Blind": 1,
+      "Carbon Monoxide Detector": 1,
+      "Confirmation": 1,
+      "Curtain": 3,
+      "Desk Lamp": 1,
+      "Door": 1,
+      "Fire Alarm": 1,
+      "Front Door": 1,
+      "Front Door Lock": 1,
+      "Garage Door": 2,
+      "Gas Leak Sensor": 1,
+      "Gas Valve": 2,
+      "Heater": 2,
+      "Home Security Alarm": 1,
+      "Light": 12,
+      "Light 2": 1,
+      "Oven": 2,
+      "Party Mode": 1,
+      "Reading Mode": 1,
+      "Security Alarm": 1,
+      "Security Camera": 1,
+      "Smoke Alarm": 1,
+      "Smoke Detector": 1,
+      "Stove": 2,
+      "Water Leak Sensor": 1,
+      "Water Valve": 1
+    }
+  },
+  "ablations": {
+    "v1_original": {
+      "real_domux_frozen_outputs": {
+        "sample_count": 48,
+        "correct_count": 45,
+        "decision_accuracy": 0.9375,
+        "decision_accuracy_wilson_95": [
+          0.8316456194505365,
+          0.9785167670916107
+        ],
+        "macro_f1": 0.9369458128078818,
+        "confusion_matrix": {
+          "allow": {
+            "allow": 16,
+            "confirm": 0,
+            "block": 0
+          },
+          "confirm": {
+            "allow": 0,
+            "confirm": 13,
+            "block": 3
+          },
+          "block": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 16
+          }
+        },
+        "per_class": {
+          "allow": {
+            "support": 16,
+            "precision": 1.0,
+            "recall": 1.0,
+            "recall_wilson_95": [
+              0.8063923194655637,
+              1.0
+            ],
+            "f1": 1.0
+          },
+          "confirm": {
+            "support": 16,
+            "precision": 1.0,
+            "recall": 0.8125,
+            "recall_wilson_95": [
+              0.5699111903802586,
+              0.9340840092857187
+            ],
+            "f1": 0.896551724137931
+          },
+          "block": {
+            "support": 16,
+            "precision": 0.8421052631578947,
+            "recall": 1.0,
+            "recall_wilson_95": [
+              0.8063923194655637,
+              1.0
+            ],
+            "f1": 0.9142857142857143
+          }
+        },
+        "risky_instruction_count": 32,
+        "risky_intercepted_count": 32,
+        "risky_interception_rate": 1.0,
+        "risky_interception_wilson_95": [
+          0.8928208017449293,
+          1.0
+        ],
+        "dangerous_allow_count": 0,
+        "dangerous_allow_rate": 0.0,
+        "safe_instruction_count": 16,
+        "false_intervention_count": 0,
+        "false_intervention_rate": 0.0,
+        "false_intervention_wilson_95": [
+          0.0,
+          0.1936076805344365
+        ],
+        "intercepted_risky_by_mode": {
+          "input_policy": 23,
+          "parser_fail_closed": 9
+        }
+      },
+      "constant_valid_output": {
+        "sample_count": 48,
+        "correct_count": 48,
+        "decision_accuracy": 1.0,
+        "decision_accuracy_wilson_95": [
+          0.9258998703338824,
+          0.9999999999999999
+        ],
+        "macro_f1": 1.0,
+        "confusion_matrix": {
+          "allow": {
+            "allow": 16,
+            "confirm": 0,
+            "block": 0
+          },
+          "confirm": {
+            "allow": 0,
+            "confirm": 16,
+            "block": 0
+          },
+          "block": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 16
+          }
+        },
+        "per_class": {
+          "allow": {
+            "support": 16,
+            "precision": 1.0,
+            "recall": 1.0,
+            "recall_wilson_95": [
+              0.8063923194655637,
+              1.0
+            ],
+            "f1": 1.0
+          },
+          "confirm": {
+            "support": 16,
+            "precision": 1.0,
+            "recall": 1.0,
+            "recall_wilson_95": [
+              0.8063923194655637,
+              1.0
+            ],
+            "f1": 1.0
+          },
+          "block": {
+            "support": 16,
+            "precision": 1.0,
+            "recall": 1.0,
+            "recall_wilson_95": [
+              0.8063923194655637,
+              1.0
+            ],
+            "f1": 1.0
+          }
+        },
+        "risky_instruction_count": 32,
+        "risky_intercepted_count": 32,
+        "risky_interception_rate": 1.0,
+        "risky_interception_wilson_95": [
+          0.8928208017449293,
+          1.0
+        ],
+        "dangerous_allow_count": 0,
+        "dangerous_allow_rate": 0.0,
+        "safe_instruction_count": 16,
+        "false_intervention_count": 0,
+        "false_intervention_rate": 0.0,
+        "false_intervention_wilson_95": [
+          0.0,
+          0.1936076805344365
+        ],
+        "intercepted_risky_by_mode": {
+          "input_policy": 32
+        }
+      },
+      "null_output": {
+        "sample_count": 48,
+        "correct_count": 16,
+        "decision_accuracy": 0.3333333333333333,
+        "decision_accuracy_wilson_95": [
+          0.21676780694818568,
+          0.4745989029405201
+        ],
+        "macro_f1": 0.16666666666666666,
+        "confusion_matrix": {
+          "allow": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 16
+          },
+          "confirm": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 16
+          },
+          "block": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 16
+          }
+        },
+        "per_class": {
+          "allow": {
+            "support": 16,
+            "precision": 0.0,
+            "recall": 0.0,
+            "recall_wilson_95": [
+              0.0,
+              0.1936076805344365
+            ],
+            "f1": 0.0
+          },
+          "confirm": {
+            "support": 16,
+            "precision": 0.0,
+            "recall": 0.0,
+            "recall_wilson_95": [
+              0.0,
+              0.1936076805344365
+            ],
+            "f1": 0.0
+          },
+          "block": {
+            "support": 16,
+            "precision": 0.3333333333333333,
+            "recall": 1.0,
+            "recall_wilson_95": [
+              0.8063923194655637,
+              1.0
+            ],
+            "f1": 0.5
+          }
+        },
+        "risky_instruction_count": 32,
+        "risky_intercepted_count": 32,
+        "risky_interception_rate": 1.0,
+        "risky_interception_wilson_95": [
+          0.8928208017449293,
+          1.0
+        ],
+        "dangerous_allow_count": 0,
+        "dangerous_allow_rate": 0.0,
+        "safe_instruction_count": 16,
+        "false_intervention_count": 16,
+        "false_intervention_rate": 1.0,
+        "false_intervention_wilson_95": [
+          0.8063923194655637,
+          1.0
+        ],
+        "intercepted_risky_by_mode": {
+          "parser_fail_closed": 32
+        }
+      }
+    },
+    "v1_parser_fixed": {
+      "real_domux_frozen_outputs": {
+        "sample_count": 48,
+        "correct_count": 48,
+        "decision_accuracy": 1.0,
+        "decision_accuracy_wilson_95": [
+          0.9258998703338824,
+          0.9999999999999999
+        ],
+        "macro_f1": 1.0,
+        "confusion_matrix": {
+          "allow": {
+            "allow": 16,
+            "confirm": 0,
+            "block": 0
+          },
+          "confirm": {
+            "allow": 0,
+            "confirm": 16,
+            "block": 0
+          },
+          "block": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 16
+          }
+        },
+        "per_class": {
+          "allow": {
+            "support": 16,
+            "precision": 1.0,
+            "recall": 1.0,
+            "recall_wilson_95": [
+              0.8063923194655637,
+              1.0
+            ],
+            "f1": 1.0
+          },
+          "confirm": {
+            "support": 16,
+            "precision": 1.0,
+            "recall": 1.0,
+            "recall_wilson_95": [
+              0.8063923194655637,
+              1.0
+            ],
+            "f1": 1.0
+          },
+          "block": {
+            "support": 16,
+            "precision": 1.0,
+            "recall": 1.0,
+            "recall_wilson_95": [
+              0.8063923194655637,
+              1.0
+            ],
+            "f1": 1.0
+          }
+        },
+        "risky_instruction_count": 32,
+        "risky_intercepted_count": 32,
+        "risky_interception_rate": 1.0,
+        "risky_interception_wilson_95": [
+          0.8928208017449293,
+          1.0
+        ],
+        "dangerous_allow_count": 0,
+        "dangerous_allow_rate": 0.0,
+        "safe_instruction_count": 16,
+        "false_intervention_count": 0,
+        "false_intervention_rate": 0.0,
+        "false_intervention_wilson_95": [
+          0.0,
+          0.1936076805344365
+        ],
+        "intercepted_risky_by_mode": {
+          "input_policy": 32
+        }
+      },
+      "constant_valid_output": {
+        "sample_count": 48,
+        "correct_count": 48,
+        "decision_accuracy": 1.0,
+        "decision_accuracy_wilson_95": [
+          0.9258998703338824,
+          0.9999999999999999
+        ],
+        "macro_f1": 1.0,
+        "confusion_matrix": {
+          "allow": {
+            "allow": 16,
+            "confirm": 0,
+            "block": 0
+          },
+          "confirm": {
+            "allow": 0,
+            "confirm": 16,
+            "block": 0
+          },
+          "block": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 16
+          }
+        },
+        "per_class": {
+          "allow": {
+            "support": 16,
+            "precision": 1.0,
+            "recall": 1.0,
+            "recall_wilson_95": [
+              0.8063923194655637,
+              1.0
+            ],
+            "f1": 1.0
+          },
+          "confirm": {
+            "support": 16,
+            "precision": 1.0,
+            "recall": 1.0,
+            "recall_wilson_95": [
+              0.8063923194655637,
+              1.0
+            ],
+            "f1": 1.0
+          },
+          "block": {
+            "support": 16,
+            "precision": 1.0,
+            "recall": 1.0,
+            "recall_wilson_95": [
+              0.8063923194655637,
+              1.0
+            ],
+            "f1": 1.0
+          }
+        },
+        "risky_instruction_count": 32,
+        "risky_intercepted_count": 32,
+        "risky_interception_rate": 1.0,
+        "risky_interception_wilson_95": [
+          0.8928208017449293,
+          1.0
+        ],
+        "dangerous_allow_count": 0,
+        "dangerous_allow_rate": 0.0,
+        "safe_instruction_count": 16,
+        "false_intervention_count": 0,
+        "false_intervention_rate": 0.0,
+        "false_intervention_wilson_95": [
+          0.0,
+          0.1936076805344365
+        ],
+        "intercepted_risky_by_mode": {
+          "input_policy": 32
+        }
+      },
+      "null_output": {
+        "sample_count": 48,
+        "correct_count": 16,
+        "decision_accuracy": 0.3333333333333333,
+        "decision_accuracy_wilson_95": [
+          0.21676780694818568,
+          0.4745989029405201
+        ],
+        "macro_f1": 0.16666666666666666,
+        "confusion_matrix": {
+          "allow": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 16
+          },
+          "confirm": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 16
+          },
+          "block": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 16
+          }
+        },
+        "per_class": {
+          "allow": {
+            "support": 16,
+            "precision": 0.0,
+            "recall": 0.0,
+            "recall_wilson_95": [
+              0.0,
+              0.1936076805344365
+            ],
+            "f1": 0.0
+          },
+          "confirm": {
+            "support": 16,
+            "precision": 0.0,
+            "recall": 0.0,
+            "recall_wilson_95": [
+              0.0,
+              0.1936076805344365
+            ],
+            "f1": 0.0
+          },
+          "block": {
+            "support": 16,
+            "precision": 0.3333333333333333,
+            "recall": 1.0,
+            "recall_wilson_95": [
+              0.8063923194655637,
+              1.0
+            ],
+            "f1": 0.5
+          }
+        },
+        "risky_instruction_count": 32,
+        "risky_intercepted_count": 32,
+        "risky_interception_rate": 1.0,
+        "risky_interception_wilson_95": [
+          0.8928208017449293,
+          1.0
+        ],
+        "dangerous_allow_count": 0,
+        "dangerous_allow_rate": 0.0,
+        "safe_instruction_count": 16,
+        "false_intervention_count": 16,
+        "false_intervention_rate": 1.0,
+        "false_intervention_wilson_95": [
+          0.8063923194655637,
+          1.0
+        ],
+        "intercepted_risky_by_mode": {
+          "parser_fail_closed": 32
+        }
+      }
+    },
+    "v2_output_aware": {
+      "real_domux_frozen_outputs": {
+        "sample_count": 48,
+        "correct_count": 47,
+        "decision_accuracy": 0.9791666666666666,
+        "decision_accuracy_wilson_95": [
+          0.8910078200474814,
+          0.9963128890224893
+        ],
+        "macro_f1": 0.9791463017269469,
+        "confusion_matrix": {
+          "allow": {
+            "allow": 16,
+            "confirm": 0,
+            "block": 0
+          },
+          "confirm": {
+            "allow": 0,
+            "confirm": 15,
+            "block": 1
+          },
+          "block": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 16
+          }
+        },
+        "per_class": {
+          "allow": {
+            "support": 16,
+            "precision": 1.0,
+            "recall": 1.0,
+            "recall_wilson_95": [
+              0.8063923194655637,
+              1.0
+            ],
+            "f1": 1.0
+          },
+          "confirm": {
+            "support": 16,
+            "precision": 1.0,
+            "recall": 0.9375,
+            "recall_wilson_95": [
+              0.7167126242970107,
+              0.9888806552353576
+            ],
+            "f1": 0.967741935483871
+          },
+          "block": {
+            "support": 16,
+            "precision": 0.9411764705882353,
+            "recall": 1.0,
+            "recall_wilson_95": [
+              0.8063923194655637,
+              1.0
+            ],
+            "f1": 0.9696969696969697
+          }
+        },
+        "risky_instruction_count": 32,
+        "risky_intercepted_count": 32,
+        "risky_interception_rate": 1.0,
+        "risky_interception_wilson_95": [
+          0.8928208017449293,
+          1.0
+        ],
+        "dangerous_allow_count": 0,
+        "dangerous_allow_rate": 0.0,
+        "safe_instruction_count": 16,
+        "false_intervention_count": 0,
+        "false_intervention_rate": 0.0,
+        "false_intervention_wilson_95": [
+          0.0,
+          0.1936076805344365
+        ],
+        "intercepted_risky_by_mode": {
+          "input_and_output": 26,
+          "input_policy": 6
+        }
+      },
+      "constant_valid_output": {
+        "sample_count": 48,
+        "correct_count": 33,
+        "decision_accuracy": 0.6875,
+        "decision_accuracy_wilson_95": [
+          0.5466692858410841,
+          0.8005431655341219
+        ],
+        "macro_f1": 0.5994993742177722,
+        "confusion_matrix": {
+          "allow": {
+            "allow": 1,
+            "confirm": 15,
+            "block": 0
+          },
+          "confirm": {
+            "allow": 0,
+            "confirm": 16,
+            "block": 0
+          },
+          "block": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 16
+          }
+        },
+        "per_class": {
+          "allow": {
+            "support": 16,
+            "precision": 1.0,
+            "recall": 0.0625,
+            "recall_wilson_95": [
+              0.01111934476464252,
+              0.28328737570298945
+            ],
+            "f1": 0.11764705882352941
+          },
+          "confirm": {
+            "support": 16,
+            "precision": 0.5161290322580645,
+            "recall": 1.0,
+            "recall_wilson_95": [
+              0.8063923194655637,
+              1.0
+            ],
+            "f1": 0.6808510638297872
+          },
+          "block": {
+            "support": 16,
+            "precision": 1.0,
+            "recall": 1.0,
+            "recall_wilson_95": [
+              0.8063923194655637,
+              1.0
+            ],
+            "f1": 1.0
+          }
+        },
+        "risky_instruction_count": 32,
+        "risky_intercepted_count": 32,
+        "risky_interception_rate": 1.0,
+        "risky_interception_wilson_95": [
+          0.8928208017449293,
+          1.0
+        ],
+        "dangerous_allow_count": 0,
+        "dangerous_allow_rate": 0.0,
+        "safe_instruction_count": 16,
+        "false_intervention_count": 15,
+        "false_intervention_rate": 0.9375,
+        "false_intervention_wilson_95": [
+          0.7167126242970107,
+          0.9888806552353576
+        ],
+        "intercepted_risky_by_mode": {
+          "input_and_output": 29,
+          "input_policy": 3
+        }
+      },
+      "null_output": {
+        "sample_count": 48,
+        "correct_count": 16,
+        "decision_accuracy": 0.3333333333333333,
+        "decision_accuracy_wilson_95": [
+          0.21676780694818568,
+          0.4745989029405201
+        ],
+        "macro_f1": 0.16666666666666666,
+        "confusion_matrix": {
+          "allow": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 16
+          },
+          "confirm": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 16
+          },
+          "block": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 16
+          }
+        },
+        "per_class": {
+          "allow": {
+            "support": 16,
+            "precision": 0.0,
+            "recall": 0.0,
+            "recall_wilson_95": [
+              0.0,
+              0.1936076805344365
+            ],
+            "f1": 0.0
+          },
+          "confirm": {
+            "support": 16,
+            "precision": 0.0,
+            "recall": 0.0,
+            "recall_wilson_95": [
+              0.0,
+              0.1936076805344365
+            ],
+            "f1": 0.0
+          },
+          "block": {
+            "support": 16,
+            "precision": 0.3333333333333333,
+            "recall": 1.0,
+            "recall_wilson_95": [
+              0.8063923194655637,
+              1.0
+            ],
+            "f1": 0.5
+          }
+        },
+        "risky_instruction_count": 32,
+        "risky_intercepted_count": 32,
+        "risky_interception_rate": 1.0,
+        "risky_interception_wilson_95": [
+          0.8928208017449293,
+          1.0
+        ],
+        "dangerous_allow_count": 0,
+        "dangerous_allow_rate": 0.0,
+        "safe_instruction_count": 16,
+        "false_intervention_count": 16,
+        "false_intervention_rate": 1.0,
+        "false_intervention_wilson_95": [
+          0.8063923194655637,
+          1.0
+        ],
+        "intercepted_risky_by_mode": {
+          "fail_closed": 32
+        }
+      }
+    }
+  },
+  "cross_pair": {
+    "pair_count": 256,
+    "versions": {
+      "v1_original": {
+        "sample_count": 256,
+        "correct_count": 96,
+        "decision_accuracy": 0.375,
+        "decision_accuracy_wilson_95": [
+          0.31795501653541774,
+          0.43574094757105014
+        ],
+        "macro_f1": 0.1818181818181818,
+        "confusion_matrix": {
+          "allow": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 0
+          },
+          "confirm": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 0
+          },
+          "block": {
+            "allow": 160,
+            "confirm": 0,
+            "block": 96
+          }
+        },
+        "per_class": {
+          "allow": {
+            "support": 0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "recall_wilson_95": [
+              0.0,
+              0.0
+            ],
+            "f1": 0.0
+          },
+          "confirm": {
+            "support": 0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "recall_wilson_95": [
+              0.0,
+              0.0
+            ],
+            "f1": 0.0
+          },
+          "block": {
+            "support": 256,
+            "precision": 1.0,
+            "recall": 0.375,
+            "recall_wilson_95": [
+              0.31795501653541774,
+              0.43574094757105014
+            ],
+            "f1": 0.5454545454545454
+          }
+        },
+        "risky_instruction_count": 256,
+        "risky_intercepted_count": 96,
+        "risky_interception_rate": 0.375,
+        "risky_interception_wilson_95": [
+          0.31795501653541774,
+          0.43574094757105014
+        ],
+        "dangerous_allow_count": 160,
+        "dangerous_allow_rate": 0.625,
+        "safe_instruction_count": 0,
+        "false_intervention_count": 0,
+        "false_intervention_rate": 0.0,
+        "false_intervention_wilson_95": [
+          0.0,
+          0.0
+        ],
+        "intercepted_risky_by_mode": {
+          "parser_fail_closed": 96
+        }
+      },
+      "v1_parser_fixed": {
+        "sample_count": 256,
+        "correct_count": 0,
+        "decision_accuracy": 0.0,
+        "decision_accuracy_wilson_95": [
+          0.0,
+          0.01478385642587143
+        ],
+        "macro_f1": 0.0,
+        "confusion_matrix": {
+          "allow": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 0
+          },
+          "confirm": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 0
+          },
+          "block": {
+            "allow": 256,
+            "confirm": 0,
+            "block": 0
+          }
+        },
+        "per_class": {
+          "allow": {
+            "support": 0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "recall_wilson_95": [
+              0.0,
+              0.0
+            ],
+            "f1": 0.0
+          },
+          "confirm": {
+            "support": 0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "recall_wilson_95": [
+              0.0,
+              0.0
+            ],
+            "f1": 0.0
+          },
+          "block": {
+            "support": 256,
+            "precision": 0.0,
+            "recall": 0.0,
+            "recall_wilson_95": [
+              0.0,
+              0.01478385642587143
+            ],
+            "f1": 0.0
+          }
+        },
+        "risky_instruction_count": 256,
+        "risky_intercepted_count": 0,
+        "risky_interception_rate": 0.0,
+        "risky_interception_wilson_95": [
+          0.0,
+          0.01478385642587143
+        ],
+        "dangerous_allow_count": 256,
+        "dangerous_allow_rate": 1.0,
+        "safe_instruction_count": 0,
+        "false_intervention_count": 0,
+        "false_intervention_rate": 0.0,
+        "false_intervention_wilson_95": [
+          0.0,
+          0.0
+        ],
+        "intercepted_risky_by_mode": {}
+      },
+      "v2_output_aware": {
+        "sample_count": 256,
+        "correct_count": 256,
+        "decision_accuracy": 1.0,
+        "decision_accuracy_wilson_95": [
+          0.9852161435741286,
+          0.9999999999999999
+        ],
+        "macro_f1": 0.3333333333333333,
+        "confusion_matrix": {
+          "allow": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 0
+          },
+          "confirm": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 0
+          },
+          "block": {
+            "allow": 0,
+            "confirm": 0,
+            "block": 256
+          }
+        },
+        "per_class": {
+          "allow": {
+            "support": 0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "recall_wilson_95": [
+              0.0,
+              0.0
+            ],
+            "f1": 0.0
+          },
+          "confirm": {
+            "support": 0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "recall_wilson_95": [
+              0.0,
+              0.0
+            ],
+            "f1": 0.0
+          },
+          "block": {
+            "support": 256,
+            "precision": 1.0,
+            "recall": 1.0,
+            "recall_wilson_95": [
+              0.9852161435741286,
+              0.9999999999999999
+            ],
+            "f1": 1.0
+          }
+        },
+        "risky_instruction_count": 256,
+        "risky_intercepted_count": 256,
+        "risky_interception_rate": 1.0,
+        "risky_interception_wilson_95": [
+          0.9852161435741286,
+          0.9999999999999999
+        ],
+        "dangerous_allow_count": 0,
+        "dangerous_allow_rate": 0.0,
+        "safe_instruction_count": 0,
+        "false_intervention_count": 0,
+        "false_intervention_rate": 0.0,
+        "false_intervention_wilson_95": [
+          0.0,
+          0.0
+        ],
+        "intercepted_risky_by_mode": {
+          "output_semantic": 256
+        }
+      }
+    }
+  },
+  "fault_injection": {
+    "v1_original": {
+      "sample_count": 20,
+      "correct_count": 10,
+      "decision_accuracy": 0.5,
+      "decision_accuracy_wilson_95": [
+        0.2992980081982123,
+        0.7007019918017877
+      ],
+      "macro_f1": 0.43522178304786996,
+      "confusion_matrix": {
+        "allow": {
+          "allow": 2,
+          "confirm": 0,
+          "block": 0
+        },
+        "confirm": {
+          "allow": 1,
+          "confirm": 1,
+          "block": 3
+        },
+        "block": {
+          "allow": 6,
+          "confirm": 0,
+          "block": 7
+        }
+      },
+      "per_class": {
+        "allow": {
+          "support": 2,
+          "precision": 0.2222222222222222,
+          "recall": 1.0,
+          "recall_wilson_95": [
+            0.34238022750665303,
+            1.0
+          ],
+          "f1": 0.3636363636363636
+        },
+        "confirm": {
+          "support": 5,
+          "precision": 1.0,
+          "recall": 0.2,
+          "recall_wilson_95": [
+            0.03622410863243014,
+            0.6244653702374747
+          ],
+          "f1": 0.33333333333333337
+        },
+        "block": {
+          "support": 13,
+          "precision": 0.7,
+          "recall": 0.5384615384615384,
+          "recall_wilson_95": [
+            0.29143795714506004,
+            0.7679393219046169
+          ],
+          "f1": 0.608695652173913
+        }
+      },
+      "risky_instruction_count": 18,
+      "risky_intercepted_count": 11,
+      "risky_interception_rate": 0.6111111111111112,
+      "risky_interception_wilson_95": [
+        0.3861904160223791,
+        0.7969475342783638
+      ],
+      "dangerous_allow_count": 7,
+      "dangerous_allow_rate": 0.3888888888888889,
+      "safe_instruction_count": 2,
+      "false_intervention_count": 0,
+      "false_intervention_rate": 0.0,
+      "false_intervention_wilson_95": [
+        0.0,
+        0.6576197724933469
+      ],
+      "intercepted_risky_by_mode": {
+        "input_policy": 1,
+        "parser_fail_closed": 10
+      }
+    },
+    "v1_parser_fixed": {
+      "sample_count": 20,
+      "correct_count": 7,
+      "decision_accuracy": 0.35,
+      "decision_accuracy_wilson_95": [
+        0.18119182410108206,
+        0.5671457233147638
+      ],
+      "macro_f1": 0.41732026143790846,
+      "confusion_matrix": {
+        "allow": {
+          "allow": 2,
+          "confirm": 0,
+          "block": 0
+        },
+        "confirm": {
+          "allow": 2,
+          "confirm": 3,
+          "block": 0
+        },
+        "block": {
+          "allow": 11,
+          "confirm": 0,
+          "block": 2
+        }
+      },
+      "per_class": {
+        "allow": {
+          "support": 2,
+          "precision": 0.13333333333333333,
+          "recall": 1.0,
+          "recall_wilson_95": [
+            0.34238022750665303,
+            1.0
+          ],
+          "f1": 0.23529411764705882
+        },
+        "confirm": {
+          "support": 5,
+          "precision": 1.0,
+          "recall": 0.6,
+          "recall_wilson_95": [
+            0.2307242812760128,
+            0.882379225767352
+          ],
+          "f1": 0.7499999999999999
+        },
+        "block": {
+          "support": 13,
+          "precision": 1.0,
+          "recall": 0.15384615384615385,
+          "recall_wilson_95": [
+            0.043258178358081184,
+            0.4223463101948254
+          ],
+          "f1": 0.2666666666666667
+        }
+      },
+      "risky_instruction_count": 18,
+      "risky_intercepted_count": 5,
+      "risky_interception_rate": 0.2777777777777778,
+      "risky_interception_wilson_95": [
+        0.12499753379553993,
+        0.5087265656029746
+      ],
+      "dangerous_allow_count": 13,
+      "dangerous_allow_rate": 0.7222222222222222,
+      "safe_instruction_count": 2,
+      "false_intervention_count": 0,
+      "false_intervention_rate": 0.0,
+      "false_intervention_wilson_95": [
+        0.0,
+        0.6576197724933469
+      ],
+      "intercepted_risky_by_mode": {
+        "input_policy": 3,
+        "parser_fail_closed": 2
+      }
+    },
+    "v2_output_aware": {
+      "sample_count": 20,
+      "correct_count": 20,
+      "decision_accuracy": 1.0,
+      "decision_accuracy_wilson_95": [
+        0.8388748419471806,
+        1.0
+      ],
+      "macro_f1": 1.0,
+      "confusion_matrix": {
+        "allow": {
+          "allow": 2,
+          "confirm": 0,
+          "block": 0
+        },
+        "confirm": {
+          "allow": 0,
+          "confirm": 5,
+          "block": 0
+        },
+        "block": {
+          "allow": 0,
+          "confirm": 0,
+          "block": 13
+        }
+      },
+      "per_class": {
+        "allow": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "recall_wilson_95": [
+            0.34238022750665303,
+            1.0
+          ],
+          "f1": 1.0
+        },
+        "confirm": {
+          "support": 5,
+          "precision": 1.0,
+          "recall": 1.0,
+          "recall_wilson_95": [
+            0.5655175352168251,
+            1.0
+          ],
+          "f1": 1.0
+        },
+        "block": {
+          "support": 13,
+          "precision": 1.0,
+          "recall": 1.0,
+          "recall_wilson_95": [
+            0.7719046276458016,
+            0.9999999999999999
+          ],
+          "f1": 1.0
+        }
+      },
+      "risky_instruction_count": 18,
+      "risky_intercepted_count": 18,
+      "risky_interception_rate": 1.0,
+      "risky_interception_wilson_95": [
+        0.8241207763533425,
+        1.0
+      ],
+      "dangerous_allow_count": 0,
+      "dangerous_allow_rate": 0.0,
+      "safe_instruction_count": 2,
+      "false_intervention_count": 0,
+      "false_intervention_rate": 0.0,
+      "false_intervention_wilson_95": [
+        0.0,
+        0.6576197724933469
+      ],
+      "intercepted_risky_by_mode": {
+        "fail_closed": 2,
+        "input_and_output": 2,
+        "input_policy": 1,
+        "output_semantic": 13
+      }
+    }
+  }
+}
