@@ -9,7 +9,7 @@ import statistics
 from collections import Counter
 from pathlib import Path
 
-from safety_gate import decide
+from safety_gate_v1 import decide
 
 
 DECISIONS = ("allow", "confirm", "block")
