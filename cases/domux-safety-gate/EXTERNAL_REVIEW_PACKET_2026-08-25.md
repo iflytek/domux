@@ -29,7 +29,7 @@
 - 固定 revision：`6c71a32f4d624cadfd9fce9d10240d8068e53456`
 - 快照大小：10,279,032,574 bytes
 - 推理：NF4 4-bit，`torch.bfloat16` compute dtype，Python 3.13.15，PyTorch 2.11.0+cu128。
-- 单元测试：8/8 通过。
+- 单元测试：9/9 通过。
 - 48 条全量评测：
   - 格式合规率：81.25%（39/48）
   - 闸门决策准确率：93.75%（45/48）
@@ -37,7 +37,7 @@
   - 高风险拦截召回率：100%（32/32）
   - 危险误放行率：0%（0/32）
   - 安全指令误干预率：0%（0/16）
-  - 闸门平均/P95 延迟：18.02 / 32.52 μs（不含模型推理）
+  - 闸门平均/P95 延迟：12.09 / 25.07 μs（不含模型推理）
 - 混淆矩阵：allow 16→allow；confirm 13→confirm、3→block；block 16→block。
 
 重要解释：三条应为 `confirm` 的样本被更保守地判为 `block`；没有高风险样本被判为
@@ -57,16 +57,16 @@ example_safety_commands.jsonl      # 48 条数据及人工标签
 DATASET_CARD.md                    # 数据卡与许可说明
 test_safety_gate.py
 test_dataset.py
-test_evaluate_safety.py            # 8 项已通过单元测试
+test_evaluate_safety.py            # 覆盖评测器输入完整性与重复 ID；总计 9 项测试通过
+evidence/domux_raw.jsonl           # 48 条真实原始输出
+evidence/domux_raw.metadata.json   # 固定 revision、依赖、seed、GPU 与 dataset SHA-256
+evidence/safety_report.json        # 可重算完整报告
+verify_evidence.py                 # 原始输出与报告一致性校验
 ```
 
-可选附加证据：Colab 生成的 `domux-safety-gate-results.zip`（逐条原始输出、metadata、
-`safety_report.json`；不含模型权重或 token）。若压缩包不在手边，审核者必须标记
-“原始输出包未复核”，不能据此否认或确认运行真实性。
-
-`colab_run.ipynb` 当前已被追踪在仓库中，且不含执行输出或 token。当前真正的证据缺口是
-历史运行的 `domux_raw.jsonl`、metadata、`safety_report.json` 和可公开日志/截图不在本地
-仓库；提交前必须重新取得或最小重跑后存入 `evidence/`。
+`colab_run.ipynb` 已被追踪且不含执行输出或 token。原始输出、metadata 和完整报告已由
+2026-08-25 的最小真实补跑恢复到 `evidence/`，并通过 `verify_evidence.py`。可公开截图仍是
+可选增强证据，不是指标重算所必需的来源。
 
 ## 5. 请审核者逐项回答
 
@@ -94,7 +94,7 @@ test_evaluate_safety.py            # 8 项已通过单元测试
 ## 6. 审核约束
 
 - 不得要求或接收 Hugging Face token、浏览器 Cookie、账号密码、模型权重或私人文件路径。
-- 不得把“8/8 单元测试通过”误写为“模型安全性得到证明”。
+- 不得把“9/9 单元测试通过”误写为“模型安全性得到证明”。
 - 不得把 48 条原创合成英文样本的结果泛化为真实家庭、中文指令、多设备并发或长期部署效果。
 - 若发现不一致，应引用具体文件、函数、数据 id 或指标字段，不能泛泛而谈。
 

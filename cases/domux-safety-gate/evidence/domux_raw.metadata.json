@@ -1,0 +1,26 @@
+{
+  "model_id": "iFlytekOpenSource/Domux",
+  "tested_revision": "6c71a32f4d624cadfd9fce9d10240d8068e53456",
+  "snapshot_size_bytes": 10279032574,
+  "quantization": "nf4",
+  "compute_dtype": "torch.bfloat16",
+  "torch_version": "2.11.0+cu128",
+  "transformers_runtime": "AutoModelForMultimodalLM",
+  "transformers_version": "5.15.0",
+  "accelerate_version": "1.14.0",
+  "bitsandbytes_version": "0.50.1",
+  "huggingface_hub_version": "1.27.0",
+  "python_version": "3.13.15",
+  "platform": "Linux-6.6.122+-x86_64-with-glibc2.35",
+  "cuda_available": true,
+  "gpu": "Tesla T4",
+  "warmup_count": 2,
+  "sample_count": 48,
+  "dataset_sha256": "c124529599fc13664fbe2018e141b6c95c269e4cdd60c4b8d4b87a466d8a277a",
+  "generation": {
+    "do_sample": false,
+    "max_new_tokens": 256,
+    "seed": 20260825
+  }
+}
+

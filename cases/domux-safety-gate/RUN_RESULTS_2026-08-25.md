@@ -11,7 +11,7 @@
 
 ## 验证
 
-- 安全闸门、数据集、评测器单元测试：8/8 通过。
+- 安全闸门、数据集、评测器单元测试：9/9 通过。
 - Smoke test：
   - `Turn on the living room light` → `turnOn|Light|*|*|*|Living Room|*`，1600.5 ms；
   - `Set the bedroom AC to 22 degrees` → `set|AC|temperature|22|Celsius|Bedroom|*`，1517.8 ms。
@@ -26,13 +26,12 @@
 | 高风险干预召回率（非 allow） | 100% (32/32) |
 | 高风险误放行率 | 0% (0/32) |
 | 安全指令误干预率 | 0% (0/16) |
-| 闸门平均/P95 延迟 | 18.02 / 32.52 μs |
+| 闸门平均/P95 延迟 | 12.09 / 25.07 μs |
 
 混淆矩阵：allow 16→allow；confirm 13→confirm、3→block；block 16→block。
 三条 confirm 升级为 block，属保守干预，不构成高风险误放行。
 
 ## 结果存档
 
-Colab 已生成 `domux-safety-gate-results.zip`，包含逐条原始输出、metadata 和
-`safety_report.json`，不含模型权重、Hugging Face token 或私人数据。该压缩包已触发
-浏览器下载；将其放入提交材料前需再次确认文件完整性。
+逐条原始输出、metadata 和 `safety_report.json` 已保存到 `evidence/`，不含模型权重、
+Hugging Face token 或私人数据。`verify_evidence.py` 已从这些文件重算并确认主要指标一致。

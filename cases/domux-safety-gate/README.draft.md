@@ -1,8 +1,8 @@
 # DRAFT — Domux 执行前安全闸门
 
-> 本文件记录了一轮已完成的真实 GPU 运行，但该轮的逐条原始输出尚未在本地仓库找到。
-> 因此它不是可公开提交的最终 README：提交前必须将同一固定 revision 的原始输出、
-> metadata 和评测报告存入 `evidence/`，并将本文件转为正式 `README.md`。
+> 本文件记录 2026-08-25 在免费 Tesla T4 上完成的真实 GPU 运行。逐条原始输出、
+> metadata 和可重算评测报告已存入 `evidence/` 并通过 `verify_evidence.py`。
+> 它仍是发布前草稿：公开 Hugging Face Discussion 后再补入唯一真实 URL 并转为正式 `README.md`。
 
 ## Task / 真实任务
 
@@ -55,30 +55,26 @@ Domux 把自然语言转换成可执行的七字段家居控制指令，但结�
 | Metric | Result | Method |
 |---|---:|---|
 | Sample count | 48 | 固定原创数据集 |
-| Domux format compliance | 81.25% (39/48) † | 七字段与动作枚举校验 |
-| End-to-end gate decision accuracy | 93.75% (45/48) † | Domux 输出 + 手工安全策略 vs 48 条人工标签 |
-| End-to-end Macro F1 | 0.9369 † | allow / confirm / block |
+| Domux format compliance | 81.25% (39/48) | 七字段与动作枚举校验 |
+| End-to-end gate decision accuracy | 93.75% (45/48) | Domux 输出 + 手工安全策略 vs 48 条人工标签 |
+| End-to-end Macro F1 | 0.9369458128 | allow / confirm / block |
 | High-risk intervention recall | 100% (32/32) | 32 条 confirm + block 被判为非 allow |
 | High-risk false-allow rate | 0% (0/32) | confirm + block 中被判 allow 的比例 |
 | False intervention rate | 0% (0/16) | 16 条 allow 被干预的比例 |
-| Gate latency mean / P95 | 18.02 / 32.52 μs † | `perf_counter_ns`，不含模型推理；P95 为第 45 个排序值 |
+| Gate latency mean / P95 | 12.09 / 25.07 μs | `perf_counter_ns`，不含模型推理；P95 为第 45 个排序值 |
 
 类别混淆矩阵：allow 为 16/16 allow；confirm 为 13/16 confirm、3/16 block；
 block 为 16/16 block。三条 confirm 被更保守地升级为 block，因此没有产生危险放行。
 
-† 这些数字来自 2026-08-25 已完成的真实 T4 运行记录，但该轮 `domux_raw.jsonl` 尚未
-在当前磁盘找到。它们只能作为待复核历史记录；公开提交前必须用 `evidence/` 中可重算的
-原始输出重新验证，并以重算结果替换本表。
-
 ## Evidence / 运行证据
 
-- GPU、运行时、量化、snapshot 大小：已在免费 Tesla T4 上运行并记录；
-- 原始输出与 `safety_report.json`：曾由 Colab 打包为
-  `domux-safety-gate-results.zip`（仅日志与指标，不含模型权重或 token），但当前本地仓库
-  未找到该包；这是提交前必须修复的证据缺口；
-- smoke test：两条 allow 指令分别在 1600.5 ms、1517.8 ms 解析完成；
-- 失败模式：历史记录显示 9/48 条模型输出未通过七字段格式／动作枚举校验；安全闸门将
-  不合规输出阻断。必须通过保留的原始输出逐条复核。
+- `evidence/domux_raw.jsonl`：48 条逐条原始输出与模型生成延迟；
+- `evidence/domux_raw.metadata.json`：固定 revision、snapshot 大小、GPU、精度、seed、
+  数据集 SHA-256 和精确依赖版本；
+- `evidence/safety_report.json`：完整混淆矩阵、逐类指标、逐样本决策与失败原因；
+- `verify_evidence.py` 已从原始输出重新计算并核对：48 条、accuracy 0.9375、
+  Macro F1 0.9369458128、format compliance 0.8125；
+- 失败模式：9/48 条模型输出未通过七字段格式／动作枚举校验，安全闸门全部默认阻断。
 
 ## Safety, privacy, and licensing / 安全、隐私与许可
 
@@ -90,5 +86,5 @@ block 为 16/16 block。三条 confirm 被更保守地升级为 block，因此�
 
 ## Published Hugging Face Discussion / 公开 Discussion
 
-待原始证据重新落盘、真实指标重算并经用户确认后发布；取得 Discussion 编号后再生成
-最终 `README.md`。
+当前只待用户确认后发布；取得 Discussion URL 后将其写入正式 `README.md` 的
+`channels` 与本节，然后再创建 PR。
