@@ -86,7 +86,10 @@ channels:
 - AutoDL 拉 HF 模型务必 `source /etc/network_turbo` 或 `HF_ENDPOINT=https://hf-mirror.com`，
   大文件建议 `HF_HUB_DISABLE_XET=1` + `--max-workers` 并行，速度可提升数倍
 - 10GB 模型务必设 `HF_HOME=/root/autodl-tmp/hf`（数据盘），系统盘 30G 会满
-- vLLM 0.27.1 + transformers 5.15.1 有 `head_dim` 逐层属性兼容问题（AmbiguousGlobalPerLayerAttributeError），
-  改用 transformers 官方 `AutoModelForCausalLM` 直连（BF16）稳定可用
+- vLLM 目前无法加载 Domux（实测 0.22.0 与 0.27.1 均失败）：Domux 为异构层 Gemma-4
+  （不同层 head_dim 为 256/512 混合），vLLM 的 Gemma-4 实现假设所有层统一 head_dim，
+  加载即报 `AssertionError: Attempted to load weight (torch.Size([512])) into parameter (torch.Size([256]))`。
+  本案例因此采用 transformers 官方实现直连（BF16）。复现本案例请勿使用 vLLM；
+  待 vLLM 支持异构 Gemma-4 后，欢迎补充官方管线的对照数据
 - transformers 5.x 中 `torch_dtype` 已废弃，用 `dtype=`；chat 模板需 `apply_chat_template(..., tokenize=False)` 再 `tok(...)` 输入
 - 关机前先下载 `eval_results.jsonl` 等产物；AutoDL 关机不计费、环境保留
