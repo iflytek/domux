@@ -5,7 +5,7 @@ date: 2026-08-24
 category: smart-home-command
 testedRevision: 6c71a32f4d624cadfd9fce9d10240d8068e53456
 runtime: transformers-5.15.1-torch-2.13.0
-hardware: rtx-4090d-24gb-autodl-ubuntu
+hardware: nvidia-geforce-rtx-4090d-24gb-gddr6x-autodl-payg-ubuntu22.04
 downloadSource: huggingface
 channels:
   - https://huggingface.co/iFlytekOpenSource/Domux/discussions/2
@@ -32,7 +32,7 @@ channels:
 ## Setup / 环境
 
 - Runtime: transformers 5.15.1 + torch 2.13.0（本地批量推理，无 API 服务）
-- GPU: RTX 4090D 24GB（AutoDL 按量付费云 GPU），Ubuntu
+- GPU: NVIDIA GeForce RTX 4090D，24564 MiB 显存（AutoDL 按量付费云 GPU），Ubuntu（nvidia-smi 实测输出已存 evidence）
 - Precision: BF16
 - 参数: greedy 解码（等价 temperature=0.0），max_new_tokens=256，batch_size=8
 
