@@ -35,6 +35,10 @@ channels:
 - GPU: NVIDIA GeForce RTX 4090D，24564 MiB 显存（AutoDL 按量付费云 GPU），Ubuntu（nvidia-smi 实测输出已存 evidence）
 - Precision: BF16
 - 参数: greedy 解码（等价 temperature=0.0），max_new_tokens=256，batch_size=8
+- **复现材料**（本目录内）：
+  - `RUNBOOK.md` —— 从下载到评测的完整执行手册
+  - `eval_direct.py` —— 评测脚本（指标函数逐字沿用官方 run_eval.py）
+  - `artifacts/` —— 评测摘要、环境快照、运行日志、固定 revision
 
 ## What happened / 实际过程
 
