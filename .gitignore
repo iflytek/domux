@@ -39,6 +39,13 @@ swanlab/
 data/
 !training/data/example*.jsonl
 
+# HER Hack-Astron #4: public, synthetic SeniorSafe case data and evidence.
+!cases/domux-seniorsafe/data/
+!cases/domux-seniorsafe/data/seniorsafe.jsonl
+!cases/domux-seniorsafe/artifacts/
+!cases/domux-seniorsafe/artifacts/*.json
+!cases/domux-seniorsafe/artifacts/*_outputs.jsonl
+
 # System
 .DS_Store
 Thumbs.db
