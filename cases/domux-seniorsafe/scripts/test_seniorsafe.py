@@ -14,6 +14,7 @@ sys.path.insert(0, str(SCRIPT_DIR))
 
 from generate_dataset import build_records  # noqa: E402
 from normalize import normalize_text, safety_decision  # noqa: E402
+from run_transformers_cpu import choose_rows  # noqa: E402
 from score import aggregate, comparison  # noqa: E402
 from validate_data import validate  # noqa: E402
 
@@ -27,6 +28,11 @@ class DatasetTests(unittest.TestCase):
         for row in build_records():
             pairs.setdefault(str(row["base_id"]), set()).add(str(row["gold"]))
         self.assertTrue(all(len(gold) == 1 for gold in pairs.values()))
+
+    def test_cpu_runner_selects_requested_ids_in_order(self) -> None:
+        rows = build_records()
+        selected = choose_rows(rows, None, "ss-031-code_switching,ss-006-self_correction")
+        self.assertEqual(["ss-031-code_switching", "ss-006-self_correction"], [row["id"] for row in selected])
 
 
 class NormalizerTests(unittest.TestCase):
