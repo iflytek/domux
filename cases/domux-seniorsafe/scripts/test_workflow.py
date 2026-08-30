@@ -9,6 +9,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 from generate_dataset import build_records
+from generate_challenge import build_challenge
 from normalize import normalize_text, safety_decision
 from run_support import RunJournal, finish_record, output_decision, provenance
 
@@ -87,6 +88,9 @@ class WorkflowTests(unittest.TestCase):
         rows = build_records()
         answers = {r['text']: r['gold'] for r in rows}
         answers.update({normalize_text(r['text'])[0]: r['gold'] for r in rows})
+        challenge = build_challenge()[:4]
+        answers.update({r['text']: r['gold'] for r in challenge})
+        answers.update({normalize_text(r['text'])[0]: r['gold'] for r in challenge})
         state = {'mode': 'good'}
 
         class Handler(BaseHTTPRequestHandler):
@@ -139,6 +143,20 @@ class WorkflowTests(unittest.TestCase):
                 metrics = json.loads((root/'metrics.json').read_text())
                 self.assertEqual(1., metrics['raw']['result_accuracy'])
                 self.assertEqual(80, metrics['comparison']['common_samples'])
+                for pipeline in ('raw', 'normalized'):
+                    proc = run(pipeline, root/'challenge', '--data', str(SCRIPT_DIR.parent/'data/challenge-v1.jsonl'),
+                               '--data-spec', str(SCRIPT_DIR.parent/'data/challenge-v1.spec.json'), '--limit', '4')
+                    self.assertEqual(0, proc.returncode, proc.stderr)
+                    env = json.loads((root/'challenge'/f'{pipeline}_environment.json').read_text())
+                    self.assertEqual(4, env['completed_samples'])
+                    self.assertIn('data_spec_sha256', env['settings'])
+                proc = subprocess.run([sys.executable, '-B', str(SCRIPT_DIR/'score.py'),
+                    '--raw', str(root/'challenge/raw_outputs.jsonl'), '--normalized', str(root/'challenge/normalized_outputs.jsonl'),
+                    '--output', str(root/'challenge/metrics.json')], capture_output=True, text=True, timeout=30)
+                self.assertEqual(0, proc.returncode, proc.stderr)
+                challenge_metrics = json.loads((root/'challenge/metrics.json').read_text())
+                self.assertEqual(4, challenge_metrics['comparison']['common_samples'])
+                self.assertEqual(1., challenge_metrics['normalized']['result_accuracy'])
                 raw_path = root/'raw_outputs.jsonl'
                 original = raw_path.read_bytes()
                 raw_path.write_bytes(original.replace(b'turnOn', b'turnOff', 1))

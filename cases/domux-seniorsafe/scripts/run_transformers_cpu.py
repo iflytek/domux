@@ -20,7 +20,7 @@ from transformers import AutoModelForMultimodalLM, AutoProcessor
 
 from normalize import normalize_text, safety_decision
 from run_support import RunJournal, finish_record, load_jsonl, provenance, select_rows
-from validate_data import validate
+from validate_data import input_contract, validate, validate_run_contract
 
 
 def resolve_snapshot(repo_id: str, revision: str, local_dir: Path | None) -> Path:
@@ -135,6 +135,8 @@ def main() -> int:
     parser.add_argument("--revision", required=True)
     parser.add_argument("--snapshot", type=Path)
     parser.add_argument("--data", type=Path, default=root / "data" / "seniorsafe.jsonl")
+    parser.add_argument("--data-spec", type=Path)
+    parser.add_argument("--freeze", type=Path, help="Verify frozen files before model access")
     parser.add_argument("--pipeline", choices=("raw", "normalized"), required=True)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--environment-output", type=Path)
@@ -158,12 +160,15 @@ def main() -> int:
 
     torch.set_num_threads(args.threads)
     dataset = load_jsonl(args.data)
-    errors = validate(dataset)
+    spec, contract_settings = input_contract(args.data, args.data_spec, args.freeze)
+    errors = validate(dataset, spec)
     if errors:
         parser.error("; ".join(errors))
     rows = choose_rows(dataset, args.limit, args.sample_ids)
     settings = {"backend": "transformers-cpu", "repo_id": args.repo_id, "dtype": args.dtype,
                 "threads": args.threads, "max_new_tokens": args.max_new_tokens, "do_sample": False}
+    settings.update(contract_settings)
+    validate_run_contract(args.freeze, settings, args.revision)
     metadata = {**provenance(rows, settings), "revision": args.revision, "run_id": args.run_id,
                 "pipeline": args.pipeline, "sample_count": len(rows), "backend": "transformers-cpu"}
     journal = RunJournal(args.output, args.environment_output, rows, metadata, args.resume)

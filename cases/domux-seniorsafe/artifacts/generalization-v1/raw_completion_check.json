@@ -1,0 +1,10 @@
+{
+  "recorded_at": "2026-08-30T14:17:04.154712+00:00",
+  "samples": 160,
+  "errors": 0,
+  "source_records_match": true,
+  "outputs_digest_match": true,
+  "provenance_matches_frozen_code": true,
+  "all_execution_performed_false": true,
+  "analysis": "No accuracy or model-output inspection before normalized phase completes."
+}

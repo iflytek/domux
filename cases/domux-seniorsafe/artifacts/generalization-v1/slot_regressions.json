@@ -1,0 +1,126 @@
+{
+  "kind": "post-run diagnostic, distinct from full exact-match regression",
+  "count": 15,
+  "rows": [
+    {
+      "id": "ch-006-unseen_numbers",
+      "raw_matched_slots": 6,
+      "normalized_matched_slots": 5,
+      "raw_output": "set|Curtain|position|65|Percent|餐厅|*",
+      "normalized_output": "set|Curtain|position|60|Percent|餐厅|*",
+      "gold": "set|Curtain|position|65|Percent|Dining Room|*"
+    },
+    {
+      "id": "ch-008-unseen_numbers",
+      "raw_matched_slots": 7,
+      "normalized_matched_slots": 6,
+      "raw_output": "set|Light|brightness|15|Percent|Bathroom|*",
+      "normalized_output": "set|Light|brightness|15|Percent|浴室|*",
+      "gold": "set|Light|brightness|15|Percent|Bathroom|*"
+    },
+    {
+      "id": "ch-009-unseen_locations",
+      "raw_matched_slots": 7,
+      "normalized_matched_slots": 6,
+      "raw_output": "turnOn|Light|*|*|*|Hallway|*",
+      "normalized_output": "turnOn|Light|*|*|*|走廊|*",
+      "gold": "turnOn|Light|*|*|*|Hallway|*"
+    },
+    {
+      "id": "ch-011-unseen_locations",
+      "raw_matched_slots": 7,
+      "normalized_matched_slots": 6,
+      "raw_output": "turnOn|Curtain|*|*|*|Balcony|*",
+      "normalized_output": "turnOn|Curtain|*|*|*|阳台|*",
+      "gold": "turnOn|Curtain|*|*|*|Balcony|*"
+    },
+    {
+      "id": "ch-013-unseen_locations",
+      "raw_matched_slots": 7,
+      "normalized_matched_slots": 6,
+      "raw_output": "turnOn|Light|*|*|*|Bathroom|*",
+      "normalized_output": "turnOn|Light|*|*|*|浴室|*",
+      "gold": "turnOn|Light|*|*|*|Bathroom|*"
+    },
+    {
+      "id": "ch-027-paraphrase",
+      "raw_matched_slots": 5,
+      "normalized_matched_slots": 4,
+      "raw_output": "pause|Curtain|position|*|*|餐厅|*",
+      "normalized_output": "set|Curtain|position|*|*|餐厅|*",
+      "gold": "pause|Curtain|*|*|*|Dining Room|*"
+    },
+    {
+      "id": "ch-034-self_correction",
+      "raw_matched_slots": 7,
+      "normalized_matched_slots": 6,
+      "raw_output": "turnOn|Light|*|*|*|Dining Room|*",
+      "normalized_output": "turnOn|Light|*|*|*|Kitchen|*",
+      "gold": "turnOn|Light|*|*|*|Dining Room|*"
+    },
+    {
+      "id": "ch-035-self_correction",
+      "raw_matched_slots": 7,
+      "normalized_matched_slots": 6,
+      "raw_output": "turnOff|Curtain|*|*|*|Balcony|*",
+      "normalized_output": "turnOff|Curtain|*|*|*|阳台|*",
+      "gold": "turnOff|Curtain|*|*|*|Balcony|*"
+    },
+    {
+      "id": "ch-039-self_correction",
+      "raw_matched_slots": 6,
+      "normalized_matched_slots": 5,
+      "raw_output": "set|Curtain|position|30|Percent|餐厅|*",
+      "normalized_output": "set|Curtain|position|80|Percent|餐厅|*",
+      "gold": "set|Curtain|position|30|Percent|Dining Room|*"
+    },
+    {
+      "id": "ch-043-negation",
+      "raw_matched_slots": 7,
+      "normalized_matched_slots": 6,
+      "raw_output": "turnOff|Curtain|*|*|*|Hallway|*",
+      "normalized_output": "turnOff|Curtain|*|*|*|走廊|*",
+      "gold": "turnOff|Curtain|*|*|*|Hallway|*"
+    },
+    {
+      "id": "ch-050-repetition",
+      "raw_matched_slots": 7,
+      "normalized_matched_slots": 6,
+      "raw_output": "turnOff|Light|*|*|*|Bathroom|*",
+      "normalized_output": "turnOff|Light|*|*|*|浴室|*",
+      "gold": "turnOff|Light|*|*|*|Bathroom|*"
+    },
+    {
+      "id": "ch-054-repetition",
+      "raw_matched_slots": 6,
+      "normalized_matched_slots": 5,
+      "raw_output": "pause|Curtain|position|*|*|Study|*",
+      "normalized_output": "pause|Study Curtain|position|*|*|Study|*",
+      "gold": "pause|Curtain|*|*|*|Study|*"
+    },
+    {
+      "id": "ch-056-repetition",
+      "raw_matched_slots": 6,
+      "normalized_matched_slots": 0,
+      "raw_output": "deactivate|Party Mode|*|*|*|走廊|*",
+      "normalized_output": "exit|Party Mode|*|*|*|走廊|*",
+      "gold": "deactivate|Party Mode|*|*|*|Hallway|*"
+    },
+    {
+      "id": "ch-059-multi_intent",
+      "raw_matched_slots": 12,
+      "normalized_matched_slots": 11,
+      "raw_output": "turnOff|Light|*|*|*|餐厅|*\nturnOn|Light|*|*|*|阳台|*",
+      "normalized_output": "turnOff|Light|*|*|*|餐厅|*\nturnOn|Desk Lamp|*|*|*|阳台|*",
+      "gold": "turnOff|Light|*|*|*|Dining Room|*\nturnOn|Light|*|*|*|Balcony|*"
+    },
+    {
+      "id": "ch-062-multi_intent",
+      "raw_matched_slots": 12,
+      "normalized_matched_slots": 10,
+      "raw_output": "turnOn|Light 1|*|*|*|书房|*\nturnOff|Light 2|*|*|*|书房|*",
+      "normalized_output": "turnOn|Study Light 1|*|*|*|*|*\nturnOff|Study Light 2|*|*|*|*|*",
+      "gold": "turnOn|Light 1|*|*|*|Study|*\nturnOff|Light 2|*|*|*|Study|*"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "recorded_at": "2026-08-30T13:35:01.053574+00:00",
+  "purpose": "freeze existing regression data and policy before challenge construction",
+  "files": {
+    "data/seniorsafe.jsonl": "d91cfb0520e8bbb4656bef386ff5c63dfd9fc0b3621bc2079ccca0f8a19eb85a",
+    "scripts/normalize.py": "9dd1313daf0d4d94bc5ce4825eba4842dc46550c0e243c69d043e6d6274f99db",
+    "scripts/protocol.py": "0334e984ff6ecd3c4824723c3d0003074ecffa891daa680d7032f240d6d0ccc7",
+    "scripts/run_support.py": "0dcca9a07c8b36b4d458515666380c223db901697706c5750a2dabbd94dff206"
+  }
+}

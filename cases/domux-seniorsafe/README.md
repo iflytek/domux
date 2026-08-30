@@ -13,6 +13,30 @@ channels:
 
 # Domux on a consumer CPU: 80-sample SeniorSafe intent benchmark, raw vs normalized pipelines
 
+## Prospective generalization follow-up / 新增泛化验证
+
+The original 80-record narrative below is preserved historical/development evidence.
+A later frozen, AI-authored challenge adds **160 texts / 80 paired scenarios**, with
+**320 real CPU inferences** and unchanged inference policies. Full details and failure
+examples are in [Generalization v1 review](artifacts/generalization-v1/REVIEW.md).
+
+- Frozen-label exact match: raw **75/136 (55.1%)**, normalized **84/136 (61.8%)**.
+- Four unit-label issues are separately documented; the protocol-label sensitivity
+  scores are **77/136 (56.6%)** and **88/136 (64.7%)**, without changing predictions
+  or overwriting the original data/results.
+- **8 exact-match regressions**, **5/24 input-policy false allows**, and **2/24
+  blocked-label requests still marked output candidates** remain. No devices were operated.
+- This is a prospective synthetic challenge, not a third-party blind test or real
+  elderly speech evaluation. English clean and Chinese/mixed challenge inputs
+  confound language with perturbation; naming differences are not all semantic errors.
+- The experiment exposes real rewrite bugs (e.g. 65 percent partially rewritten
+  as 60, and Balcony Light partially rewritten as Desk Lamp). These inference
+  defects were **not repaired within the frozen experiment**. The case is not safe
+  for direct device integration.
+
+See the [reproduction guide](artifacts/generalization-v1/RUNBOOK.md) for configurable
+dataset validation, frozen-run guards, evidence files and conservative resume behavior.
+
 ## Task / 真实任务
 
 Elderly users speak to smart-home devices in dialect-flavored, ASR-corrupted,

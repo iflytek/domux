@@ -18,7 +18,7 @@ from pathlib import Path
 from normalize import normalize_text, safety_decision
 from protocol import parse_output
 from run_support import RunJournal, finish_record, load_jsonl, provenance, select_rows
-from validate_data import validate
+from validate_data import input_contract, validate, validate_run_contract
 
 
 def call_model(base_url: str, api_key: str, model: str, text: str, timeout: float, max_tokens: int) -> tuple[str, float]:
@@ -98,6 +98,8 @@ def main() -> int:
     root = Path(__file__).resolve().parents[1]
     parser = argparse.ArgumentParser()
     parser.add_argument("--data", type=Path, default=root / "data" / "seniorsafe.jsonl")
+    parser.add_argument("--data-spec", type=Path)
+    parser.add_argument("--freeze", type=Path, help="Verify frozen files before model access")
     parser.add_argument("--output", type=Path)
     parser.add_argument("--environment-output", type=Path)
     parser.add_argument("--pipeline", choices=("raw", "normalized"), required=True)
@@ -127,12 +129,15 @@ def main() -> int:
         args.environment_output = root / "artifacts" / f"{args.pipeline}_environment.json"
 
     rows = load_jsonl(args.data)
-    errors = validate(rows)
+    spec, contract_settings = input_contract(args.data, args.data_spec, args.freeze)
+    errors = validate(rows, spec)
     if errors:
         parser.error("; ".join(errors))
     rows = select_rows(rows, args.limit)
     settings = {"backend": "openai-compatible", "model": args.model, "temperature": 0.,
                 "max_tokens": args.max_tokens, "timeout": args.timeout, "warmup": args.warmup}
+    settings.update(contract_settings)
+    validate_run_contract(args.freeze, settings, args.revision)
     metadata = {**provenance(rows, settings), "revision": args.revision, "run_id": args.run_id,
                 "pipeline": args.pipeline, "sample_count": len(rows),
                 "backend": "openai-compatible", "python": sys.version, "platform": platform.platform(),

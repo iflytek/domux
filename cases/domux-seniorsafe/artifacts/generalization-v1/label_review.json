@@ -1,0 +1,31 @@
+{
+  "recorded_at": "2026-08-30T13:54:43.990412+00:00",
+  "reason": "Local output-spec.md section 5 explicitly uses unit * for vague relative brightness adjustment; no numeric value/unit was spoken in these four fixtures. Extend the unspecified-unit convention to vague AC adjustment. Frozen primary labels remain unchanged.",
+  "source": "docs/output-spec.md",
+  "source_sha256": "330c051676b1d64450eb397d5311e643b5e353f70d1f2ce0ed6dda6180afd30e",
+  "review_stage": "after experiment freeze, during raw run; reviewer has not inspected model predictions",
+  "already_generated_affected_ids": [],
+  "sensitivity_metric": "Recompute ordered exact/F1 using protocol_gold for these four records only; keep original metrics and all predictions intact. Not a model or policy fix.",
+  "changes": [
+    {
+      "id": "ch-025-clean",
+      "frozen_gold": "adjustDown|Light|brightness|*|Percent|Living Room|*",
+      "protocol_gold": "adjustDown|Light|brightness|*|*|Living Room|*"
+    },
+    {
+      "id": "ch-025-paraphrase",
+      "frozen_gold": "adjustDown|Light|brightness|*|Percent|Living Room|*",
+      "protocol_gold": "adjustDown|Light|brightness|*|*|Living Room|*"
+    },
+    {
+      "id": "ch-026-clean",
+      "frozen_gold": "adjustUp|AC|temperature|*|Celsius|Bedroom|*",
+      "protocol_gold": "adjustUp|AC|temperature|*|*|Bedroom|*"
+    },
+    {
+      "id": "ch-026-paraphrase",
+      "frozen_gold": "adjustUp|AC|temperature|*|Celsius|Bedroom|*",
+      "protocol_gold": "adjustUp|AC|temperature|*|*|Bedroom|*"
+    }
+  ]
+}
