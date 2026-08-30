@@ -17,7 +17,7 @@ channels:
 
 Elderly users speak to smart-home devices in dialect-flavored, ASR-corrupted,
 code-switched Mandarin. Domux must turn these utterances into a strict
-7-slot command format (`intent|device|attribute|value|unit|room|zone`), and
+7-slot command format (`action|device|attribute|value|unit|room|floor`), and
 risky/ambiguous utterances must not be executed. This case benchmarks Domux on
 the synthetic [SeniorSafe set](data/seniorsafe.jsonl) (80 utterances: 40 clean
 plus 40 paired noisy variants) and measures how much a deterministic,
@@ -88,14 +88,102 @@ Run log excerpt (real run, revision `6c71a32f`):
 [raw] 5/5 ss-003-clean latency_ms=15153.866 error=False
 ```
 
-![Domux CPU run evidence: benchmark summary](preview.png)
+## Audit fixes / 审查修复
 
-## Results / 结果
+The current case remains an **offline developer benchmark**, not a device controller.
+The original results below are preserved historical evidence. Current runner code
+uses stricter, versioned scoring and must write to a new run directory; never
+combine its results with the original logs as if they came from the same pipeline.
+
+- Risk matching is case-insensitive for English aliases; a room alone no longer
+  resolves a missing device. This remains a limited lexical policy, not a safety certification.
+- Correction utterances retain their full context instead of dropping earlier clauses.
+- Parsing requires non-empty fields and a known action. Exact match now preserves
+  order and duplicates; slot/intent F1 use separate ordered dynamic programming.
+- Both runners retain raw model output for research, including blocked examples.
+  `safety_decision` is the input-policy label. `output_decision` separately checks
+  model output and can be `reject`, `clarify`, or `candidate`. **Candidate never
+  grants execution permission**; every row records `execution_performed: false`.
+- Outputs are created exclusively, with code/data/settings fingerprints and a final
+  result digest. `--resume` accepts only a matching intact prefix. A torn last line
+  is refused without altering it. Do not run simultaneous writers against one run.
+- Errors produce a nonzero exit and a failed manifest; incomplete runs cannot be
+  silently scored as completed experiments. Existing error rows are preserved on
+  resume; use a new run to retry a failed experiment.
+
+Offline checks (no packages or model downloads required):
+
+```powershell
+python cases/domux-seniorsafe/scripts/validate_data.py
+python -m unittest discover -s cases/domux-seniorsafe/scripts -p 'test_*.py' -v
+```
+
+The workflow test uses a local synthetic HTTP provider. Its perfect scores test
+program plumbing only, **not Domux quality**. Newly authored safety counterexamples
+are regression cases, not an untouched statistical holdout set.
+
+Reproduce a fresh paired CPU run using the existing environment and cached model:
+
+```powershell
+$env:HF_HUB_OFFLINE = '1'
+$env:TRANSFORMERS_OFFLINE = '1'
+foreach ($pipeline in @('raw', 'normalized')) {
+    .\.venv\Scripts\python.exe -B cases/domux-seniorsafe/scripts/run_transformers_cpu.py `
+        --revision 6c71a32f4d624cadfd9fce9d10240d8068e53456 `
+        --pipeline $pipeline --run-id "local-v2-$pipeline" --threads 16 `
+        --output "cases/domux-seniorsafe/artifacts/local-v2/${pipeline}_outputs.jsonl" `
+        --environment-output "cases/domux-seniorsafe/artifacts/local-v2/${pipeline}_environment.json"
+    if ($LASTEXITCODE -ne 0) { throw 'Run failed; inspect evidence before continuing' }
+}
+.\.venv\Scripts\python.exe -B cases/domux-seniorsafe/scripts/score.py `
+    --raw cases/domux-seniorsafe/artifacts/local-v2/raw_outputs.jsonl `
+    --normalized cases/domux-seniorsafe/artifacts/local-v2/normalized_outputs.jsonl `
+    --output cases/domux-seniorsafe/artifacts/local-v2/metrics.json
+```
+
+Choose another directory if it already exists. To resume, repeat the same runner
+command with `--resume` and unchanged code, inputs and settings. New strict scoring
+requires sibling `*_environment.json` manifests. `--allow-legacy` is only for
+explicit historical rescoring and cannot restore missing provenance.
+
+For the API runner, revision is caller-declared (`model_revision_verified: false`);
+the client cannot prove that a remote server actually serves those weights. CPU
+`--snapshot` accepts the matching Hugging Face cache layout, not arbitrary folders.
+
+## Verified audit rerun / 修复后全量重跑
+
+The audit rerun completed **80 raw + 80 normalized CPU inferences with zero runtime
+errors**, under matching code/data/settings fingerprints. All 31 local tests and
+the data/case validators passed. This verifies the offline benchmark, not a device controller.
+
+| Metric | Fresh raw | Fixed normalized |
+|---|---:|---:|
+| Exact match (70 evaluable) | 55.7% (39/70) | **85.7% (60/70)** |
+| Slot F1 (v2 ordered scorer) | 0.8956 | 0.9666 |
+| Intent F1 (v2 ordered scorer) | 0.5674 | 0.8652 |
+| Average generation latency | 8.54 s | 8.77 s |
+| P95 generation latency (nearest rank) | 10.44 s | 11.13 s |
+
+Recovery is 23/31 (74.2%); regression is 2/39 (5.1%). The fixed normalizer improves
+exact match by 10 percentage points over the original normalized run. Ten parse
+failures remain; two are regressions relative to fresh raw. No device was executed.
+New latency observations do not establish a causal speedup over the old run.
+
+See the [audit report](artifacts/audit-v2/REVIEW.md),
+[paired metrics](artifacts/audit-v2/metrics.json),
+[remaining failures](artifacts/audit-v2/remaining_parse_failures.json), and
+[verification record](artifacts/audit-v2/verification.json).
+The original results below retain their original scorer; their F1 values are not
+directly interchangeable with v2. An explicit historical rescore is included in
+the audit directory. This local update does not update the remote Discussion.
+
+## Historical results / 原始版本结果
 
 70/80 samples are parse-evaluable; the 10 `ambiguous_reference` /
-`high_risk_ambiguity` samples expect a safety decision (5 `clarify`, 5
+`high_risk_ambiguity` samples expect a safety decision (6 `clarify`, 4
 `reject`) instead of a parseable command and are excluded from parse metrics
-by design. Latency is wall-clock
+by design. Safety metrics use 15 labeled non-execute samples in total (11 clarify,
+4 reject), including five high-risk clean samples. Latency is wall-clock
 `model.generate` time per sample, no warm-up pass, single run.
 
 | Metric | Raw | Normalized | Method |
@@ -130,18 +218,18 @@ Limitations observed:
   slot `Lightset`, `BedroomHeaterset to24 Celsius` produced `Heaterset`) and
   the lexicon missed `厨房` / `三十度` / bare `安防`. These are fixed in
   [normalize.py](scripts/normalize.py) after this run (space-padded
-  substitutions plus the missing lexicon entries), so a re-run of the
-  normalized pipeline should land above the reported 75.7%. The
-  self-correction rewriting rule is still open.
-- ~9.4 s per command is fine for a spoken-home hub (users expect ~1 command/s)
-  but far from interactive GPU latency.
+  substitutions plus the missing lexicon entries). The later audit also removed
+  destructive correction rewriting. The original 75.7% does not measure these changes.
+- Average generation latency was ~9.4 s; nearest-rank P95 was ~14.6 s in both
+  original runs. Suitability for spoken-home interaction has not been user-tested.
 
 ## Why it mattered / 价值
 
-- Proves Domux (10.3 GB BF16) is fully usable on a commodity no-GPU Windows PC:
+- Demonstrates that this Domux snapshot can complete an offline benchmark on this no-GPU Windows PC:
   6 s load, ~9.4 s per command, zero errors across 160 CPU inferences.
 - Quantifies a cheap, auditable pre-pass: +20.0 pp exact-match accuracy,
-  +19.3 pp intent F1, at zero latency cost — while honestly reporting its
+  +19.3 pp intent F1 in the original scorer. Normalization overhead was not separately
+  measured in that run; the original evidence also records its
   17.9% regression rate and pinpointing the exact splicing bugs behind it.
 - The recovery/regression ID lists in
   [artifacts/metrics.json](artifacts/metrics.json) give the next person a
@@ -164,17 +252,17 @@ URL below, which also appears in the frontmatter.
   repository license.
 - Ambiguity handling for high-risk actions, verified against the run logs: on
   all 10 `ambiguous_reference` / `high_risk_ambiguity` samples the model itself
-  emitted well-formed, directly executable commands in **both** pipelines
+  emitted seven-field command strings in **both** pipelines
   (for example `turnOn|Door Lock|*|*|*|*|*` and `turnOn|Gas Valve|*|*|*|*|*`).
   Nothing in the model refuses, asks for confirmation, or produces an
-  unparseable reply. Execution is prevented only by the deterministic rule
-  layer (`safety_decision` in [normalize.py](scripts/normalize.py)), which
-  returns `clarify` for 5 samples and `reject` for the other 5 and never
-  `execute` for these texts. The reported 100% safety-decision accuracy and
+  unparseable reply. The offline rule function (`safety_decision` in
+  [normalize.py](scripts/normalize.py)) labels 6 of those texts `clarify` and 4
+  `reject`. These runners have no device executor and do not demonstrate a
+  deployed interlock or a confirmation conversation. The reported 100% safety-decision accuracy and
   0% dangerous-execute rate therefore measure the rule layer against the
-  dataset's own labels — they are not model behavior. A deployment must keep
-  this gate in front of the model; the model alone is not safe on risky
-  commands.
+  dataset's own labels — they are not model behavior. A future deployment needs
+  device identity resolution, capability validation, authorization, confirmation,
+  cancellation and execution acknowledgements; these are outside this benchmark.
 
 ## Notes and gotchas / 踩坑记录
 
@@ -182,8 +270,8 @@ URL below, which also appears in the frontmatter.
   text-only chat; both are missing from a plain torch-CPU install.
 - Install CPU wheels from the PyTorch CPU index:
   `uv pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu`.
-- BF16 works on this CPU (torch 2.13) — no float32 fallback needed, and
-  `low_cpu_mem_usage=True` keeps peak RSS around a few GB during load.
+- The historical CPU run used BF16 without a float32 fallback. The recorded
+  `model_load_rss_delta_bytes` is a before/after RSS difference, **not peak memory**.
 - huggingface.co web pages can return HTTP 418 behind some proxy exit nodes;
   the API endpoints and `hf download` kept working. Retry later or switch node.
 - `hf auth login` device codes expire in ~10 minutes; a Read token via
