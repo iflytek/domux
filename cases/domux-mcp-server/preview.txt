@@ -1,0 +1,43 @@
+Domux MCP 智能家居 · 2035 快递机器人上门演示
+=============================================
+
+[0] 初始化智慧之家（身份与组件装配）
+    owner: agent_owner_6f23c9d1
+    family: agent_family_a44cf54d
+    service_agent: agent_service_agent_6a376108
+
+[1] 门铃响 → 快递机器人自然语言申请进门
+    "我是快递机器人，请给玄关门锁解锁让我放下包裹"
+    Domux 解析: unlock_door | door_lock | entryway | floor_1
+
+[2] 高危识别 → 首次鉴权被拒
+    action=unlock_door 命中高危清单
+    → DENIED (无有效授权)
+
+[3] 管家签发最小化授权
+    rooms=['entryway'] devices=['door_lock']
+    TTL=300s single_use=True
+
+[4] 重试 → 高危转 pending_confirmation
+    → PENDING_CONFIRMATION
+    owner 手机 App 收到确认请求
+
+[5] owner 二次确认 → 执行门锁解锁
+    → ALLOWED by owner
+    HA: lock.unlock @ lock.door_lock_entryway_f1
+
+[6] 审计留痕回放（7 条审计记录）
+    register → authorize(denied) → grant(ok)
+    → authorize(pending) → confirm(allowed)
+
+[7] 授权过期 → 再次申请被拒
+    → DENIED (一次性授权已消耗)
+
+[8] 风险评分引擎更新
+    总分: 36/100 (moderate)
+    fire=65, flood=70, intrusion=0, equipment_fault=10
+
+[9] 保险报告签发
+    token 已签发, 标准化风险报告生成
+
+=== 全链路 9 步通过，92 项断言全部通过 ===
