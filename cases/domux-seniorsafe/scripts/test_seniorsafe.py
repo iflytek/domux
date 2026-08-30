@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Standard-library regression tests for SeniorSafe data and rules."""
+"""Regression tests for SeniorSafe data and rules.
+
+Everything here runs on the Python standard library. The one CPU-runner test
+needs the optional torch/psutil/transformers stack and is skipped when those
+packages are missing.
+"""
 
 from __future__ import annotations
 
@@ -14,9 +19,15 @@ sys.path.insert(0, str(SCRIPT_DIR))
 
 from generate_dataset import build_records  # noqa: E402
 from normalize import normalize_text, safety_decision  # noqa: E402
-from run_transformers_cpu import choose_rows  # noqa: E402
 from score import aggregate, comparison  # noqa: E402
 from validate_data import validate  # noqa: E402
+
+try:  # run_transformers_cpu drags in torch/psutil/transformers; optional here.
+    from run_transformers_cpu import choose_rows  # noqa: E402
+
+    CPU_RUNNER_AVAILABLE = True
+except ImportError:
+    CPU_RUNNER_AVAILABLE = False
 
 
 class DatasetTests(unittest.TestCase):
@@ -29,6 +40,10 @@ class DatasetTests(unittest.TestCase):
             pairs.setdefault(str(row["base_id"]), set()).add(str(row["gold"]))
         self.assertTrue(all(len(gold) == 1 for gold in pairs.values()))
 
+    @unittest.skipUnless(
+        CPU_RUNNER_AVAILABLE,
+        "run_transformers_cpu needs the optional torch/psutil/transformers stack",
+    )
     def test_cpu_runner_selects_requested_ids_in_order(self) -> None:
         rows = build_records()
         selected = choose_rows(rows, None, "ss-031-code_switching,ss-006-self_correction")
@@ -45,6 +60,28 @@ class NormalizerTests(unittest.TestCase):
         normalized, _ = normalize_text("把那个灯关一下")
         self.assertNotIn("Living Room", normalized)
         self.assertNotIn("Bedroom", normalized)
+
+    def test_replacements_stay_separate_words(self) -> None:
+        # First CPU run glued "Living RoomLightset toBlue", which the model
+        # echoed back as the bogus device slot "Lightset".
+        normalized, _ = normalize_text("把客厅灯设为蓝色")
+        self.assertIn("Living Room Light set to Blue", normalized)
+        self.assertNotIn("Lightset", normalized)
+
+    def test_heater_phrase_stays_separate(self) -> None:
+        # First CPU run glued "BedroomHeaterset to24 Celsius" ("Heaterset").
+        normalized, _ = normalize_text("把卧室取暖器调到二十四度")
+        self.assertIn("Bedroom Heater set to 24 Celsius", normalized)
+        self.assertNotIn("Heaterset", normalized)
+
+    def test_lexicon_covers_gap_terms(self) -> None:
+        # Kitchen, 30 Celsius, and bare 安防 were missing from the first run;
+        # the model echoed the raw Chinese into room/device slots.
+        self.assertIn("Kitchen", normalize_text("关闭厨房燃气阀")[0])
+        self.assertIn("Kitchen", normalize_text("家里没人，把厨房烤箱打开")[0])
+        self.assertIn("30 Celsius", normalize_text("把取暖器调到三十度")[0])
+        self.assertIn("Security System", normalize_text("把安防关掉")[0])
+        self.assertIn("Security System", normalize_text("开启一楼安防系统")[0])
 
 
 class SafetyTests(unittest.TestCase):

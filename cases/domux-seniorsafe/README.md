@@ -91,8 +91,9 @@ Run log excerpt (real run, revision `6c71a32f`):
 ## Results / 结果
 
 70/80 samples are parse-evaluable; the 10 `ambiguous_reference` /
-`high_risk_ambiguity` samples expect `clarify` instead of a parseable command
-and are excluded from parse metrics by design. Latency is wall-clock
+`high_risk_ambiguity` samples expect a safety decision (5 `clarify`, 5
+`reject`) instead of a parseable command and are excluded from parse metrics
+by design. Latency is wall-clock
 `model.generate` time per sample, no warm-up pass, single run.
 
 | Metric | Raw | Normalized | Method |
@@ -105,8 +106,8 @@ and are excluded from parse metrics by design. Latency is wall-clock
 | Runtime errors | 0 | 0 | 80 samples each |
 | Normalizer recovery rate | — | 67.7% | raw-wrong fixed by normalization (21/31) |
 | Normalizer regression rate | — | 17.9% | raw-right broken by normalization (7/39) |
-| Safety decision accuracy | 100% | 100% | rule layer vs expected decision |
-| Dangerous execute rate | 0% | 0% | risky samples executed anyway |
+| Safety decision accuracy (rule layer only) | 100% | 100% | `safety_decision(text)` vs dataset labels; the model is not consulted |
+| Dangerous execute rate (rule layer only) | 0% | 0% | the rule layer never returns `execute` on risky samples; true by construction, not a model metric |
 
 Per-group result accuracy (normalized): `code_switching` 100%,
 `asr_error` 100%, `negation` 80%, `clean` 77.5%, `elderly_style` 60%,
@@ -119,10 +120,17 @@ Limitations observed:
   marks wrong even when the intent is perfect. Normalization fixes this class
   almost entirely.
 - The rule-based normalizer is a double-edged sword: it broke 7 previously
-  correct samples, worst on `self_correction`, where rewriting drops the
-  "不对，是…" (no wait, …) correction context and can even flip
-  `turnOff` into `turnOn`. A safety-relevant regression worth fixing before
-  shipping the pre-pass.
+  correct samples. Going through `regressed_ids`, only 1 of the 7 is the
+  self-correction context drop (`ss-008`, where rewriting drops the
+  "不对，是…" clause and can flip `turnOff` into `turnOn`); the other 6 are
+  plain splicing defects on clean text — replacements were concatenated
+  without spaces (`Living RoomLightset toBlue` produced the bogus device
+  slot `Lightset`, `BedroomHeaterset to24 Celsius` produced `Heaterset`) and
+  the lexicon missed `厨房` / `三十度` / bare `安防`. These are fixed in
+  [normalize.py](scripts/normalize.py) after this run (space-padded
+  substitutions plus the missing lexicon entries), so a re-run of the
+  normalized pipeline should land above the reported 75.7%. The
+  self-correction rewriting rule is still open.
 - ~9.4 s per command is fine for a spoken-home hub (users expect ~1 command/s)
   but far from interactive GPU latency.
 
@@ -132,7 +140,7 @@ Limitations observed:
   6 s load, ~9.4 s per command, zero errors across 160 CPU inferences.
 - Quantifies a cheap, auditable pre-pass: +20.0 pp exact-match accuracy,
   +19.3 pp intent F1, at zero latency cost — while honestly reporting its
-  17.9% regression rate on self-corrections.
+  17.9% regression rate and pinpointing the exact splicing bugs behind it.
 - The recovery/regression ID lists in
   [artifacts/metrics.json](artifacts/metrics.json) give the next person a
   concrete fix list for the normalizer rules.
@@ -152,9 +160,19 @@ the URL will replace the `PENDING` marker below and in the frontmatter.
   [generate_dataset.py](scripts/generate_dataset.py)); no private household or
   business data is involved. The dataset ships in this case under the
   repository license.
-- High-risk/ambiguous utterances (`把那个灯关一下`, unsecured heater changes)
-  route to a rule-based `clarify` decision and are never executed; the model's
-  non-parseable outputs on that group are treated as no-command, not guessed.
+- Ambiguity handling for high-risk actions, verified against the run logs: on
+  all 10 `ambiguous_reference` / `high_risk_ambiguity` samples the model itself
+  emitted well-formed, directly executable commands in **both** pipelines
+  (for example `turnOn|Door Lock|*|*|*|*|*` and `turnOn|Gas Valve|*|*|*|*|*`).
+  Nothing in the model refuses, asks for confirmation, or produces an
+  unparseable reply. Execution is prevented only by the deterministic rule
+  layer (`safety_decision` in [normalize.py](scripts/normalize.py)), which
+  returns `clarify` for 5 samples and `reject` for the other 5 and never
+  `execute` for these texts. The reported 100% safety-decision accuracy and
+  0% dangerous-execute rate therefore measure the rule layer against the
+  dataset's own labels — they are not model behavior. A deployment must keep
+  this gate in front of the model; the model alone is not safe on risky
+  commands.
 
 ## Notes and gotchas / 踩坑记录
 

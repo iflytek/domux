@@ -35,12 +35,15 @@ PHRASE_REPLACEMENTS = [
     ("二十四度", "24 Celsius"),
     ("二十二度", "22 Celsius"),
     ("二十度", "20 Celsius"),
+    ("三十度", "30 Celsius"),
     ("一楼", "First Floor"),
     ("客厅", "Living Room"),
     ("卧室", "Bedroom"),
     ("书房", "Study"),
+    ("厨房", "Kitchen"),
     ("玄关", "Entrance"),
     ("安防系统", "Security System"),
+    ("安防", "Security System"),
     ("燃气阀", "Gas Valve"),
     ("取暖器", "Heater"),
     ("门锁", "Door Lock"),
@@ -102,7 +105,11 @@ EXPLICIT_CONTEXT_TERMS = (
 def _replace(text: str, old: str, new: str, rule: str, edits: list[Edit]) -> str:
     if old not in text:
         return text
-    updated = text.replace(old, new)
+    # Pad every substitution with spaces so spliced tokens stay separate words
+    # for the model: 客厅灯设为蓝色 must become "Living Room Light set to Blue",
+    # not "Living RoomLightset toBlue" (the glue produced bogus device slots
+    # such as "Lightset" and "Heaterset" in the first CPU run).
+    updated = text.replace(old, f" {new} " if new else " ")
     edits.append(Edit(rule=rule, before=old, after=new))
     return updated
 
