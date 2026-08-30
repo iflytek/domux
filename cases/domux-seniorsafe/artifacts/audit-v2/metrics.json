@@ -1,0 +1,545 @@
+{
+  "revision": "6c71a32f4d624cadfd9fce9d10240d8068e53456",
+  "scorer_version": "2-ordered-exact-lcs-f1",
+  "legacy_rescore": false,
+  "raw": {
+    "samples": 80,
+    "parse_evaluable": 70,
+    "format_compliance": 1.0,
+    "result_accuracy": 0.5571428571428572,
+    "slot_f1": 0.8956433637284702,
+    "intent_f1": 0.5673758865248227,
+    "avg_latency_ms": 8539.1483625,
+    "p95_latency_ms": 10443.937,
+    "max_latency_ms": 12288.159,
+    "safety_risky_samples": 15,
+    "errors": 0,
+    "safety_decision_accuracy": 1.0,
+    "dangerous_execute_rate": 0.0,
+    "slot_counts": [
+      442,
+      497,
+      490
+    ],
+    "intent_counts": [
+      40,
+      71,
+      70
+    ]
+  },
+  "raw_by_group": {
+    "ambiguous_reference": {
+      "samples": 5,
+      "parse_evaluable": 0,
+      "format_compliance": 0.0,
+      "result_accuracy": 0.0,
+      "slot_f1": 0.0,
+      "intent_f1": 0.0,
+      "avg_latency_ms": 8217.6094,
+      "p95_latency_ms": 9033.028,
+      "max_latency_ms": 9033.028,
+      "safety_risky_samples": 5,
+      "errors": 0,
+      "safety_decision_accuracy": 1.0,
+      "dangerous_execute_rate": 0.0,
+      "slot_counts": [
+        0,
+        0,
+        0
+      ],
+      "intent_counts": [
+        0,
+        0,
+        0
+      ]
+    },
+    "asr_error": {
+      "samples": 5,
+      "parse_evaluable": 5,
+      "format_compliance": 1.0,
+      "result_accuracy": 0.6,
+      "slot_f1": 0.9428571428571428,
+      "intent_f1": 0.6,
+      "avg_latency_ms": 8025.666,
+      "p95_latency_ms": 8905.837,
+      "max_latency_ms": 8905.837,
+      "safety_risky_samples": 0,
+      "errors": 0,
+      "safety_decision_accuracy": 1.0,
+      "dangerous_execute_rate": 0.0,
+      "slot_counts": [
+        33,
+        35,
+        35
+      ],
+      "intent_counts": [
+        3,
+        5,
+        5
+      ]
+    },
+    "clean": {
+      "samples": 40,
+      "parse_evaluable": 40,
+      "format_compliance": 1.0,
+      "result_accuracy": 0.625,
+      "slot_f1": 0.9357142857142857,
+      "intent_f1": 0.625,
+      "avg_latency_ms": 8334.669,
+      "p95_latency_ms": 9554.982,
+      "max_latency_ms": 10262.691,
+      "safety_risky_samples": 5,
+      "errors": 0,
+      "safety_decision_accuracy": 1.0,
+      "dangerous_execute_rate": 0.0,
+      "slot_counts": [
+        262,
+        280,
+        280
+      ],
+      "intent_counts": [
+        25,
+        40,
+        40
+      ]
+    },
+    "code_switching": {
+      "samples": 5,
+      "parse_evaluable": 5,
+      "format_compliance": 1.0,
+      "result_accuracy": 0.2,
+      "slot_f1": 0.8857142857142857,
+      "intent_f1": 0.20000000000000004,
+      "avg_latency_ms": 7902.998799999999,
+      "p95_latency_ms": 8395.753,
+      "max_latency_ms": 8395.753,
+      "safety_risky_samples": 0,
+      "errors": 0,
+      "safety_decision_accuracy": 1.0,
+      "dangerous_execute_rate": 0.0,
+      "slot_counts": [
+        31,
+        35,
+        35
+      ],
+      "intent_counts": [
+        1,
+        5,
+        5
+      ]
+    },
+    "elderly_style": {
+      "samples": 5,
+      "parse_evaluable": 5,
+      "format_compliance": 1.0,
+      "result_accuracy": 0.2,
+      "slot_f1": 0.6571428571428571,
+      "intent_f1": 0.20000000000000004,
+      "avg_latency_ms": 9379.312399999999,
+      "p95_latency_ms": 10926.514,
+      "max_latency_ms": 10926.514,
+      "safety_risky_samples": 0,
+      "errors": 0,
+      "safety_decision_accuracy": 1.0,
+      "dangerous_execute_rate": 0.0,
+      "slot_counts": [
+        23,
+        35,
+        35
+      ],
+      "intent_counts": [
+        1,
+        5,
+        5
+      ]
+    },
+    "high_risk_ambiguity": {
+      "samples": 5,
+      "parse_evaluable": 0,
+      "format_compliance": 0.0,
+      "result_accuracy": 0.0,
+      "slot_f1": 0.0,
+      "intent_f1": 0.0,
+      "avg_latency_ms": 8099.498000000001,
+      "p95_latency_ms": 8548.986,
+      "max_latency_ms": 8548.986,
+      "safety_risky_samples": 5,
+      "errors": 0,
+      "safety_decision_accuracy": 1.0,
+      "dangerous_execute_rate": 0.0,
+      "slot_counts": [
+        0,
+        0,
+        0
+      ],
+      "intent_counts": [
+        0,
+        0,
+        0
+      ]
+    },
+    "negation": {
+      "samples": 5,
+      "parse_evaluable": 5,
+      "format_compliance": 1.0,
+      "result_accuracy": 0.8,
+      "slot_f1": 0.8857142857142857,
+      "intent_f1": 0.8000000000000002,
+      "avg_latency_ms": 9130.0536,
+      "p95_latency_ms": 10679.513,
+      "max_latency_ms": 10679.513,
+      "safety_risky_samples": 0,
+      "errors": 0,
+      "safety_decision_accuracy": 1.0,
+      "dangerous_execute_rate": 0.0,
+      "slot_counts": [
+        31,
+        35,
+        35
+      ],
+      "intent_counts": [
+        4,
+        5,
+        5
+      ]
+    },
+    "repetition": {
+      "samples": 5,
+      "parse_evaluable": 5,
+      "format_compliance": 1.0,
+      "result_accuracy": 0.4,
+      "slot_f1": 0.8000000000000002,
+      "intent_f1": 0.4000000000000001,
+      "avg_latency_ms": 9228.0528,
+      "p95_latency_ms": 10878.33,
+      "max_latency_ms": 10878.33,
+      "safety_risky_samples": 0,
+      "errors": 0,
+      "safety_decision_accuracy": 1.0,
+      "dangerous_execute_rate": 0.0,
+      "slot_counts": [
+        28,
+        35,
+        35
+      ],
+      "intent_counts": [
+        2,
+        5,
+        5
+      ]
+    },
+    "self_correction": {
+      "samples": 5,
+      "parse_evaluable": 5,
+      "format_compliance": 1.0,
+      "result_accuracy": 0.6,
+      "slot_f1": 0.8831168831168832,
+      "intent_f1": 0.7272727272727272,
+      "avg_latency_ms": 9965.8308,
+      "p95_latency_ms": 12288.159,
+      "max_latency_ms": 12288.159,
+      "safety_risky_samples": 0,
+      "errors": 0,
+      "safety_decision_accuracy": 1.0,
+      "dangerous_execute_rate": 0.0,
+      "slot_counts": [
+        34,
+        42,
+        35
+      ],
+      "intent_counts": [
+        4,
+        6,
+        5
+      ]
+    }
+  },
+  "normalized": {
+    "samples": 80,
+    "parse_evaluable": 70,
+    "format_compliance": 1.0,
+    "result_accuracy": 0.8571428571428571,
+    "slot_f1": 0.9665653495440728,
+    "intent_f1": 0.8652482269503546,
+    "avg_latency_ms": 8765.2300625,
+    "p95_latency_ms": 11127.239,
+    "max_latency_ms": 12383.499,
+    "safety_risky_samples": 15,
+    "errors": 0,
+    "safety_decision_accuracy": 1.0,
+    "dangerous_execute_rate": 0.0,
+    "slot_counts": [
+      477,
+      497,
+      490
+    ],
+    "intent_counts": [
+      61,
+      71,
+      70
+    ]
+  },
+  "normalized_by_group": {
+    "ambiguous_reference": {
+      "samples": 5,
+      "parse_evaluable": 0,
+      "format_compliance": 0.0,
+      "result_accuracy": 0.0,
+      "slot_f1": 0.0,
+      "intent_f1": 0.0,
+      "avg_latency_ms": 8071.420999999999,
+      "p95_latency_ms": 8677.496,
+      "max_latency_ms": 8677.496,
+      "safety_risky_samples": 5,
+      "errors": 0,
+      "safety_decision_accuracy": 1.0,
+      "dangerous_execute_rate": 0.0,
+      "slot_counts": [
+        0,
+        0,
+        0
+      ],
+      "intent_counts": [
+        0,
+        0,
+        0
+      ]
+    },
+    "asr_error": {
+      "samples": 5,
+      "parse_evaluable": 5,
+      "format_compliance": 1.0,
+      "result_accuracy": 1.0,
+      "slot_f1": 1.0,
+      "intent_f1": 1.0,
+      "avg_latency_ms": 8546.764200000001,
+      "p95_latency_ms": 9809.689,
+      "max_latency_ms": 9809.689,
+      "safety_risky_samples": 0,
+      "errors": 0,
+      "safety_decision_accuracy": 1.0,
+      "dangerous_execute_rate": 0.0,
+      "slot_counts": [
+        35,
+        35,
+        35
+      ],
+      "intent_counts": [
+        5,
+        5,
+        5
+      ]
+    },
+    "clean": {
+      "samples": 40,
+      "parse_evaluable": 40,
+      "format_compliance": 1.0,
+      "result_accuracy": 0.925,
+      "slot_f1": 0.9892857142857143,
+      "intent_f1": 0.925,
+      "avg_latency_ms": 8669.6167,
+      "p95_latency_ms": 10921.579,
+      "max_latency_ms": 11607.656,
+      "safety_risky_samples": 5,
+      "errors": 0,
+      "safety_decision_accuracy": 1.0,
+      "dangerous_execute_rate": 0.0,
+      "slot_counts": [
+        277,
+        280,
+        280
+      ],
+      "intent_counts": [
+        37,
+        40,
+        40
+      ]
+    },
+    "code_switching": {
+      "samples": 5,
+      "parse_evaluable": 5,
+      "format_compliance": 1.0,
+      "result_accuracy": 1.0,
+      "slot_f1": 1.0,
+      "intent_f1": 1.0,
+      "avg_latency_ms": 8137.5254,
+      "p95_latency_ms": 8420.086,
+      "max_latency_ms": 8420.086,
+      "safety_risky_samples": 0,
+      "errors": 0,
+      "safety_decision_accuracy": 1.0,
+      "dangerous_execute_rate": 0.0,
+      "slot_counts": [
+        35,
+        35,
+        35
+      ],
+      "intent_counts": [
+        5,
+        5,
+        5
+      ]
+    },
+    "elderly_style": {
+      "samples": 5,
+      "parse_evaluable": 5,
+      "format_compliance": 1.0,
+      "result_accuracy": 0.6,
+      "slot_f1": 0.8857142857142857,
+      "intent_f1": 0.6,
+      "avg_latency_ms": 9736.1288,
+      "p95_latency_ms": 11781.841,
+      "max_latency_ms": 11781.841,
+      "safety_risky_samples": 0,
+      "errors": 0,
+      "safety_decision_accuracy": 1.0,
+      "dangerous_execute_rate": 0.0,
+      "slot_counts": [
+        31,
+        35,
+        35
+      ],
+      "intent_counts": [
+        3,
+        5,
+        5
+      ]
+    },
+    "high_risk_ambiguity": {
+      "samples": 5,
+      "parse_evaluable": 0,
+      "format_compliance": 0.0,
+      "result_accuracy": 0.0,
+      "slot_f1": 0.0,
+      "intent_f1": 0.0,
+      "avg_latency_ms": 9070.367199999999,
+      "p95_latency_ms": 11207.774,
+      "max_latency_ms": 11207.774,
+      "safety_risky_samples": 5,
+      "errors": 0,
+      "safety_decision_accuracy": 1.0,
+      "dangerous_execute_rate": 0.0,
+      "slot_counts": [
+        0,
+        0,
+        0
+      ],
+      "intent_counts": [
+        0,
+        0,
+        0
+      ]
+    },
+    "negation": {
+      "samples": 5,
+      "parse_evaluable": 5,
+      "format_compliance": 1.0,
+      "result_accuracy": 0.8,
+      "slot_f1": 0.9428571428571428,
+      "intent_f1": 0.8000000000000002,
+      "avg_latency_ms": 8436.3274,
+      "p95_latency_ms": 11127.239,
+      "max_latency_ms": 11127.239,
+      "safety_risky_samples": 0,
+      "errors": 0,
+      "safety_decision_accuracy": 1.0,
+      "dangerous_execute_rate": 0.0,
+      "slot_counts": [
+        33,
+        35,
+        35
+      ],
+      "intent_counts": [
+        4,
+        5,
+        5
+      ]
+    },
+    "repetition": {
+      "samples": 5,
+      "parse_evaluable": 5,
+      "format_compliance": 1.0,
+      "result_accuracy": 0.6,
+      "slot_f1": 0.9142857142857143,
+      "intent_f1": 0.6,
+      "avg_latency_ms": 9184.420199999999,
+      "p95_latency_ms": 9810.951,
+      "max_latency_ms": 9810.951,
+      "safety_risky_samples": 0,
+      "errors": 0,
+      "safety_decision_accuracy": 1.0,
+      "dangerous_execute_rate": 0.0,
+      "slot_counts": [
+        32,
+        35,
+        35
+      ],
+      "intent_counts": [
+        3,
+        5,
+        5
+      ]
+    },
+    "self_correction": {
+      "samples": 5,
+      "parse_evaluable": 5,
+      "format_compliance": 1.0,
+      "result_accuracy": 0.6,
+      "slot_f1": 0.8831168831168832,
+      "intent_f1": 0.7272727272727272,
+      "avg_latency_ms": 9703.7932,
+      "p95_latency_ms": 12383.499,
+      "max_latency_ms": 12383.499,
+      "safety_risky_samples": 0,
+      "errors": 0,
+      "safety_decision_accuracy": 1.0,
+      "dangerous_execute_rate": 0.0,
+      "slot_counts": [
+        34,
+        42,
+        35
+      ],
+      "intent_counts": [
+        4,
+        6,
+        5
+      ]
+    }
+  },
+  "comparison": {
+    "common_samples": 80,
+    "normalizer_recovery_rate": 0.7419354838709677,
+    "normalizer_regression_rate": 0.05128205128205128,
+    "recovered_ids": [
+      "ss-002-clean",
+      "ss-002-elderly_style",
+      "ss-005-elderly_style",
+      "ss-006-clean",
+      "ss-010-clean",
+      "ss-013-clean",
+      "ss-014-clean",
+      "ss-015-repetition",
+      "ss-018-clean",
+      "ss-018-negation",
+      "ss-021-clean",
+      "ss-022-clean",
+      "ss-023-clean",
+      "ss-027-asr_error",
+      "ss-027-clean",
+      "ss-030-asr_error",
+      "ss-030-clean",
+      "ss-031-code_switching",
+      "ss-032-clean",
+      "ss-032-code_switching",
+      "ss-033-code_switching",
+      "ss-034-code_switching",
+      "ss-036-clean"
+    ],
+    "regressed_ids": [
+      "ss-020-clean",
+      "ss-020-negation"
+    ],
+    "normalized_pair_consistency": 0.7666666666666667,
+    "eligible_pairs": 30
+  }
+}

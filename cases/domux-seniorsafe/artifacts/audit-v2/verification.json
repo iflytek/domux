@@ -1,0 +1,57 @@
+{
+  "recorded_at": "2026-08-30T11:57:38.284369+00:00",
+  "checks": [
+    {
+      "check": "unit_and_local_http_workflow",
+      "exit_code": 0,
+      "output": "...............................\n----------------------------------------------------------------------\nRan 31 tests in 19.567s\n\nOK"
+    },
+    {
+      "check": "dataset_schema",
+      "exit_code": 0,
+      "output": "[seniorsafe] valid: 80 records, 40 pairs"
+    },
+    {
+      "check": "publication_gate",
+      "exit_code": 0,
+      "output": "[cases] scaffold and submitted cases are valid"
+    },
+    {
+      "check": "diff_whitespace",
+      "exit_code": 0,
+      "output": ""
+    }
+  ],
+  "runtime_packages": {
+    "torch": "2.13.0+cpu",
+    "torchvision": "0.28.0+cpu",
+    "transformers": "5.16.1",
+    "accelerate": "1.14.0",
+    "huggingface-hub": "1.29.0",
+    "psutil": "7.2.2"
+  },
+  "boundaries": [
+    "HTTP workflow tests use a synthetic local provider, not Domux.",
+    "Real CPU inference outputs are stored separately.",
+    "This task did not execute devices or publish external messages."
+  ],
+  "real_cpu_checks": [
+    {
+      "pipeline": "raw",
+      "complete": true,
+      "code_matches_current": true,
+      "dataset_matches_current": true,
+      "output_digest_matches": true,
+      "no_execution": true
+    },
+    {
+      "pipeline": "normalized",
+      "complete": true,
+      "code_matches_current": true,
+      "dataset_matches_current": true,
+      "output_digest_matches": true,
+      "no_execution": true
+    }
+  ],
+  "strict_scoring_exit_code": 0
+}
