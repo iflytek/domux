@@ -1,0 +1,23 @@
+{
+  "recorded_at": "2026-08-30T05:18:01.819241+00:00",
+  "run_id": "full-80-cpu-raw",
+  "repo_id": "iFlytekOpenSource/Domux",
+  "revision": "6c71a32f4d624cadfd9fce9d10240d8068e53456",
+  "snapshot_size_bytes": 10279032574,
+  "snapshot_path_redacted": "6c71a32f4d624cadfd9fce9d10240d8068e53456",
+  "pipeline": "raw",
+  "sample_count": 80,
+  "python": "3.12.13 (main, May 10 2026, 19:35:37) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor_class": "Gemma4Processor",
+  "model_class": "Gemma4ForConditionalGeneration",
+  "torch": "2.13.0+cpu",
+  "transformers_backend": "cpu",
+  "dtype": "bfloat16",
+  "threads": 16,
+  "load_seconds": 5.381,
+  "model_load_rss_delta_bytes": 266203136,
+  "system_ram_bytes": 33752997888,
+  "max_new_tokens": 128,
+  "do_sample": false
+}
