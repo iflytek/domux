@@ -45,6 +45,7 @@ data/
 !cases/domux-seniorsafe/artifacts/
 !cases/domux-seniorsafe/artifacts/*.json
 !cases/domux-seniorsafe/artifacts/*_outputs.jsonl
+!cases/domux-seniorsafe/artifacts/audit-v2/*_outputs.jsonl
 
 # System
 .DS_Store

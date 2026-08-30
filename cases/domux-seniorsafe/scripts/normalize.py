@@ -103,13 +103,17 @@ EXPLICIT_CONTEXT_TERMS = (
 
 
 def _replace(text: str, old: str, new: str, rule: str, edits: list[Edit]) -> str:
-    if old not in text:
-        return text
     # Pad every substitution with spaces so spliced tokens stay separate words
     # for the model: 客厅灯设为蓝色 must become "Living Room Light set to Blue",
     # not "Living RoomLightset toBlue" (the glue produced bogus device slots
     # such as "Lightset" and "Heaterset" in the first CPU run).
-    updated = text.replace(old, f" {new} " if new else " ")
+    if old.isascii() and old.isalpha():
+        updated = re.sub(r'(?<![A-Za-z0-9_])' + re.escape(old) + r'(?![A-Za-z0-9_])',
+                         lambda _: f' {new} ', text, flags=re.IGNORECASE)
+    else:
+        updated = text.replace(old, f" {new} " if new else " ")
+    if updated == text:
+        return text
     edits.append(Edit(rule=rule, before=old, after=new))
     return updated
 
@@ -125,14 +129,11 @@ def normalize_text(text: str) -> tuple[str, list[dict[str, str]]]:
     for old, new in ASR_REPLACEMENTS.items():
         normalized = _replace(normalized, old, new, "synthetic_asr_alias", edits)
 
-    # Preserve the final clause after explicit correction markers. This rule is
-    # conservative: it only drops text when the final clause names a device.
-    correction_match = re.search(r"(?:不对|等一下|算了|不是[^，。]*[，,])\s*(.+)$", normalized)
-    if correction_match:
-        final_clause = correction_match.group(1).strip(" ，,。.")
-        if any(term in final_clause for term in ("灯", "空调", "窗帘", "AC", "light", "curtain")):
-            edits.append(Edit("explicit_self_correction", normalized, final_clause))
-            normalized = final_clause
+    # A correction can change only one slot while inheriting the others.
+    # Keep the complete utterance for the model instead of guessing inheritance.
+    if re.search(r'不对|等一下|算了|不是|不[，,。…]|\b(?:actually|instead)\b', normalized, re.I):
+        edits.append(Edit('preserve_correction_context', normalized, normalized))
+        return normalized, [edit.to_dict() for edit in edits]
 
     for filler in FILLERS:
         normalized = _replace(normalized, filler, "", "remove_filler", edits)
@@ -156,22 +157,45 @@ def normalize_text(text: str) -> tuple[str, list[dict[str, str]]]:
     return normalized, [edit.to_dict() for edit in edits]
 
 
+def contains_term(text: str, term: str) -> bool:
+    if term.isascii():
+        return bool(re.search(r'(?<![a-z0-9_])' + re.escape(term.casefold()) + r'(?![a-z0-9_])', text.casefold()))
+    return term in text
+
+
 def safety_decision(text: str) -> tuple[str, list[str]]:
     """Return a deterministic offline decision; this does not control devices."""
 
+    text = re.sub(r'\s+', ' ', unicodedata.normalize('NFKC', text)).strip()
+    if not text:
+        return 'clarify', ['empty_request']
     reasons: list[str] = []
-    lower = text.lower()
+    lower = text.casefold()
+    # Keep risk aliases separate from text rewriting. Unknown targets fail closed.
+    aliases = {'gas': ('燃气阀', '煤气阀', 'gas valve'),
+               'heater': ('取暖器', '暖气', 'heater'),
+               'security': ('安防', 'security', 'alarm system'),
+               'oven': ('烤箱', 'oven'), 'lock': ('门锁', 'door lock', 'lock')}
+    risks = {kind for kind, terms in aliases.items() if any(contains_term(text, term) for term in terms)}
+    has_device = bool(risks) or any(contains_term(text, term) for term in
+        ('灯', '空调', '窗帘', '创帘', '客厅等', '诶西', 'light', 'lite', 'lamp', 'ac', 'curtain', 'blind'))
+    has_context = any(contains_term(text, term) for term in EXPLICIT_CONTEXT_TERMS)
+    ambiguous = any(contains_term(text, term) for term in (*AMBIGUOUS_TERMS, 'it', 'that', 'there'))
 
-    if any(term in text for term in AMBIGUOUS_TERMS) and not any(term in text for term in EXPLICIT_CONTEXT_TERMS):
+    if ambiguous and not (has_context and has_device):
         reasons.append("ambiguous_reference_without_unique_context")
+    if not has_device:
+        reasons.append('missing_or_unsupported_device')
 
-    if "燃气阀" in text and any(term in text for term in ("打开", "开启")):
+    opening = any(contains_term(text, term) for term in ('打开', '开启', 'turn on', 'open', 'unlock'))
+    closing = any(contains_term(text, term) for term in ('关掉', '关闭', '停用', 'turn off', 'disable', 'deactivate'))
+    if 'gas' in risks and opening:
         reasons.append("gas_valve_open_request")
-    if "取暖器" in text and ("三十度" in text or re.search(r"\b(?:29|30|3[1-9])\b", lower)):
+    if 'heater' in risks and ('三十度' in text or any(float(n) >= 29 for n in re.findall(r'\d+(?:\.\d+)?', lower))):
         reasons.append("heater_temperature_above_mvp_limit")
-    if "安防" in text and any(term in text for term in ("关掉", "关闭", "停用")):
+    if 'security' in risks and closing:
         reasons.append("security_disable_request")
-    if "烤箱" in text and "没人" in text and any(term in text for term in ("打开", "开启")):
+    if 'oven' in risks and opening and any(contains_term(text, term) for term in ('没人', '无人', 'nobody', 'unattended')):
         reasons.append("unattended_oven_start")
 
     if any(reason in reasons for reason in (
@@ -185,7 +209,7 @@ def safety_decision(text: str) -> tuple[str, list[str]]:
     if reasons:
         return "clarify", reasons
 
-    if any(term in text for term in HIGH_RISK_TERMS):
+    if risks:
         # Explicit high-risk commands are not automatically rejected. The MVP
         # marks them for confirmation unless they match a refusal rule above.
         return "clarify", ["high_risk_action_requires_confirmation"]

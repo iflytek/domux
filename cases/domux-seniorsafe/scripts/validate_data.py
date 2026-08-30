@@ -8,6 +8,7 @@ import json
 import re
 from collections import Counter, defaultdict
 from pathlib import Path
+from protocol import parse_output
 
 
 GROUPS = {
@@ -63,9 +64,17 @@ def validate(rows: list[dict[str, object]]) -> list[str]:
 
     for index, row in enumerate(rows, start=1):
         prefix = f"record {index}"
+        if not isinstance(row, dict):
+            errors.append(f'{prefix}: record must be an object')
+            continue
         missing = REQUIRED - row.keys()
+        if row.keys() - REQUIRED:
+            errors.append(f'{prefix}: unexpected fields {sorted(row.keys() - REQUIRED)}')
         if missing:
             errors.append(f"{prefix}: missing fields {sorted(missing)}")
+            continue
+        if any(not isinstance(row[key], str) or not row[key].strip() for key in REQUIRED - {'evaluate_parse'}):
+            errors.append(f'{prefix}: text fields must be non-empty strings')
             continue
         row_id = str(row["id"])
         if row_id in ids:
@@ -87,9 +96,10 @@ def validate(rows: list[dict[str, object]]) -> list[str]:
             errors.append(f"{prefix}: evaluate_parse must be boolean")
         if not str(row["text"]).strip():
             errors.append(f"{prefix}: text is empty")
-        for output_line in str(row["gold"]).splitlines():
-            if len(output_line.split("|")) != 7:
-                errors.append(f"{prefix}: gold line does not have seven fields")
+        if not parse_output(row['gold'])[1]:
+            errors.append(f'{prefix}: gold must contain valid non-empty seven-field commands')
+        if row_id != f"{row['base_id']}-{row['group']}":
+            errors.append(f'{prefix}: id must match base_id and group')
         pairs[str(row["base_id"])].append(row)
 
     for base_id, pair in sorted(pairs.items()):

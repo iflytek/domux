@@ -7,6 +7,7 @@ import argparse
 import json
 import os
 import platform
+import re
 import sys
 import time
 from datetime import datetime, timezone
@@ -18,13 +19,16 @@ from huggingface_hub import snapshot_download
 from transformers import AutoModelForMultimodalLM, AutoProcessor
 
 from normalize import normalize_text, safety_decision
-from run_eval import canonical_set, load_jsonl, parse_output
+from run_support import RunJournal, finish_record, load_jsonl, provenance, select_rows
+from validate_data import validate
 
 
 def resolve_snapshot(repo_id: str, revision: str, local_dir: Path | None) -> Path:
     if local_dir is not None:
         if not local_dir.is_dir():
             raise FileNotFoundError(f"snapshot directory does not exist: {local_dir}")
+        if local_dir.name != revision or local_dir.parent.name != "snapshots" or local_dir.parent.parent.name != "models--" + repo_id.replace("/", "--"):
+            raise ValueError("--snapshot must be the pinned Hugging Face cache snapshot for this repo/revision")
         return local_dir.resolve()
     return Path(snapshot_download(repo_id=repo_id, revision=revision)).resolve()
 
@@ -67,19 +71,17 @@ def generate(processor: object, model: object, text: str, max_new_tokens: int) -
         )
     latency_ms = (time.perf_counter() - started) * 1000
     prompt_tokens = inputs["input_ids"].shape[-1]
-    decoded = processor.decode(outputs[0][prompt_tokens:], skip_special_tokens=True)
+    generated = outputs[0][prompt_tokens:]
+    eos = model.generation_config.eos_token_id
+    eos_ids = eos if isinstance(eos, list) else [eos]
+    if len(generated) >= max_new_tokens and int(generated[-1]) not in eos_ids:
+        raise ValueError("generation reached token limit without EOS")
+    decoded = processor.decode(generated, skip_special_tokens=True)
     return decoded.strip(), latency_ms
 
 
 def choose_rows(rows: list[dict[str, object]], limit: int | None, sample_ids: str) -> list[dict[str, object]]:
-    if sample_ids:
-        requested = [item.strip() for item in sample_ids.split(",") if item.strip()]
-        by_id = {str(row["id"]): row for row in rows}
-        missing = [row_id for row_id in requested if row_id not in by_id]
-        if missing:
-            raise ValueError(f"unknown sample ids: {missing}")
-        return [by_id[row_id] for row_id in requested]
-    return rows[:limit] if limit is not None else rows
+    return select_rows(rows, limit, sample_ids)
 
 
 def evaluate(
@@ -91,6 +93,7 @@ def evaluate(
     run_id: str,
     max_new_tokens: int,
 ) -> dict[str, object]:
+    started = time.perf_counter()
     source_text = str(row["text"])
     request_text = source_text
     normalized_text: str | None = None
@@ -105,20 +108,15 @@ def evaluate(
     error: str | None = None
     try:
         raw_output, latency_ms = generate(processor, model, request_text, max_new_tokens)
-    except (RuntimeError, ValueError, KeyError) as exc:
-        error = f"{type(exc).__name__}: {exc}"
+    except (RuntimeError, ValueError, KeyError, IndexError, TypeError, OSError) as exc:
+        error = type(exc).__name__
 
-    parsed, format_valid = parse_output(raw_output) if not error else ([], False)
-    result_correct = bool(row["evaluate_parse"]) and canonical_set(raw_output) == canonical_set(str(row["gold"]))
+    result = finish_record(row, raw_output, latency_ms, error, decision)
     return {
         **row,
         "request_text": request_text,
-        "raw_output": raw_output,
-        "parsed": parsed,
-        "format_valid": format_valid,
-        "result_correct": result_correct,
-        "latency_ms": round(latency_ms, 3),
-        "error": error,
+        **result,
+        "total_latency_ms": round((time.perf_counter() - started) * 1000, 3),
         "normalized_text": normalized_text,
         "normalization_edits": edits,
         "safety_decision": decision,
@@ -146,38 +144,38 @@ def main() -> int:
     parser.add_argument("--max-new-tokens", type=int, default=128)
     parser.add_argument("--limit", type=int)
     parser.add_argument("--sample-ids", default="")
+    parser.add_argument("--resume", action="store_true")
     args = parser.parse_args()
 
-    if len(args.revision) != 40:
+    if not re.fullmatch(r"[0-9a-fA-F]{40}", args.revision):
         parser.error("--revision must be a full 40-character Hugging Face SHA")
+    if args.threads <= 0 or args.max_new_tokens <= 0 or not args.run_id.strip():
+        parser.error("threads/max-new-tokens must be positive and run-id non-empty")
     if args.output is None:
         args.output = root / "artifacts" / f"{args.pipeline}_outputs.jsonl"
     if args.environment_output is None:
         args.environment_output = root / "artifacts" / f"{args.pipeline}_environment.json"
 
     torch.set_num_threads(args.threads)
-    rows = choose_rows(load_jsonl(args.data), args.limit, args.sample_ids)
+    dataset = load_jsonl(args.data)
+    errors = validate(dataset)
+    if errors:
+        parser.error("; ".join(errors))
+    rows = choose_rows(dataset, args.limit, args.sample_ids)
+    settings = {"backend": "transformers-cpu", "repo_id": args.repo_id, "dtype": args.dtype,
+                "threads": args.threads, "max_new_tokens": args.max_new_tokens, "do_sample": False}
+    metadata = {**provenance(rows, settings), "revision": args.revision, "run_id": args.run_id,
+                "pipeline": args.pipeline, "sample_count": len(rows), "backend": "transformers-cpu"}
+    journal = RunJournal(args.output, args.environment_output, rows, metadata, args.resume)
+    if len(journal.completed) == len(rows):
+        return journal.finish()
     snapshot = resolve_snapshot(args.repo_id, args.revision, args.snapshot)
     processor, model, load_seconds, rss_delta = load_model(snapshot, args.dtype)
 
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    with args.output.open("w", encoding="utf-8", newline="\n") as handle:
-        for index, row in enumerate(rows, start=1):
-            result = evaluate(
-                row,
-                args.pipeline,
-                processor,
-                model,
-                args.revision,
-                args.run_id,
-                args.max_new_tokens,
-            )
-            handle.write(json.dumps(result, ensure_ascii=False) + "\n")
-            print(
-                f"[{args.pipeline}] {index}/{len(rows)} {row['id']} "
-                f"latency_ms={result['latency_ms']} error={result['error'] is not None}",
-                flush=True,
-            )
+    for index, row in enumerate(rows[len(journal.completed):], start=len(journal.completed) + 1):
+        result = evaluate(row, args.pipeline, processor, model, args.revision, args.run_id, args.max_new_tokens)
+        journal.append(result)
+        print(f"[{args.pipeline}] {index}/{len(rows)} {row['id']} latency_ms={result['latency_ms']} error={result['error'] is not None}", flush=True)
 
     environment = {
         "recorded_at": datetime.now(timezone.utc).isoformat(),
@@ -202,10 +200,7 @@ def main() -> int:
         "max_new_tokens": args.max_new_tokens,
         "do_sample": False,
     }
-    args.environment_output.parent.mkdir(parents=True, exist_ok=True)
-    args.environment_output.write_text(json.dumps(environment, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"[seniorsafe] wrote {args.output} and {args.environment_output}")
-    return 0
+    return journal.finish(environment)
 
 
 if __name__ == "__main__":
