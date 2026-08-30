@@ -8,7 +8,7 @@ runtime: transformers 5.16.1 + torch 2.13.0+cpu (CPU-only)
 hardware: Intel 14-core CPU (Model 170), 31.4 GB RAM, Windows 11, no GPU
 downloadSource: huggingface
 channels:
-  - https://huggingface.co/iFlytekOpenSource/Domux/discussions/PENDING
+  - https://huggingface.co/iFlytekOpenSource/Domux/discussions/7
 ---
 
 # Domux on a consumer CPU: 80-sample SeniorSafe intent benchmark, raw vs normalized pipelines
@@ -88,6 +88,8 @@ Run log excerpt (real run, revision `6c71a32f`):
 [raw] 5/5 ss-003-clean latency_ms=15153.866 error=False
 ```
 
+![Domux CPU run evidence: benchmark summary](preview.png)
+
 ## Results / 结果
 
 70/80 samples are parse-evaluable; the 10 `ambiguous_reference` /
@@ -147,10 +149,10 @@ Limitations observed:
 
 ## Published Hugging Face Discussion / 公开 Discussion
 
-Pending: the full case is being published to the official Domux Discussions;
-the URL will replace the `PENDING` marker below and in the frontmatter.
+Published: the full case is posted in the official Domux Discussions at the
+URL below, which also appears in the frontmatter.
 
-- https://huggingface.co/iFlytekOpenSource/Domux/discussions/PENDING
+- https://huggingface.co/iFlytekOpenSource/Domux/discussions/7
 
 ## Safety, privacy, and licensing / 安全、隐私与许可
 
