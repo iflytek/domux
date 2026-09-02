@@ -1,0 +1,27 @@
+RECORDED_REAL_DOMUX_RUN
+date=2026-08-25
+model_id=iFlytekOpenSource/Domux
+tested_revision=6c71a32f4d624cadfd9fce9d10240d8068e53456
+hardware=Google Colab free Tesla T4
+gpu_vram=15 GB
+platform=Linux-6.6.122+-x86_64-with-glibc2.35
+python=3.13.15
+torch=2.11.0+cu128
+transformers=5.15.0
+accelerate=1.14.0
+bitsandbytes=0.50.1
+huggingface_hub=1.27.0
+quantization=NF4 4-bit
+compute_dtype=torch.bfloat16
+generation_do_sample=false
+generation_max_new_tokens=256
+generation_seed=20260825
+snapshot_size_bytes=10279032574
+
+LOCAL_GATE_RECOMPUTATION
+dependency_scope=Python standard library only
+note=Gate metrics, attacks, Wilson intervals, and evidence verification do not require GPU packages.
+
+LIMITATION
+This snapshot records the direct packages and platform fields captured during the real run.
+It is not a full transitive pip freeze or a byte-for-byte Colab image lock.

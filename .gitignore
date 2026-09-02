@@ -36,6 +36,10 @@ swanlab/
 # Data files
 *.jsonl
 !**/example*.jsonl
+!cases/**/evidence/
+!cases/**/evidence/*.jsonl
+!cases/**/evidence/*.json
+!cases/**/evidence/*.log
 data/
 !training/data/example*.jsonl
 
