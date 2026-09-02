@@ -1,0 +1,17 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 📖 Documentation / 项目文档
+    url: https://github.com/iflytek/domux#readme
+    about: Quick start, benchmark, deployment and output specification. / 快速开始、评测、部署与输出规范。
+  - name: 🤗 Model on Hugging Face / Hugging Face 模型
+    url: https://huggingface.co/iFlytekOpenSource/Domux
+    about: Model card, weights and usage notes. / 模型卡、权重与使用说明。
+  - name: 🔧 Model on ModelScope / ModelScope 模型
+    url: https://modelscope.cn/models/iflytek/domux
+    about: Mirror for users in mainland China. / 面向中国大陆用户的镜像。
+  - name: 🔒 Report a security vulnerability / 报告安全漏洞
+    url: https://github.com/iflytek/community/blob/master/SECURITY.md
+    about: Please do NOT open a public issue for security problems. / 安全问题请勿公开提交 issue。
+  - name: 💬 iFLYTEK Open Source Community / 讯飞开源社区
+    url: https://github.com/iflytek/community
+    about: Contribution guide and code of conduct. / 贡献指南与行为准则。
