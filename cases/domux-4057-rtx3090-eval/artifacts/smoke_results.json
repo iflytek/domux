@@ -1,0 +1,59 @@
+{
+  "created_at_utc": "2026-08-25T03:18:34.681991+00:00",
+  "temperature": 0.0,
+  "max_examples": 5,
+  "all_passed": true,
+  "all_expected_matches": false,
+  "results": [
+    {
+      "sample": 1,
+      "query": "Turn on the living room light",
+      "raw_output": "turnOn|Light|*|*|*|Living Room|*",
+      "expected": "turnOn|Light|*|*|*|Living Room|*",
+      "format_valid": true,
+      "expected_match": true,
+      "latency_seconds": 0.165805,
+      "error": null
+    },
+    {
+      "sample": 2,
+      "query": "Set bedroom AC to 22 degrees",
+      "raw_output": "set|AC|temperature|22|Celsius|Bedroom|*",
+      "expected": "set|AC|temperature|22|Celsius|Bedroom|*",
+      "format_valid": true,
+      "expected_match": true,
+      "latency_seconds": 0.124784,
+      "error": null
+    },
+    {
+      "sample": 3,
+      "query": "Close the curtains 20 percent",
+      "raw_output": "set|Curtain|position|20|Percent|*|*",
+      "expected": "adjustDown|Curtain|openness|20|Percent|*|*",
+      "format_valid": true,
+      "expected_match": false,
+      "latency_seconds": 0.127714,
+      "error": null
+    },
+    {
+      "sample": 4,
+      "query": "Turn on the Master Light in the Master Bedroom on the Second Floor, set brightness to 80%, color temperature to 4000K, color to Blue, and mode to Reading.",
+      "raw_output": "turnOn|Light|*|*|*|Master Bedroom|Second Floor\nset|Light|brightness|80|Percent|Master Bedroom|Second Floor\nset|Light|colorTemperature|4000|Kelvin|Master Bedroom|Second Floor\nset|Light|color|Blue|*|Master Bedroom|Second Floor\nset|Light|mode|Reading|*|Master Bedroom|Second Floor",
+      "expected": "turnOn|Light|*|*|*|Master Bedroom|Second Floor\nset|Light|brightness|80|Percent|Master Bedroom|Second Floor\nset|Light|colorTemperature|4000|Kelvin|Master Bedroom|Second Floor\nset|Light|color|Blue|*|Master Bedroom|Second Floor\nset|Light|mode|Reading|*|Master Bedroom|Second Floor",
+      "format_valid": true,
+      "expected_match": true,
+      "latency_seconds": 0.627652,
+      "error": null
+    },
+    {
+      "sample": 5,
+      "query": "Turn off all lights in the Living Room on the Ground Floor, set the AC to Cool mode at 24 degrees in the Guest Bedroom, and open the curtains halfway in the Dining Room.",
+      "raw_output": "turnOff|Light|*|*|*|Living Room|Ground Floor\nset|AC|mode|Cool|*|Guest Bedroom|*\nset|Curtain|position|50|Percent|Dining Room|*",
+      "expected": "turnOff|Light|*|*|*|Living Room|Ground Floor\nset|AC|mode|Cool|*|Guest Bedroom|*\nset|AC|temperature|24|Celsius|Guest Bedroom|*\nset|Curtain|openness|50|Percent|Dining Room|*",
+      "format_valid": true,
+      "expected_match": false,
+      "latency_seconds": 0.361754,
+      "error": null
+    }
+  ]
+}

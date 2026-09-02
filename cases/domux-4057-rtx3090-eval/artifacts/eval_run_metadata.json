@@ -1,0 +1,16 @@
+{
+  "started_at_utc": "2026-08-25T03:18:34.836828+00:00",
+  "finished_at_utc": "2026-08-25T03:19:30.937033+00:00",
+  "duration_seconds": 56.127,
+  "model": "domux",
+  "endpoint": "local OpenAI-compatible /v1/chat/completions",
+  "temperature": 0.0,
+  "max_tokens": 256,
+  "max_workers": 20,
+  "request_timeout_seconds": 60,
+  "latency_warmup_samples": 5,
+  "dataset_expected_samples": 4057,
+  "completed_samples": 4057,
+  "api_error_count": 0,
+  "latency_definition": "end-to-end request latency under concurrency 20; not TTFT"
+}

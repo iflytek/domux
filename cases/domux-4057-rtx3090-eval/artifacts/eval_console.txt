@@ -1,0 +1,273 @@
+======================================================================
+Smart Home Control - Model Evaluation
+======================================================================
+Input:  <USER_HOME>/domux-her-hack-astron-4/eval/smart_home_control_test_set.jsonl
+Output: <USER_HOME>/domux-her-hack-astron-4/cases/domux-4057-rtx3090-eval/artifacts/raw/eval_results.jsonl
+Model:  domux
+API:    http://127.0.0.1:8000/v1
+Concurrency: 20
+
+Loaded 4057 samples across 4 categories:
+  - multi_intent: 1641
+  - non_standard_naming: 559
+  - omitted_attribute: 735
+  - single_intent: 1122
+
+======================================================================
+Category: multi_intent  (1641 samples)
+======================================================================
+
+  Progress: 20/1641 (1.2%)
+  Progress: 40/1641 (2.4%)
+  Progress: 60/1641 (3.7%)
+  Progress: 80/1641 (4.9%)
+  Progress: 100/1641 (6.1%)
+  Progress: 120/1641 (7.3%)
+  Progress: 140/1641 (8.5%)
+  Progress: 160/1641 (9.8%)
+  Progress: 180/1641 (11.0%)
+  Progress: 200/1641 (12.2%)
+  Progress: 220/1641 (13.4%)
+  Progress: 240/1641 (14.6%)
+  Progress: 260/1641 (15.8%)
+  Progress: 280/1641 (17.1%)
+  Progress: 300/1641 (18.3%)
+  Progress: 320/1641 (19.5%)
+  Progress: 340/1641 (20.7%)
+  Progress: 360/1641 (21.9%)
+  Progress: 380/1641 (23.2%)
+  Progress: 400/1641 (24.4%)
+  Progress: 420/1641 (25.6%)
+  Progress: 440/1641 (26.8%)
+  Progress: 460/1641 (28.0%)
+  Progress: 480/1641 (29.3%)
+  Progress: 500/1641 (30.5%)
+  Progress: 520/1641 (31.7%)
+  Progress: 540/1641 (32.9%)
+  Progress: 560/1641 (34.1%)
+  Progress: 580/1641 (35.3%)
+  Progress: 600/1641 (36.6%)
+  Progress: 620/1641 (37.8%)
+  Progress: 640/1641 (39.0%)
+  Progress: 660/1641 (40.2%)
+  Progress: 680/1641 (41.4%)
+  Progress: 700/1641 (42.7%)
+  Progress: 720/1641 (43.9%)
+  Progress: 740/1641 (45.1%)
+  Progress: 760/1641 (46.3%)
+  Progress: 780/1641 (47.5%)
+  Progress: 800/1641 (48.8%)
+  Progress: 820/1641 (50.0%)
+  Progress: 840/1641 (51.2%)
+  Progress: 860/1641 (52.4%)
+  Progress: 880/1641 (53.6%)
+  Progress: 900/1641 (54.8%)
+  Progress: 920/1641 (56.1%)
+  Progress: 940/1641 (57.3%)
+  Progress: 960/1641 (58.5%)
+  Progress: 980/1641 (59.7%)
+  Progress: 1000/1641 (60.9%)
+  Progress: 1020/1641 (62.2%)
+  Progress: 1040/1641 (63.4%)
+  Progress: 1060/1641 (64.6%)
+  Progress: 1080/1641 (65.8%)
+  Progress: 1100/1641 (67.0%)
+  Progress: 1120/1641 (68.3%)
+  Progress: 1140/1641 (69.5%)
+  Progress: 1160/1641 (70.7%)
+  Progress: 1180/1641 (71.9%)
+  Progress: 1200/1641 (73.1%)
+  Progress: 1220/1641 (74.3%)
+  Progress: 1240/1641 (75.6%)
+  Progress: 1260/1641 (76.8%)
+  Progress: 1280/1641 (78.0%)
+  Progress: 1300/1641 (79.2%)
+  Progress: 1320/1641 (80.4%)
+  Progress: 1340/1641 (81.7%)
+  Progress: 1360/1641 (82.9%)
+  Progress: 1380/1641 (84.1%)
+  Progress: 1400/1641 (85.3%)
+  Progress: 1420/1641 (86.5%)
+  Progress: 1440/1641 (87.8%)
+  Progress: 1460/1641 (89.0%)
+  Progress: 1480/1641 (90.2%)
+  Progress: 1500/1641 (91.4%)
+  Progress: 1520/1641 (92.6%)
+  Progress: 1540/1641 (93.8%)
+  Progress: 1560/1641 (95.1%)
+  Progress: 1580/1641 (96.3%)
+  Progress: 1600/1641 (97.5%)
+  Progress: 1620/1641 (98.7%)
+  Progress: 1640/1641 (99.9%)
+  Progress: 1641/1641 (100.0%)
+  Format compliance: 100.00% (1641/1641)
+  Result accuracy:   97.87% (1606/1641)
+  Slot F1:           99.69%
+  Intent F1:         98.74%
+  Avg latency: 0.369s
+
+======================================================================
+Category: non_standard_naming  (559 samples)
+======================================================================
+
+  Progress: 20/559 (3.6%)
+  Progress: 40/559 (7.2%)
+  Progress: 60/559 (10.7%)
+  Progress: 80/559 (14.3%)
+  Progress: 100/559 (17.9%)
+  Progress: 120/559 (21.5%)
+  Progress: 140/559 (25.0%)
+  Progress: 160/559 (28.6%)
+  Progress: 180/559 (32.2%)
+  Progress: 200/559 (35.8%)
+  Progress: 220/559 (39.4%)
+  Progress: 240/559 (42.9%)
+  Progress: 260/559 (46.5%)
+  Progress: 280/559 (50.1%)
+  Progress: 300/559 (53.7%)
+  Progress: 320/559 (57.2%)
+  Progress: 340/559 (60.8%)
+  Progress: 360/559 (64.4%)
+  Progress: 380/559 (68.0%)
+  Progress: 400/559 (71.6%)
+  Progress: 420/559 (75.1%)
+  Progress: 440/559 (78.7%)
+  Progress: 460/559 (82.3%)
+  Progress: 480/559 (85.9%)
+  Progress: 500/559 (89.4%)
+  Progress: 520/559 (93.0%)
+  Progress: 540/559 (96.6%)
+  Progress: 559/559 (100.0%)
+  Format compliance: 100.00% (559/559)
+  Result accuracy:   95.89% (536/559)
+  Slot F1:           99.27%
+  Intent F1:         95.98%
+  Avg latency: 0.207s
+
+======================================================================
+Category: omitted_attribute  (735 samples)
+======================================================================
+
+  Progress: 20/735 (2.7%)
+  Progress: 40/735 (5.4%)
+  Progress: 60/735 (8.2%)
+  Progress: 80/735 (10.9%)
+  Progress: 100/735 (13.6%)
+  Progress: 120/735 (16.3%)
+  Progress: 140/735 (19.0%)
+  Progress: 160/735 (21.8%)
+  Progress: 180/735 (24.5%)
+  Progress: 200/735 (27.2%)
+  Progress: 220/735 (29.9%)
+  Progress: 240/735 (32.7%)
+  Progress: 260/735 (35.4%)
+  Progress: 280/735 (38.1%)
+  Progress: 300/735 (40.8%)
+  Progress: 320/735 (43.5%)
+  Progress: 340/735 (46.3%)
+  Progress: 360/735 (49.0%)
+  Progress: 380/735 (51.7%)
+  Progress: 400/735 (54.4%)
+  Progress: 420/735 (57.1%)
+  Progress: 440/735 (59.9%)
+  Progress: 460/735 (62.6%)
+  Progress: 480/735 (65.3%)
+  Progress: 500/735 (68.0%)
+  Progress: 520/735 (70.7%)
+  Progress: 540/735 (73.5%)
+  Progress: 560/735 (76.2%)
+  Progress: 580/735 (78.9%)
+  Progress: 600/735 (81.6%)
+  Progress: 620/735 (84.4%)
+  Progress: 640/735 (87.1%)
+  Progress: 660/735 (89.8%)
+  Progress: 680/735 (92.5%)
+  Progress: 700/735 (95.2%)
+  Progress: 720/735 (98.0%)
+  Progress: 735/735 (100.0%)
+  Format compliance: 100.00% (735/735)
+  Result accuracy:   99.05% (728/735)
+  Slot F1:           99.67%
+  Intent F1:         99.05%
+  Avg latency: 0.209s
+
+======================================================================
+Category: single_intent  (1122 samples)
+======================================================================
+
+  Progress: 20/1122 (1.8%)
+  Progress: 40/1122 (3.6%)
+  Progress: 60/1122 (5.3%)
+  Progress: 80/1122 (7.1%)
+  Progress: 100/1122 (8.9%)
+  Progress: 120/1122 (10.7%)
+  Progress: 140/1122 (12.5%)
+  Progress: 160/1122 (14.3%)
+  Progress: 180/1122 (16.0%)
+  Progress: 200/1122 (17.8%)
+  Progress: 220/1122 (19.6%)
+  Progress: 240/1122 (21.4%)
+  Progress: 260/1122 (23.2%)
+  Progress: 280/1122 (25.0%)
+  Progress: 300/1122 (26.7%)
+  Progress: 320/1122 (28.5%)
+  Progress: 340/1122 (30.3%)
+  Progress: 360/1122 (32.1%)
+  Progress: 380/1122 (33.9%)
+  Progress: 400/1122 (35.7%)
+  Progress: 420/1122 (37.4%)
+  Progress: 440/1122 (39.2%)
+  Progress: 460/1122 (41.0%)
+  Progress: 480/1122 (42.8%)
+  Progress: 500/1122 (44.6%)
+  Progress: 520/1122 (46.3%)
+  Progress: 540/1122 (48.1%)
+  Progress: 560/1122 (49.9%)
+  Progress: 580/1122 (51.7%)
+  Progress: 600/1122 (53.5%)
+  Progress: 620/1122 (55.3%)
+  Progress: 640/1122 (57.0%)
+  Progress: 660/1122 (58.8%)
+  Progress: 680/1122 (60.6%)
+  Progress: 700/1122 (62.4%)
+  Progress: 720/1122 (64.2%)
+  Progress: 740/1122 (66.0%)
+  Progress: 760/1122 (67.7%)
+  Progress: 780/1122 (69.5%)
+  Progress: 800/1122 (71.3%)
+  Progress: 820/1122 (73.1%)
+  Progress: 840/1122 (74.9%)
+  Progress: 860/1122 (76.6%)
+  Progress: 880/1122 (78.4%)
+  Progress: 900/1122 (80.2%)
+  Progress: 920/1122 (82.0%)
+  Progress: 940/1122 (83.8%)
+  Progress: 960/1122 (85.6%)
+  Progress: 980/1122 (87.3%)
+  Progress: 1000/1122 (89.1%)
+  Progress: 1020/1122 (90.9%)
+  Progress: 1040/1122 (92.7%)
+  Progress: 1060/1122 (94.5%)
+  Progress: 1080/1122 (96.3%)
+  Progress: 1100/1122 (98.0%)
+  Progress: 1120/1122 (99.8%)
+  Progress: 1122/1122 (100.0%)
+  Format compliance: 100.00% (1122/1122)
+  Result accuracy:   99.64% (1118/1122)
+  Slot F1:           99.94%
+  Intent F1:         99.64%
+  Avg latency: 0.207s
+
+======================================================================
+Summary
+======================================================================
+Category               Samples   Format  Accuracy   SlotF1  IntentF1   Latency
+multi_intent              1641  100.00%    97.87%   99.69%    98.74%    0.369s
+non_standard_naming        559  100.00%    95.89%   99.27%    95.98%    0.207s
+omitted_attribute          735  100.00%    99.05%   99.67%    99.05%    0.209s
+single_intent             1122  100.00%    99.64%   99.94%    99.64%    0.207s
+OVERALL                   4057  100.00%    98.30%   99.70%    98.69%
+
+Done. Per-sample results saved to: <USER_HOME>/domux-her-hack-astron-4/cases/domux-4057-rtx3090-eval/artifacts/raw/eval_results.jsonl
+Metrics summary saved to:        <USER_HOME>/domux-her-hack-astron-4/cases/domux-4057-rtx3090-eval/artifacts/eval_summary.json
+Evaluation complete: 4057 samples, 0 API errors

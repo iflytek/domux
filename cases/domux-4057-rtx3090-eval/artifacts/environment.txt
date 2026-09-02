@@ -1,0 +1,18 @@
+collected_at_utc=2026-08-25T03:24:07Z
+os_kernel=Linux 6.8.0-138-generic x86_64
+python=Python 3.11.15
+visible_gpu=0
+gpu_inventory:
+0, NVIDIA GeForce RTX 3090, 24576 MiB, 580.178.04
+1, NVIDIA GeForce RTX 3090, 24576 MiB, 580.178.04
+cuda_runtime_reported_by_nvidia_smi:
+Tue Aug 25 11:24:07 2026
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.178.04             Driver Version: 580.178.04     CUDA Version: 13.0     |
+package_versions:
+vllm=0.22.0
+transformers=5.5.1
+huggingface-hub=1.28.0
+requests=2.34.2
+torch=2.11.0
+nvidia-cuda-nvcc=13.0.88
