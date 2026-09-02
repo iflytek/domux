@@ -1,0 +1,42 @@
+name: Bug report
+description: Report a reproducible problem in Domux
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping us improve Domux. Please search existing issues first.
+  - type: textarea
+    id: description
+    attributes:
+      label: Problem
+      description: What happened, and what did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Include the smallest reproducible input, command, or code sample.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Domux version or commit
+      placeholder: v0.1.0 or commit SHA
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Operating system, Python version, hardware, and relevant dependencies.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs and additional context
+      description: Remove credentials and sensitive information before posting.
+      render: shell

@@ -1,0 +1,32 @@
+name: Feature request
+description: Propose an improvement to Domux
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: Please describe the user problem before proposing a solution.
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+      description: What use case is difficult or impossible today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the behavior and, if useful, a possible API or workflow.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: How are you handling this today?
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add examples, mockups, benchmarks, or related links.
