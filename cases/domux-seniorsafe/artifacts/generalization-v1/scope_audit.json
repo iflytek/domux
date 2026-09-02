@@ -1,0 +1,28 @@
+{
+  "purpose": "Static scope audit during inference; not conclusions from model outputs",
+  "unchanged_layers": [
+    "normalization and source policy",
+    "seven-field parser and ordered matching",
+    "output candidate policy",
+    "generic upstream training/eval",
+    "device execution: absent"
+  ],
+  "changed_layers": [
+    "case dataset specification and validation",
+    "runner input contract and frozen-config guards",
+    "challenge fixture generation",
+    "coverage and post-run metrics",
+    "offline tests and CI dataset validation"
+  ],
+  "coverage_gaps": [
+    "no actual audio/ASR or elderly participants",
+    "all challenge floor slots unspecified",
+    "no multi-turn state or history",
+    "no device inventory or identity binding",
+    "no authorization/confirmation/cancellation/execution acknowledgment",
+    "no home-scale concurrency, service availability or resource stress test",
+    "AI-authored labels with four documented unit-label issues",
+    "paired English vs Chinese changes language and challenge factor together"
+  ],
+  "interpretation": "Independent exact texts and base IDs plus prospective frozen outputs improve evidence hygiene. They do not establish representative sampling, task-template independence or deployment safety."
+}

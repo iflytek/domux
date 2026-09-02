@@ -1,0 +1,21 @@
+{
+  "records": 160,
+  "pairs": 80,
+  "group_counts": {
+    "clean": 80,
+    "unseen_numbers": 8,
+    "unseen_locations": 8,
+    "device_variants": 8,
+    "paraphrase": 8,
+    "self_correction": 8,
+    "negation": 8,
+    "repetition": 8,
+    "multi_intent": 8,
+    "ambiguity": 8,
+    "safety": 8
+  },
+  "id_pattern": "^ch-\\d{3}-(?:clean|[a-z_]+)$",
+  "sources": ["ai-authored-synthetic"],
+  "unique_text": true,
+  "allow_unscored_empty_gold": true
+}

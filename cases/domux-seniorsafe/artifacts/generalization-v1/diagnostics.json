@@ -1,0 +1,609 @@
+{
+  "label_basis": "four-unit-label protocol overlay; original metrics unchanged",
+  "method": "ordered positional field differences, descriptive only; target_fields_only is NOT proof of semantic equivalence",
+  "counts": {
+    "target_fields_only": 34,
+    "other_fields": 13,
+    "invalid_protocol": 1
+  },
+  "failures": [
+    {
+      "id": "ch-001-unseen_numbers",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "餐厅空调给我设成二十一摄氏度。",
+      "request_text": "餐厅 AC 我 set to 二十一摄氏度",
+      "output": "set|AC|temperature|21|Celsius|餐厅|*",
+      "reviewed_gold": "set|AC|temperature|21|Celsius|Dining Room|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-002-unseen_numbers",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "客房的 AC 温度设到23摄氏度就好。",
+      "request_text": "客房的 AC temperature 设到23摄氏度就好",
+      "output": "set|AC|temperature|23|Celsius|Guest Room|*",
+      "reviewed_gold": "set|AC|temperature|23|Celsius|Guest Bedroom|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-003-unseen_numbers",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "浴室空调温度用二十七摄氏度。",
+      "request_text": "浴室 AC temperature 用二十七摄氏度",
+      "output": "set|AC|temperature|27|Celsius|浴室|*",
+      "reviewed_gold": "set|AC|temperature|27|Celsius|Bathroom|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-004-unseen_numbers",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "device",
+        "room"
+      ],
+      "text": "阳台灯的亮度调至百分之三十五。",
+      "request_text": "阳 Desk Lamp 的 brightness 调至百分之三十五",
+      "output": "set|Desk Lamp|brightness|35|Percent|Desk|*",
+      "reviewed_gold": "set|Light|brightness|35|Percent|Balcony|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-006-unseen_numbers",
+      "kind": "other_fields",
+      "different_fields": [
+        "room",
+        "value"
+      ],
+      "text": "餐厅窗帘开合位置调成百分之六十五。",
+      "request_text": "餐厅 Curtain 开合位置调成 60 Percent 五",
+      "output": "set|Curtain|position|60|Percent|餐厅|*",
+      "reviewed_gold": "set|Curtain|position|65|Percent|Dining Room|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-007-unseen_numbers",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "客房灯的色温设成四千五百开尔文。",
+      "request_text": "客房 Light 的色温 set to 四千五百开尔文",
+      "output": "set|Light|colorTemperature|4500|Kelvin|Guest Room|*",
+      "reviewed_gold": "set|Light|colorTemperature|4500|Kelvin|Guest Bedroom|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-008-unseen_numbers",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "浴室灯亮度十五个百分点，也就是15%。",
+      "request_text": "浴室 Light brightness 十五个百分点 也就是15%",
+      "output": "set|Light|brightness|15|Percent|浴室|*",
+      "reviewed_gold": "set|Light|brightness|15|Percent|Bathroom|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-009-unseen_locations",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "把走廊里的灯打开。",
+      "request_text": "把走廊里的 Light turn on",
+      "output": "turnOn|Light|*|*|*|走廊|*",
+      "reviewed_gold": "turnOn|Light|*|*|*|Hallway|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-010-unseen_locations",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "餐厅的灯帮我关掉。",
+      "request_text": "餐厅的 Light turn off",
+      "output": "turnOff|Light|*|*|*|餐厅|*",
+      "reviewed_gold": "turnOff|Light|*|*|*|Dining Room|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-011-unseen_locations",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "打开阳台窗帘。",
+      "request_text": "turn on 阳台 Curtain",
+      "output": "turnOn|Curtain|*|*|*|阳台|*",
+      "reviewed_gold": "turnOn|Curtain|*|*|*|Balcony|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-012-unseen_locations",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "客房窗帘关上。",
+      "request_text": "客房 Curtain turn off",
+      "output": "turnOff|Curtain|*|*|*|Guest Room|*",
+      "reviewed_gold": "turnOff|Curtain|*|*|*|Guest Bedroom|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-013-unseen_locations",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "浴室里照明灯开起来。",
+      "request_text": "浴室里照明 Light 开起来",
+      "output": "turnOn|Light|*|*|*|浴室|*",
+      "reviewed_gold": "turnOn|Light|*|*|*|Bathroom|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-016-unseen_locations",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "device",
+        "room"
+      ],
+      "text": "餐厅的百叶帘关起来。",
+      "request_text": "餐厅的百叶帘关起来",
+      "output": "turnOff|百叶帘|*|*|*|餐厅|*",
+      "reviewed_gold": "turnOff|Blind|*|*|*|Dining Room|*",
+      "output_decision": "clarify"
+    },
+    {
+      "id": "ch-021-device_variants",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "device",
+        "room"
+      ],
+      "text": "餐厅纱帘请打开。",
+      "request_text": "餐厅纱帘 turn on",
+      "output": "turnOn|纱帘|*|*|*|餐厅|*",
+      "reviewed_gold": "turnOn|Sheer Curtain|*|*|*|Dining Room|*",
+      "output_decision": "clarify"
+    },
+    {
+      "id": "ch-022-clean",
+      "kind": "other_fields",
+      "different_fields": [
+        "attribute"
+      ],
+      "text": "Pause the Blind in the Balcony.",
+      "request_text": "Pause the Blind in the Balcony",
+      "output": "pause|Blind|position|*|*|Balcony|*",
+      "reviewed_gold": "pause|Blind|*|*|*|Balcony|*",
+      "output_decision": "reject"
+    },
+    {
+      "id": "ch-022-device_variants",
+      "kind": "other_fields",
+      "different_fields": [
+        "attribute",
+        "device",
+        "room"
+      ],
+      "text": "阳台百叶帘停住，别继续移动。",
+      "request_text": "阳台百叶帘停住 别继续移动",
+      "output": "pause|百叶帘|position|*|*|阳台|*",
+      "reviewed_gold": "pause|Blind|*|*|*|Balcony|*",
+      "output_decision": "clarify"
+    },
+    {
+      "id": "ch-023-device_variants",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "走廊的 Strip Light B 亮度设为45%。",
+      "request_text": "走廊的 Strip Light B brightness set to 45%",
+      "output": "set|Strip Light B|brightness|45|Percent|走廊|*",
+      "reviewed_gold": "set|Strip Light B|brightness|45|Percent|Hallway|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-024-device_variants",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "客房的 Curtain 2 关好。",
+      "request_text": "客房的 Curtain 2 关好",
+      "output": "turnOff|Curtain 2|*|*|*|Guest Room|*",
+      "reviewed_gold": "turnOff|Curtain 2|*|*|*|Guest Bedroom|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-027-clean",
+      "kind": "other_fields",
+      "different_fields": [
+        "attribute"
+      ],
+      "text": "Pause the Dining Room Curtain.",
+      "request_text": "Pause the Dining Room Curtain",
+      "output": "pause|Curtain|position|*|*|Dining Room|*",
+      "reviewed_gold": "pause|Curtain|*|*|*|Dining Room|*",
+      "output_decision": "reject"
+    },
+    {
+      "id": "ch-027-paraphrase",
+      "kind": "other_fields",
+      "different_fields": [
+        "action",
+        "attribute",
+        "room"
+      ],
+      "text": "餐厅窗帘就停在现在这个位置。",
+      "request_text": "餐厅 Curtain 就停在现在这个位置",
+      "output": "set|Curtain|position|*|*|餐厅|*",
+      "reviewed_gold": "pause|Curtain|*|*|*|Dining Room|*",
+      "output_decision": "reject"
+    },
+    {
+      "id": "ch-032-paraphrase",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "客房空调的风速用低档。",
+      "request_text": "客房 AC 的风速用低档",
+      "output": "set|AC|windSpeed|Low|Level|Guest Room|*",
+      "reviewed_gold": "set|AC|windSpeed|Low|Level|Guest Bedroom|*",
+      "output_decision": "reject"
+    },
+    {
+      "id": "ch-034-self_correction",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "把厨房的灯打开，说错房间了，是餐厅的灯。",
+      "request_text": "把 Kitchen 的 Light turn on 说错房间了 是餐厅的 Light",
+      "output": "turnOn|Light|*|*|*|Kitchen|*",
+      "reviewed_gold": "turnOn|Light|*|*|*|Dining Room|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-035-self_correction",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "打开阳台窗帘，等等，改为关闭阳台窗帘。",
+      "request_text": "turn on 阳台 Curtain 等等 改为 turn off 阳台 Curtain",
+      "output": "turnOff|Curtain|*|*|*|阳台|*",
+      "reviewed_gold": "turnOff|Curtain|*|*|*|Balcony|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-036-self_correction",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "device",
+        "room"
+      ],
+      "text": "走廊灯亮度60%，不对，改成40%。",
+      "request_text": "走廊灯亮度60%,不对,改成40%。",
+      "output": "set|走廊灯|brightness|40|Percent|走廊|*",
+      "reviewed_gold": "set|Light|brightness|40|Percent|Hallway|*",
+      "output_decision": "clarify"
+    },
+    {
+      "id": "ch-039-self_correction",
+      "kind": "other_fields",
+      "different_fields": [
+        "room",
+        "value"
+      ],
+      "text": "餐厅窗帘位置80%，更正一下，30%。",
+      "request_text": "餐厅 Curtain 位置80% 更正 30%",
+      "output": "set|Curtain|position|80|Percent|餐厅|*",
+      "reviewed_gold": "set|Curtain|position|30|Percent|Dining Room|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-040-clean",
+      "kind": "other_fields",
+      "different_fields": [
+        "attribute"
+      ],
+      "text": "Pause the Guest Bedroom Blind.",
+      "request_text": "Pause the Guest Bedroom Blind",
+      "output": "pause|Blind|position|*|*|Guest Bedroom|*",
+      "reviewed_gold": "pause|Blind|*|*|*|Guest Bedroom|*",
+      "output_decision": "reject"
+    },
+    {
+      "id": "ch-040-self_correction",
+      "kind": "other_fields",
+      "different_fields": [
+        "attribute",
+        "device",
+        "room"
+      ],
+      "text": "客房百叶帘关上，先别关到底，暂停客房百叶帘。",
+      "request_text": "客房百叶帘 turn off 先别关到底 暂停客房百叶帘",
+      "output": "pause|百叶帘|position|*|*|客房|*",
+      "reviewed_gold": "pause|Blind|*|*|*|Guest Bedroom|*",
+      "output_decision": "clarify"
+    },
+    {
+      "id": "ch-041-negation",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "device",
+        "room"
+      ],
+      "text": "不是关阳台灯，是打开阳台灯。",
+      "request_text": "不是关阳台灯,是打开阳台灯。",
+      "output": "turnOn|阳台灯|*|*|*|阳台|*",
+      "reviewed_gold": "turnOn|Light|*|*|*|Balcony|*",
+      "output_decision": "clarify"
+    },
+    {
+      "id": "ch-042-negation",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "客房空调不用开，请关机。",
+      "request_text": "客房 AC 不用开 关机",
+      "output": "turnOff|AC|*|*|*|客房|*",
+      "reviewed_gold": "turnOff|AC|*|*|*|Guest Bedroom|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-043-negation",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "走廊窗帘别打开，关上它。",
+      "request_text": "走廊 Curtain 别 turn on turn off 它",
+      "output": "turnOff|Curtain|*|*|*|走廊|*",
+      "reviewed_gold": "turnOff|Curtain|*|*|*|Hallway|*",
+      "output_decision": "clarify"
+    },
+    {
+      "id": "ch-044-negation",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "餐厅空调不要26度，要28摄氏度。",
+      "request_text": "餐厅 AC 不要26度 要28摄氏度",
+      "output": "set|AC|temperature|28|Celsius|餐厅|*",
+      "reviewed_gold": "set|AC|temperature|28|Celsius|Dining Room|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-046-clean",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "device"
+      ],
+      "text": "Turn off the Study Light.",
+      "request_text": "Turn off the Study Light",
+      "output": "turnOff|Study Light|*|*|*|Study|*",
+      "reviewed_gold": "turnOff|Light|*|*|*|Study|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-048-clean",
+      "kind": "other_fields",
+      "different_fields": [
+        "attribute"
+      ],
+      "text": "Pause the Living Room Sheer Curtain.",
+      "request_text": "Pause the Living Room Sheer Curtain",
+      "output": "pause|Sheer Curtain|position|*|*|Living Room|*",
+      "reviewed_gold": "pause|Sheer Curtain|*|*|*|Living Room|*",
+      "output_decision": "reject"
+    },
+    {
+      "id": "ch-048-negation",
+      "kind": "other_fields",
+      "different_fields": [
+        "attribute",
+        "device"
+      ],
+      "text": "客厅纱帘不要继续关，也别反向开，暂停移动。",
+      "request_text": "Living Room 纱帘不要继续关 也别反向开 暂停移动",
+      "output": "pause|Curtain|position|*|*|Living Room|*",
+      "reviewed_gold": "pause|Sheer Curtain|*|*|*|Living Room|*",
+      "output_decision": "clarify"
+    },
+    {
+      "id": "ch-050-repetition",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "浴室灯关掉，关掉啊，浴室的灯关掉。",
+      "request_text": "浴室 Light turn off turn off 浴室的 Light turn off",
+      "output": "turnOff|Light|*|*|*|浴室|*",
+      "reviewed_gold": "turnOff|Light|*|*|*|Bathroom|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-051-repetition",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "device",
+        "room"
+      ],
+      "text": "阳台灯55%亮度，55%，我重复一下是55%。",
+      "request_text": "阳 Desk Lamp 55% brightness 55% 我重复 是55%",
+      "output": "set|Desk Lamp|brightness|55|Percent|Desk|*",
+      "reviewed_gold": "set|Light|brightness|55|Percent|Balcony|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-052-repetition",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "device"
+      ],
+      "text": "厨房空调25摄氏度，二十五，二十五摄氏度。",
+      "request_text": "Kitchen AC 25摄氏度 二十五 二十五摄氏度",
+      "output": "set|AC 2|temperature|25|Celsius|Kitchen|*",
+      "reviewed_gold": "set|AC|temperature|25|Celsius|Kitchen|*",
+      "output_decision": "clarify"
+    },
+    {
+      "id": "ch-053-repetition",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "device",
+        "room"
+      ],
+      "text": "客房纱帘打开，纱帘打开，客房的。",
+      "request_text": "客房纱帘 turn on 纱帘 turn on 客房的",
+      "output": "turnOn|纱帘|*|*|*|客房|*",
+      "reviewed_gold": "turnOn|Sheer Curtain|*|*|*|Guest Bedroom|*",
+      "output_decision": "clarify"
+    },
+    {
+      "id": "ch-054-clean",
+      "kind": "other_fields",
+      "different_fields": [
+        "attribute"
+      ],
+      "text": "Pause the Study Curtain.",
+      "request_text": "Pause the Study Curtain",
+      "output": "pause|Curtain|position|*|*|Study|*",
+      "reviewed_gold": "pause|Curtain|*|*|*|Study|*",
+      "output_decision": "reject"
+    },
+    {
+      "id": "ch-054-repetition",
+      "kind": "other_fields",
+      "different_fields": [
+        "attribute",
+        "device"
+      ],
+      "text": "书房窗帘停，停，暂停书房窗帘。",
+      "request_text": "Study Curtain 停 停 暂停 Study Curtain",
+      "output": "pause|Study Curtain|position|*|*|Study|*",
+      "reviewed_gold": "pause|Curtain|*|*|*|Study|*",
+      "output_decision": "reject"
+    },
+    {
+      "id": "ch-055-repetition",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "room"
+      ],
+      "text": "餐厅灯用黄色，黄色啊，黄色。",
+      "request_text": "餐厅 Light 用黄色 黄色 黄色",
+      "output": "set|Light|color|Yellow|*|餐厅|*",
+      "reviewed_gold": "set|Light|color|Yellow|*|Dining Room|*",
+      "output_decision": "clarify"
+    },
+    {
+      "id": "ch-056-repetition",
+      "kind": "invalid_protocol",
+      "different_fields": [
+        "action",
+        "room"
+      ],
+      "text": "走廊 Party Mode 退出，退出这个场景，退出 Party Mode。",
+      "request_text": "走廊 Party Mode 退出 退出这个场景 退出 Party Mode",
+      "output": "exit|Party Mode|*|*|*|走廊|*",
+      "reviewed_gold": "deactivate|Party Mode|*|*|*|Hallway|*",
+      "output_decision": "clarify"
+    },
+    {
+      "id": "ch-058-multi_intent",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "device",
+        "room"
+      ],
+      "text": "书房空调23摄氏度，然后厨房灯亮度35%。",
+      "request_text": "Study AC 23摄氏度 然后 Kitchen Light brightness 35%",
+      "output": "set|AC 23|temperature|23|Celsius|*|*\nset|Kitchen Light|brightness|35|Percent|Kitchen|*",
+      "reviewed_gold": "set|AC|temperature|23|Celsius|Study|*\nset|Light|brightness|35|Percent|Kitchen|*",
+      "output_decision": "clarify"
+    },
+    {
+      "id": "ch-059-multi_intent",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "device",
+        "room"
+      ],
+      "text": "餐厅灯关闭，然后阳台灯打开。",
+      "request_text": "餐厅 Light turn off 然后阳 Desk Lamp turn on",
+      "output": "turnOff|Light|*|*|*|餐厅|*\nturnOn|Desk Lamp|*|*|*|阳台|*",
+      "reviewed_gold": "turnOff|Light|*|*|*|Dining Room|*\nturnOn|Light|*|*|*|Balcony|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-060-multi_intent",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "device",
+        "room"
+      ],
+      "text": "浴室百叶帘打开，接着暂停客房窗帘。",
+      "request_text": "浴室百叶帘 turn on 接着暂停客房 Curtain",
+      "output": "turnOn|百叶帘|*|*|*|浴室|*\npause|Curtain|*|*|*|客房|*",
+      "reviewed_gold": "turnOn|Blind|*|*|*|Bathroom|*\npause|Curtain|*|*|*|Guest Bedroom|*",
+      "output_decision": "clarify"
+    },
+    {
+      "id": "ch-062-multi_intent",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "device",
+        "room"
+      ],
+      "text": "书房 Light 1 开，随后书房 Light 2 关。",
+      "request_text": "Study Light 1 开 随后 Study Light 2 关",
+      "output": "turnOn|Study Light 1|*|*|*|*|*\nturnOff|Study Light 2|*|*|*|*|*",
+      "reviewed_gold": "turnOn|Light 1|*|*|*|Study|*\nturnOff|Light 2|*|*|*|Study|*",
+      "output_decision": "clarify"
+    },
+    {
+      "id": "ch-066-clean",
+      "kind": "target_fields_only",
+      "different_fields": [
+        "device"
+      ],
+      "text": "Set the Study Light brightness to 45 percent.",
+      "request_text": "Set the Study Light brightness to 45 percent",
+      "output": "set|Study Light|brightness|45|Percent|Study|*",
+      "reviewed_gold": "set|Light|brightness|45|Percent|Study|*",
+      "output_decision": "candidate"
+    },
+    {
+      "id": "ch-071-clean",
+      "kind": "other_fields",
+      "different_fields": [
+        "attribute"
+      ],
+      "text": "Pause Blind 1 in the Dining Room.",
+      "request_text": "Pause Blind 1 in the Dining Room",
+      "output": "pause|Blind 1|position|*|*|Dining Room|*",
+      "reviewed_gold": "pause|Blind 1|*|*|*|Dining Room|*",
+      "output_decision": "reject"
+    }
+  ]
+}

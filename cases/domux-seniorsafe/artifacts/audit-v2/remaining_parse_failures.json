@@ -1,0 +1,132 @@
+[
+  {
+    "id": "ss-001-elderly_style",
+    "group": "elderly_style",
+    "text": "麻烦你帮我把客厅里面头顶上那个灯打开一下，谢谢。",
+    "request_text": "把 Living Room 里面头顶上那个 Light turn on",
+    "gold": "turnOn|Ceiling Light|*|*|*|Living Room|*",
+    "raw_output": "turnOn|Light|*|*|*|Living Room|*",
+    "safety_decision": "execute",
+    "output_decision": "candidate",
+    "output_reasons": [
+      "offline_only_requires_device_resolution_and_execution_ack"
+    ]
+  },
+  {
+    "id": "ss-004-clean",
+    "group": "clean",
+    "text": "把书房台灯亮度调到百分之五十",
+    "request_text": "把 Study Desk Lamp brightness set to 50 Percent",
+    "gold": "set|Desk Lamp|brightness|50|Percent|Study|*",
+    "raw_output": "set|Desk Lamp|brightness|50|Percent|Study Area|*",
+    "safety_decision": "execute",
+    "output_decision": "candidate",
+    "output_reasons": [
+      "offline_only_requires_device_resolution_and_execution_ack"
+    ]
+  },
+  {
+    "id": "ss-004-elderly_style",
+    "group": "elderly_style",
+    "text": "书房看书那个小台灯，亮一点，调到一半就行。",
+    "request_text": "Study 看书那个小 Desk Lamp 亮一点 set to 一半",
+    "gold": "set|Desk Lamp|brightness|50|Percent|Study|*",
+    "raw_output": "adjustUp|Desk Lamp|brightness|*|*|Study|*",
+    "safety_decision": "execute",
+    "output_decision": "candidate",
+    "output_reasons": [
+      "offline_only_requires_device_resolution_and_execution_ack"
+    ]
+  },
+  {
+    "id": "ss-009-self_correction",
+    "group": "self_correction",
+    "text": "客厅灯设成红色，等一下，改成蓝色。",
+    "request_text": "客厅灯设成红色,等一下,改成蓝色。",
+    "gold": "set|Light|color|Blue|*|Living Room|*",
+    "raw_output": "set|Light|color|Red|*|Living Room|*\nset|Light|color|Blue|*|Living Room|*",
+    "safety_decision": "execute",
+    "output_decision": "clarify",
+    "output_reasons": [
+      "named_value_requires_device_capability_registry"
+    ]
+  },
+  {
+    "id": "ss-010-self_correction",
+    "group": "self_correction",
+    "text": "把书房台灯关掉……不，还是打开吧。",
+    "request_text": "把书房台灯关掉......不,还是打开吧。",
+    "gold": "turnOn|Desk Lamp|*|*|*|Study|*",
+    "raw_output": "turnOn|Lamp|*|*|*|Study|*",
+    "safety_decision": "execute",
+    "output_decision": "candidate",
+    "output_reasons": [
+      "offline_only_requires_device_resolution_and_execution_ack"
+    ]
+  },
+  {
+    "id": "ss-013-repetition",
+    "group": "repetition",
+    "text": "卧室空调二十四度，二十四度，调到二十四度。",
+    "request_text": "Bedroom AC 24 Celsius 24 Celsius set to 24 Celsius",
+    "gold": "set|AC|temperature|24|Celsius|Bedroom|*",
+    "raw_output": "set|AC 2|temperature|24|Celsius|Bedroom|*",
+    "safety_decision": "execute",
+    "output_decision": "clarify",
+    "output_reasons": [
+      "unsupported_device_capabilities"
+    ]
+  },
+  {
+    "id": "ss-014-repetition",
+    "group": "repetition",
+    "text": "书房台灯关掉，台灯关掉，书房的。",
+    "request_text": "Study Desk Lamp turn off Desk Lamp turn off Study 的",
+    "gold": "turnOff|Desk Lamp|*|*|*|Study|*",
+    "raw_output": "turnOff|Study Desk Lamp|*|*|*|Study Desk|*",
+    "safety_decision": "execute",
+    "output_decision": "candidate",
+    "output_reasons": [
+      "offline_only_requires_device_resolution_and_execution_ack"
+    ]
+  },
+  {
+    "id": "ss-020-clean",
+    "group": "clean",
+    "text": "关闭书房灯",
+    "request_text": "turn off Study Light",
+    "gold": "turnOff|Light|*|*|*|Study|*",
+    "raw_output": "turnOff|Study Light|*|*|*|Study|*",
+    "safety_decision": "execute",
+    "output_decision": "candidate",
+    "output_reasons": [
+      "offline_only_requires_device_resolution_and_execution_ack"
+    ]
+  },
+  {
+    "id": "ss-020-negation",
+    "group": "negation",
+    "text": "书房灯别开着了，关掉。",
+    "request_text": "Study Light 别开着了 turn off",
+    "gold": "turnOff|Light|*|*|*|Study|*",
+    "raw_output": "turnOff|Study Light|*|*|*|*|*",
+    "safety_decision": "execute",
+    "output_decision": "clarify",
+    "output_reasons": [
+      "generated_target_missing_room"
+    ]
+  },
+  {
+    "id": "ss-039-clean",
+    "group": "clean",
+    "text": "开启一楼安防系统",
+    "request_text": "turn on First Floor Security System",
+    "gold": "turnOn|Security System|*|*|*|*|First Floor",
+    "raw_output": "activate|Security System|*|*|*|*|First Floor",
+    "safety_decision": "clarify",
+    "output_decision": "clarify",
+    "output_reasons": [
+      "source_policy_blocks_candidate"
+    ]
+  }
+]

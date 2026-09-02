@@ -1,0 +1,7 @@
+{
+  "method": "NFKC + casefold + remove whitespace and Unicode punctuation",
+  "cross_set_overlap_ids": [],
+  "new_unique_texts_under_this_method": 160,
+  "note": "Still not a semantic-similarity or family-template independence test.",
+  "challenge_sha256": "5a1f761211e8da8e1467a4667675b09066702fe621e8410115ca0f9d8c6b3463"
+}

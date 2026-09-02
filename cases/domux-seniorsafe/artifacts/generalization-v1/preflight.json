@@ -1,0 +1,14 @@
+{
+  "recorded_at": "2026-08-30T13:51:47.028939+00:00",
+  "tests": {
+    "command": ".venv/Scripts/python.exe -B -m unittest discover -s cases/domux-seniorsafe/scripts -p test_*.py",
+    "exit_code": 0,
+    "stdout": "Ran 38 tests in 14.359s; OK",
+    "no_site_packages": "Ran 38 tests in 15.323s; OK (skipped=4)"
+  },
+  "dataset_validation": "160 records, 80 pairs; passed before inference",
+  "case_validation": "scaffold and submitted cases are valid",
+  "git_diff_check": "passed before inference",
+  "freeze_files": 22,
+  "limitations": "Local HTTP provider tests use synthetic responses, not Domux; CPU tensor tests are not real-device tests."
+}

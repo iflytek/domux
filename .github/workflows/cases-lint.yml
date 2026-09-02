@@ -22,6 +22,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate SeniorSafe logic (offline; no model download)
+        run: |
+          python cases/domux-seniorsafe/scripts/validate_data.py
+          python cases/domux-seniorsafe/scripts/validate_data.py cases/domux-seniorsafe/data/challenge-v1.jsonl --spec cases/domux-seniorsafe/data/challenge-v1.spec.json
+          python -m unittest discover -s cases/domux-seniorsafe/scripts -p 'test_*.py' -v
       - name: Validate case-study rules
         run: |
           python -m py_compile scripts/validate_cases.py

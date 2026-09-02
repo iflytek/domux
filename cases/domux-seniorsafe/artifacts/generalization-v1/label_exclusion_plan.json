@@ -1,0 +1,11 @@
+{
+  "purpose": "Additional label-uncertainty sensitivity, defined before viewing any predictions",
+  "excluded_ids": [
+    "ch-025-clean",
+    "ch-025-paraphrase",
+    "ch-026-clean",
+    "ch-026-paraphrase"
+  ],
+  "remaining_parse_denominator": 132,
+  "frozen_primary_and_overlay_unchanged": true
+}

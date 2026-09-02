@@ -1,0 +1,117 @@
+{
+  "actions": {
+    "old_count": 4,
+    "new_count": 8,
+    "new_not_in_old": [
+      "activate",
+      "adjustDown",
+      "deactivate",
+      "pause"
+    ],
+    "shared": [
+      "adjustUp",
+      "set",
+      "turnOff",
+      "turnOn"
+    ]
+  },
+  "devices": {
+    "old_count": 10,
+    "new_count": 15,
+    "new_not_in_old": [
+      "AC 2",
+      "Blind",
+      "Blind 1",
+      "Curtain 2",
+      "Light 1",
+      "Light 2",
+      "Party Mode",
+      "Romantic Mode",
+      "Sheer Curtain",
+      "Spot Light 1",
+      "Strip Light A",
+      "Strip Light B"
+    ],
+    "shared": [
+      "AC",
+      "Curtain",
+      "Light"
+    ]
+  },
+  "attributes": {
+    "old_count": 5,
+    "new_count": 8,
+    "new_not_in_old": [
+      "colorTemperature",
+      "mode",
+      "windSpeed"
+    ],
+    "shared": [
+      "*",
+      "brightness",
+      "color",
+      "position",
+      "temperature"
+    ]
+  },
+  "values": {
+    "old_count": 7,
+    "new_count": 23,
+    "new_not_in_old": [
+      "15",
+      "20",
+      "21",
+      "22",
+      "23",
+      "27",
+      "28",
+      "30",
+      "35",
+      "40",
+      "45",
+      "4500",
+      "55",
+      "65",
+      "75",
+      "Dry",
+      "Green",
+      "Low",
+      "Purple",
+      "Yellow"
+    ],
+    "shared": [
+      "*",
+      "25",
+      "Blue"
+    ]
+  },
+  "rooms": {
+    "old_count": 6,
+    "new_count": 11,
+    "new_not_in_old": [
+      "Balcony",
+      "Bathroom",
+      "Bedroom 3",
+      "Dining Room",
+      "Garage",
+      "Guest Bedroom",
+      "Hallway"
+    ],
+    "shared": [
+      "Bedroom",
+      "Kitchen",
+      "Living Room",
+      "Study"
+    ]
+  },
+  "floors": {
+    "old_count": 2,
+    "new_count": 1,
+    "new_not_in_old": [],
+    "shared": [
+      "*"
+    ]
+  },
+  "note": "Coverage comparison of scored fixture gold; not proof of semantic independence or real household coverage. Every floor remains unspecified.",
+  "data_sha256": "5a1f761211e8da8e1467a4667675b09066702fe621e8410115ca0f9d8c6b3463"
+}

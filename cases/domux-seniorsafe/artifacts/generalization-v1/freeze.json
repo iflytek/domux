@@ -1,0 +1,39 @@
+{
+  "recorded_at": "2026-08-30T13:49:38.136449+00:00",
+  "meaning": "local prospective freeze before first challenge model output; byte hashes, not external attestation",
+  "run": {
+    "revision": "6c71a32f4d624cadfd9fce9d10240d8068e53456",
+    "settings": {
+      "backend": "transformers-cpu",
+      "repo_id": "iFlytekOpenSource/Domux",
+      "dtype": "bfloat16",
+      "threads": 16,
+      "max_new_tokens": 128,
+      "do_sample": false
+    }
+  },
+  "files": {
+    "data/challenge-v1.jsonl": "5a1f761211e8da8e1467a4667675b09066702fe621e8410115ca0f9d8c6b3463",
+    "data/challenge-v1.spec.json": "e2bfdc3d5d3a69f9a079e6feb93381190048301f8a6de7b58cc2e58dbbc02759",
+    "data/seniorsafe.jsonl": "d91cfb0520e8bbb4656bef386ff5c63dfd9fc0b3621bc2079ccca0f8a19eb85a",
+    "artifacts/generalization-v1/baseline_lock.json": "2220a7ef14c4cd85cc04ef743f381779de075b9e06f6d0ced8ffe641ffccb8ab",
+    "artifacts/generalization-v1/PROTOCOL.md": "d7b4de72bc16f21e28b7d0b338cb303de7f9932bc188ab9e86c112296903fc5d",
+    "artifacts/generalization-v1/coverage.json": "6cf72e611f8fd8cad98acd47898ee60678773c07e40789b95f67dd023f1775c7",
+    "scripts/challenge_report.py": "db7b1827c5ab7bac8dbff052eeff810d8e0f2933943ec157a68baa8b03762d74",
+    "scripts/freeze_challenge.py": "973c236eab8caa9fb395b5f138153f456dba19693a42c999fa29c9656057932d",
+    "scripts/generate_challenge.py": "6d3164df61a1adddd74fc86fe60dc3f3b22a6127ec13d6f954f71759a4fae30d",
+    "scripts/generate_dataset.py": "1414e480e7e82a9c801bca826eb3425209f5d79863bc4b20536f64b75f146f46",
+    "scripts/normalize.py": "9dd1313daf0d4d94bc5ce4825eba4842dc46550c0e243c69d043e6d6274f99db",
+    "scripts/protocol.py": "0334e984ff6ecd3c4824723c3d0003074ecffa891daa680d7032f240d6d0ccc7",
+    "scripts/run_eval.py": "8e9f334d71edad1dcbc90e92eb09cf45e88cef2c50a3e8170ff90164bda58cad",
+    "scripts/run_support.py": "0dcca9a07c8b36b4d458515666380c223db901697706c5750a2dabbd94dff206",
+    "scripts/run_transformers_cpu.py": "ccf200faf17784fa2170241496598fa1648732296c6a0f2f967ad14e57626934",
+    "scripts/score.py": "b672af09a8df0d2718cd6172dcb6bcd17b30a71d4107fa30d6082ef8c885093a",
+    "scripts/test_challenge.py": "3ba89794f14ea66ae9d9cc66e2d5c23fcac926db95de3bf0b47e9922d62873d0",
+    "scripts/test_cpu_generation.py": "d16f8e543daab6d5f9ff4a783a7f28acc07ed73de13d1bd206d9c0fb8fc2dbb8",
+    "scripts/test_regressions.py": "908cd3f874fd6ee30ff83fb0af27122d8ae677113c93a00ec4e08752ada8411c",
+    "scripts/test_seniorsafe.py": "d2d5b7fb527ad6c1060450f011e7e85745170aabebaf36566427005cdcf779d1",
+    "scripts/test_workflow.py": "244b98a49d0593a35b92118986571c2e637934cfbab05e9e4442691784e6c490",
+    "scripts/validate_data.py": "bca9ea11f9ad5a0737c6e9cc0078394c7e32bdfade10098b00cd7aa5f3a8c82c"
+  }
+}
