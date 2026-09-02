@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "data_version": "2026-08-26.7",
+  "full_file": "scenarios.jsonl",
+  "full_sha256": "0e27842c62d9cd4e4b1467b43e3ebcd346c79c0125c4f40cce97d363c821a0a0",
+  "development_count": 16,
+  "development_sha256": "b6e4155835dfe430320282316bd107b8bbec7d2b6e95db9cd7af069c7cb4bace",
+  "evaluation_count": 48,
+  "evaluation_sha256": "dfdf7a0f40ec7df111ca56e5443b90aa6958f5a0bb7eca0eea0a63fa5f8d4d50",
+  "independent_candidate_sha256": "e81b7879760e6c15c5dcde0a516946e8baac68a15d3aeef3aa119b63e8eb5578",
+  "pre_model_reviewed_eval_sha256": "dfdf7a0f40ec7df111ca56e5443b90aa6958f5a0bb7eca0eea0a63fa5f8d4d50",
+  "protocol_file": "protocol.json",
+  "protocol_sha256": "e0b1c0d1db4237311707401f469f5cb69a581a711fce6d6a314172a9449641e0",
+  "snapshot_manifest_file": "snapshot_manifest.json",
+  "snapshot_manifest_sha256": "85ffc0d612758c2dfb1cde6b42623a8f793ad5f4e42e6734694b0c2107389200",
+  "evaluation_category_counts": {
+    "context_reference": 12,
+    "duplicate_entity": 12,
+    "missing_slot": 12,
+    "negation_correction": 12
+  },
+  "status": "pre_frozen_before_any_model_output"
+}

@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "protocol_id": "clarify-commit-v1",
+  "model": {
+    "id": "iFlytekOpenSource/Domux",
+    "revision": "6c71a32f4d624cadfd9fce9d10240d8068e53456",
+    "snapshot_manifest_file": "snapshot_manifest.json",
+    "snapshot_files_sha256": "5a13462b24fc9b00d132c42718e037bc42fc51a3c6752041998e085579f01416",
+    "primary_precision": "bf16",
+    "do_sample": false,
+    "temperature": 0,
+    "max_new_tokens": 128,
+    "seed": 20260826,
+    "warmup": {
+      "count": 2,
+      "source": "independent commands excluded from both data splits"
+    }
+  },
+  "analysis_population": {
+    "unit": "base_id",
+    "development_bases": 16,
+    "evaluation_bases": 48,
+    "paired_probes_per_base": ["clear", "ambiguous"],
+    "rule": "No evaluation base may be removed, relabelled or selectively rerun after formal inference starts."
+  },
+  "arms": {
+    "B0_unique_or_abstain": {
+      "grounding": true,
+      "clarification": false,
+      "behavior_on_multiple_candidates": "safe_abstain",
+      "executor_and_postcondition": "shared"
+    },
+    "B1_clarify_and_prepare": {
+      "grounding": true,
+      "clarification": true,
+      "server_plan_binding": true,
+      "session_binding": true,
+      "candidate_revalidation": false,
+      "state_revalidation": false,
+      "ttl": false,
+      "one_time_nonce": false,
+      "executor_and_postcondition": "shared"
+    },
+    "B2_clarify_and_commit": {
+      "grounding": true,
+      "clarification": true,
+      "server_plan_binding": true,
+      "session_binding": true,
+      "candidate_revalidation": true,
+      "state_revalidation": true,
+      "ttl_seconds": 30,
+      "one_time_nonce": true,
+      "executor_and_postcondition": "shared"
+    }
+  },
+  "trial_reset": [
+    "create a fresh adapter from the frozen fixture",
+    "compare its controlled projection hash with the frozen initial projection",
+    "create a fresh prepared action",
+    "apply exactly one declared mutation",
+    "commit and record SUT calls separately from setup calls",
+    "read all controlled entities and compare the expected delta"
+  ],
+  "mutations": {
+    "clean": {"eligible_bases": 48, "desired": "one dispatch and exact delta"},
+    "replay": {"eligible_bases": 48, "desired": "second submission rejected with zero additional calls"},
+    "expiry": {"eligible_bases": 48, "desired": "reject after expires_at plus one logical tick"},
+    "target_drift": {"eligible_bases": 48, "desired": "reject after one controlled target field changes"},
+    "session_swap": {"eligible_bases": 48, "desired": "reject alternate pre-declared session"},
+    "plan_swap": {"eligible_bases": 48, "desired": "reject one valid but different plan digest"},
+    "candidate_change": {"eligible_bases": 48, "desired": "reject one candidate metadata change"},
+    "context_state_change": {"eligible_category": "context_reference", "eligible_bases": 12, "desired": "reject a bound context-source state change"},
+    "unrelated_state_change": {"eligible_bases": 48, "desired": "allow and complete despite an unrelated controlled state change"}
+  },
+  "language_metrics": {
+    "sensitivity": "ambiguous probes correctly sent to clarification / 48",
+    "specificity": "clear controls correctly treated as unique / 48",
+    "false_clarification_rate": "clear controls incorrectly sent to clarification / 48",
+    "paired_discrimination": "bases where ambiguous is clarified and clear is unique / 48",
+    "candidate_coverage": "bases where expected target is present and candidate count is one to three / 48",
+    "clarification_completion": "bases whose confirmed canonical plan reaches the intended entity and delta / 48",
+    "warning": "The deliberately balanced 1:1 probes do not estimate production PPV."
+  },
+  "execution_metrics": {
+    "dispatch_coverage": "bases with the expected SUT dispatch / 48",
+    "exact_delta_success": "bases with exact target delta and no other controlled entity change / 48",
+    "wrong_target_transition": "bases with any unapproved controlled entity transition / 48",
+    "zero_preconfirm_calls": "bases with zero SUT calls before explicit confirmation / 48",
+    "universal_guard_rate": "per-base conjunction of replay, expiry, target drift, session, plan, candidate and unrelated-state outcomes / 48",
+    "context_guard_rate": "context-state mutation outcome / 12"
+  },
+  "statistics": {
+    "binary_intervals": "Wilson two-sided 95%, z=1.959963984540054",
+    "paired_test": "two-sided exact McNemar using discordant base counts",
+    "primary_comparisons": [
+      "B1 versus B0 ambiguous clean exact-delta success",
+      "B2 versus B1 universal guard pass"
+    ],
+    "multiplicity": "Holm correction across the two primary comparisons",
+    "latency_unit": "median of the clear and ambiguous latency within each base, then median and p95 across 48 bases",
+    "pseudo_replication_guards": [
+      "two probes do not become n=96 independent bases",
+      "three arms reuse the same model output",
+      "mutations do not become n=384 independent bases",
+      "multi-line instructions, service calls and state events are not samples"
+    ]
+  },
+  "pilot_gate": {
+    "base_ids": [
+      "dev-duplicate_entity-01",
+      "dev-duplicate_entity-02",
+      "dev-duplicate_entity-03",
+      "dev-missing_slot-01",
+      "dev-missing_slot-02",
+      "dev-missing_slot-03",
+      "dev-context_reference-01",
+      "dev-context_reference-02",
+      "dev-context_reference-03",
+      "dev-negation_correction-01",
+      "dev-negation_correction-02",
+      "dev-negation_correction-03"
+    ],
+    "full_4057": "Only required if a quantized or trained model variant changes model outputs.",
+    "quantization": "Only proceed after the complete core E2E passes and a same-hardware matched run can finish.",
+    "training": "Only proceed for a repeated action/domain parsing failure, never for missing runtime inventory or state grounding."
+  }
+}

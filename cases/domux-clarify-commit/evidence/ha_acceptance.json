@@ -1,0 +1,650 @@
+{
+  "execution_source_bindings": {
+    "binding_bundle_sha256": "9359a27e970603a1635d1c6307b5bbd651bda86a70ab6098a189c7bdce4d5fa1",
+    "digest_algorithm": "sha256",
+    "host_python": {
+      "implementation": "cpython",
+      "version": "3.12.12"
+    },
+    "inputs": {
+      "data/scenarios.jsonl": {
+        "sha256": "0e27842c62d9cd4e4b1467b43e3ebcd346c79c0125c4f40cce97d363c821a0a0",
+        "size_bytes": 161098
+      },
+      "evidence/v1/domux_raw.jsonl": {
+        "sha256": "c0561bc72042dc7415d322fea90649866355dc44d2547f246d87cd87d367e966",
+        "size_bytes": 49637
+      }
+    },
+    "module_origins_verified": true,
+    "path_base": "case_directory",
+    "pre_post_execution_match": true,
+    "schema_version": 1,
+    "sources": {
+      "clarify_commit.py": {
+        "sha256": "67e1dff8b413f7dffbd5ef1d826973153b86e35cb0da3b75aeec52d11160eaff",
+        "size_bytes": 226611
+      },
+      "ha_acceptance.py": {
+        "sha256": "4820b87a784e5a63de27ae536d747666b65678e22578397a8483dcd30336a75a",
+        "size_bytes": 88780
+      }
+    }
+  },
+  "home_assistant": {
+    "auth": {
+      "issue_http": 200,
+      "refresh_after_revoke_http": 400,
+      "revoke_http": 200,
+      "token_type": "Bearer",
+      "ttl_seconds": 1800
+    },
+    "health": {
+      "authenticated_api_http": 200,
+      "message": "API running.",
+      "unauthenticated_api_http": 401
+    },
+    "onboarding": {
+      "final": {
+        "analytics": true,
+        "core_config": true,
+        "integration": true,
+        "user": true
+      },
+      "initial": {
+        "analytics": false,
+        "core_config": false,
+        "integration": false,
+        "user": false
+      },
+      "requests": {
+        "analytics_http": 200,
+        "core_config_http": 200,
+        "integration_http": 200,
+        "users_http": 200
+      }
+    },
+    "phases": {
+      "service_call_accounting": {
+        "direct_rest_events": [
+          {
+            "domain": "light",
+            "http_status": 200,
+            "phase": "setup",
+            "request_path": "/api/services/light/turn_on",
+            "service": "turn_on"
+          },
+          {
+            "domain": "light",
+            "http_status": 200,
+            "phase": "setup",
+            "request_path": "/api/services/light/turn_on",
+            "service": "turn_on"
+          },
+          {
+            "domain": "cover",
+            "http_status": 200,
+            "phase": "setup",
+            "request_path": "/api/services/cover/set_cover_position",
+            "service": "set_cover_position"
+          },
+          {
+            "domain": "climate",
+            "http_status": 200,
+            "phase": "setup",
+            "request_path": "/api/services/climate/set_hvac_mode",
+            "service": "set_hvac_mode"
+          },
+          {
+            "domain": "climate",
+            "http_status": 200,
+            "phase": "setup",
+            "request_path": "/api/services/climate/set_temperature",
+            "service": "set_temperature"
+          },
+          {
+            "domain": "light",
+            "http_status": 200,
+            "phase": "external_fault_injection",
+            "request_path": "/api/services/light/turn_on",
+            "service": "turn_on"
+          }
+        ],
+        "external_fault_injection": 1,
+        "setup_direct_rest": 5,
+        "sut_dispatches": 3,
+        "total": 9
+      },
+      "setup": {
+        "classification": "direct_rest_state_normalization",
+        "dispatches": [
+          {
+            "domain": "light",
+            "http": 200,
+            "service": "turn_on"
+          },
+          {
+            "domain": "light",
+            "http": 200,
+            "service": "turn_on"
+          },
+          {
+            "domain": "cover",
+            "http": 200,
+            "service": "set_cover_position"
+          },
+          {
+            "domain": "climate",
+            "http": 200,
+            "service": "set_hvac_mode"
+          },
+          {
+            "domain": "climate",
+            "http": 200,
+            "service": "set_temperature"
+          }
+        ],
+        "included_in_sut_dispatch_count": false,
+        "purpose": "setup_only"
+      },
+      "sut": {
+        "adapter": "HomeAssistantRESTAdapter",
+        "case_count": 4,
+        "cases": [
+          {
+            "case": "recorded_ambiguous_light_off",
+            "controlled_after": {
+              "brightness": null,
+              "color_temp_kelvin": null,
+              "entity_id": "light.ceiling_lights",
+              "rgb_color": null,
+              "state": "off"
+            },
+            "controlled_before": {
+              "brightness": 178,
+              "color_temp_kelvin": 3000,
+              "entity_id": "light.ceiling_lights",
+              "rgb_color": [
+                255,
+                177,
+                110
+              ],
+              "state": "on"
+            },
+            "domain": "light",
+            "domux_evidence": {
+              "artifact": "evidence/v1/domux_raw.jsonl",
+              "artifact_sha256": "c0561bc72042dc7415d322fea90649866355dc44d2547f246d87cd87d367e966",
+              "base_id": "eval-duplicate_entity-01",
+              "line_number": 2,
+              "pair_verified": true,
+              "query_sha256": "f27717f08a911d7db2dcafcec7dc4fb5363b9cff40840596c17d548101b6fdcf",
+              "raw_output_sha256": "c5fee12f0a6f2de9ca00f1a3d64485625ddcceba18e34a799ddbfe38196dd76e",
+              "validation": "whole_artifact_and_per_field_sha256",
+              "variant": "ambiguous"
+            },
+            "grounding": {
+              "candidate_ids": [
+                "light.ceiling_lights",
+                "light.bed_light"
+              ],
+              "clarification_required": true,
+              "resolution": "resolve_clarification_submission",
+              "selected_entity_id": "light.ceiling_lights"
+            },
+            "ha_registry_profile": "semantic_target_mapping_subset_not_full_scenario_inventory",
+            "outcome": "COMMITTED",
+            "postcondition": {
+              "all_registered_entities_exact": true,
+              "matched_prepared_projection": true,
+              "reason": "committed",
+              "status": "COMMITTED"
+            },
+            "replay": {
+              "accepted": false,
+              "dispatched": false,
+              "reason": "replayed_nonce",
+              "sut_dispatch_delta": 0
+            },
+            "scenario_provenance": {
+              "artifact": "data/scenarios.jsonl",
+              "artifact_sha256": "0e27842c62d9cd4e4b1467b43e3ebcd346c79c0125c4f40cce97d363c821a0a0",
+              "base_id": "eval-duplicate_entity-01",
+              "binding_sha256": "39c46c2421f31df71a05882b7fdf43a0c79ce658250c70ee4ecb53c4fff80518",
+              "clarification_answer": "The Living Room light on the Ground Floor.",
+              "clarification_answer_sha256": "136300ffc636a6a93b5960d39f4b34d3526d46c7c5cf13e96426c24a5b045662",
+              "confirmed_instruction": {
+                "action": "turnOff",
+                "attribute": "*",
+                "device": "Light",
+                "floor": "Ground Floor",
+                "room": "Living Room",
+                "unit": "*",
+                "value": "*"
+              },
+              "confirmed_instruction_sha256": "0d5831300f6f011e923f1ef0b69481f59157762fc0221cc3b562c1344b9af9d0",
+              "expected_target_entity_id": "light.eval_de_01_living",
+              "frozen_candidate_count": 3,
+              "ha_matching_candidate_count": 2,
+              "ha_registry_profile": "semantic_target_mapping_subset_not_full_scenario_inventory",
+              "inventory_limitation": {
+                "full_scenario_inventory_reproduced": false,
+                "profile": "semantic_target_mapping_subset_not_full_scenario_inventory"
+              },
+              "line_number": 17,
+              "post_clarification_model_call": false,
+              "row_sha256": "8b8f6498aef6bb4cb7fd5af3ac9adbef3e2cf0013c7a22451fc339e5f85cd871",
+              "scenario_target_to_ha_demo_entity": {
+                "ha_demo_entity_id": "light.ceiling_lights",
+                "scenario_target_entity_id": "light.eval_de_01_living",
+                "semantic_fields_match": true
+              },
+              "source": "frozen_synthetic_scenario_gold",
+              "target_inventory_semantics": {
+                "aliases": [],
+                "device": "Light",
+                "domain": "light",
+                "floor": "Ground Floor",
+                "room": "Living Room"
+              },
+              "used_for_resolution": true,
+              "variant": "ambiguous",
+              "variant_command_sha256": "f27717f08a911d7db2dcafcec7dc4fb5363b9cff40840596c17d548101b6fdcf"
+            },
+            "service_shape": {
+              "data": {
+                "entity_id": "light.ceiling_lights"
+              },
+              "domain": "light",
+              "service": "turn_off"
+            }
+          },
+          {
+            "case": "recorded_unique_cover_position",
+            "controlled_after": {
+              "current_position": 20,
+              "entity_id": "cover.hall_window",
+              "state": "open"
+            },
+            "controlled_before": {
+              "current_position": 80,
+              "entity_id": "cover.hall_window",
+              "state": "open"
+            },
+            "domain": "cover",
+            "domux_evidence": {
+              "artifact": "evidence/v1/domux_raw.jsonl",
+              "artifact_sha256": "c0561bc72042dc7415d322fea90649866355dc44d2547f246d87cd87d367e966",
+              "base_id": "eval-duplicate_entity-02",
+              "line_number": 3,
+              "pair_verified": true,
+              "query_sha256": "cd4494727bc97d234d9c50f345468ab88b3571230ef610b5ef367d307f30e784",
+              "raw_output_sha256": "1435c4aa085aa8a5470b0cafc14629f15ea12f5ea0fdb255fe0f3fcb90a85edf",
+              "validation": "whole_artifact_and_per_field_sha256",
+              "variant": "clear"
+            },
+            "grounding": {
+              "candidate_ids": [
+                "cover.hall_window"
+              ],
+              "clarification_required": false,
+              "resolution": "resolve_unique_request",
+              "selected_entity_id": "cover.hall_window"
+            },
+            "ha_registry_profile": "semantic_target_mapping_subset_not_full_scenario_inventory",
+            "outcome": "COMMITTED",
+            "postcondition": {
+              "all_registered_entities_exact": true,
+              "matched_prepared_projection": true,
+              "reason": "committed",
+              "status": "COMMITTED"
+            },
+            "replay": {
+              "accepted": false,
+              "dispatched": false,
+              "reason": "replayed_nonce",
+              "sut_dispatch_delta": 0
+            },
+            "scenario_provenance": {
+              "artifact": "data/scenarios.jsonl",
+              "artifact_sha256": "0e27842c62d9cd4e4b1467b43e3ebcd346c79c0125c4f40cce97d363c821a0a0",
+              "base_id": "eval-duplicate_entity-02",
+              "binding_sha256": "98e9f02e52d1c81f6a7a18a785885ab64ad93c57a3bd50de8f4f7a68b437ba83",
+              "clarification_answer": "The Hall curtain on the First Floor.",
+              "clarification_answer_sha256": "2398268aa0cca19e8cfeb11b9c26f42dc893b16693bb6dd7bef9fbf2923ceb92",
+              "confirmed_instruction": {
+                "action": "set",
+                "attribute": "position",
+                "device": "Curtain",
+                "floor": "First Floor",
+                "room": "Hall",
+                "unit": "Percent",
+                "value": "20"
+              },
+              "confirmed_instruction_sha256": "1435c4aa085aa8a5470b0cafc14629f15ea12f5ea0fdb255fe0f3fcb90a85edf",
+              "expected_target_entity_id": "cover.eval_de_02_upstairs_hall",
+              "frozen_candidate_count": 2,
+              "ha_matching_candidate_count": 1,
+              "ha_registry_profile": "semantic_target_mapping_subset_not_full_scenario_inventory",
+              "inventory_limitation": {
+                "full_scenario_inventory_reproduced": false,
+                "profile": "semantic_target_mapping_subset_not_full_scenario_inventory"
+              },
+              "line_number": 18,
+              "post_clarification_model_call": false,
+              "row_sha256": "24f7b968a30cba095932b3f5da47ce8f8fc65d521546a830de1b6ea149db7fb4",
+              "scenario_target_to_ha_demo_entity": {
+                "ha_demo_entity_id": "cover.hall_window",
+                "scenario_target_entity_id": "cover.eval_de_02_upstairs_hall",
+                "semantic_fields_match": true
+              },
+              "source": "frozen_synthetic_scenario_gold",
+              "target_inventory_semantics": {
+                "aliases": [],
+                "device": "Curtain",
+                "domain": "cover",
+                "floor": "First Floor",
+                "room": "Hall"
+              },
+              "used_for_resolution": false,
+              "variant": "clear",
+              "variant_command_sha256": "cd4494727bc97d234d9c50f345468ab88b3571230ef610b5ef367d307f30e784"
+            },
+            "service_shape": {
+              "data": {
+                "entity_id": "cover.hall_window",
+                "position": 20
+              },
+              "domain": "cover",
+              "service": "set_cover_position"
+            }
+          },
+          {
+            "case": "recorded_unique_climate_temperature",
+            "controlled_after": {
+              "entity_id": "climate.hvac",
+              "fan_mode": "on_high",
+              "state": "cool",
+              "temperature": 22.0
+            },
+            "controlled_before": {
+              "entity_id": "climate.hvac",
+              "fan_mode": "on_high",
+              "state": "cool",
+              "temperature": 24.0
+            },
+            "domain": "climate",
+            "domux_evidence": {
+              "artifact": "evidence/v1/domux_raw.jsonl",
+              "artifact_sha256": "c0561bc72042dc7415d322fea90649866355dc44d2547f246d87cd87d367e966",
+              "base_id": "eval-duplicate_entity-03",
+              "line_number": 5,
+              "pair_verified": true,
+              "query_sha256": "c892af8646f0e3d0e52226ddf5d5c0ac4fed0d977ced9592e693b2abaf88962b",
+              "raw_output_sha256": "37282efde74972be3bc4bdab6351683ed9be31dcefbff39e1527ce81a0da58a4",
+              "validation": "whole_artifact_and_per_field_sha256",
+              "variant": "clear"
+            },
+            "grounding": {
+              "candidate_ids": [
+                "climate.hvac"
+              ],
+              "clarification_required": false,
+              "resolution": "resolve_unique_request",
+              "selected_entity_id": "climate.hvac"
+            },
+            "ha_registry_profile": "semantic_target_mapping_subset_not_full_scenario_inventory",
+            "outcome": "COMMITTED",
+            "postcondition": {
+              "all_registered_entities_exact": true,
+              "matched_prepared_projection": true,
+              "reason": "committed",
+              "status": "COMMITTED"
+            },
+            "replay": {
+              "accepted": false,
+              "dispatched": false,
+              "reason": "replayed_nonce",
+              "sut_dispatch_delta": 0
+            },
+            "scenario_provenance": {
+              "artifact": "data/scenarios.jsonl",
+              "artifact_sha256": "0e27842c62d9cd4e4b1467b43e3ebcd346c79c0125c4f40cce97d363c821a0a0",
+              "base_id": "eval-duplicate_entity-03",
+              "binding_sha256": "4e149daeff09b5307563d5e96661e417f9349f9cc3129f80877ed2c7d4ac46c3",
+              "clarification_answer": "The Bedroom AC on the Second Floor, in Celsius.",
+              "clarification_answer_sha256": "32d9503216df62eda6dbbced0b276a73330754bbaa1c12c10175f079f91d6431",
+              "confirmed_instruction": {
+                "action": "set",
+                "attribute": "temperature",
+                "device": "AC",
+                "floor": "Second Floor",
+                "room": "Bedroom",
+                "unit": "Celsius",
+                "value": "22"
+              },
+              "confirmed_instruction_sha256": "37282efde74972be3bc4bdab6351683ed9be31dcefbff39e1527ce81a0da58a4",
+              "expected_target_entity_id": "climate.eval_de_03_bedroom_second",
+              "frozen_candidate_count": 2,
+              "ha_matching_candidate_count": 1,
+              "ha_registry_profile": "semantic_target_mapping_subset_not_full_scenario_inventory",
+              "inventory_limitation": {
+                "full_scenario_inventory_reproduced": false,
+                "profile": "semantic_target_mapping_subset_not_full_scenario_inventory"
+              },
+              "line_number": 19,
+              "post_clarification_model_call": false,
+              "row_sha256": "ef0be54be7aaae140c846076fe9568dbea981fd6a96575b12cb6633057756bdf",
+              "scenario_target_to_ha_demo_entity": {
+                "ha_demo_entity_id": "climate.hvac",
+                "scenario_target_entity_id": "climate.eval_de_03_bedroom_second",
+                "semantic_fields_match": true
+              },
+              "source": "frozen_synthetic_scenario_gold",
+              "target_inventory_semantics": {
+                "aliases": [],
+                "device": "AC",
+                "domain": "climate",
+                "floor": "Second Floor",
+                "room": "Bedroom"
+              },
+              "used_for_resolution": false,
+              "variant": "clear",
+              "variant_command_sha256": "c892af8646f0e3d0e52226ddf5d5c0ac4fed0d977ced9592e693b2abaf88962b"
+            },
+            "service_shape": {
+              "data": {
+                "entity_id": "climate.hvac",
+                "temperature": 22.0
+              },
+              "domain": "climate",
+              "service": "set_temperature"
+            }
+          },
+          {
+            "binding": {
+              "after_external_mutation_state_digest": "80e68977cce90ffd209341d5cdd5fb029c287f2cc719802fd12abbc6ec6a7f06",
+              "before_external_mutation_state_digest": "dcb0369d3d033fa784ccf60d4aa5d20d00ef1ddb458817e281687679dca574c6",
+              "changed_after_external_mutation": true,
+              "matched_before_external_mutation": true,
+              "prepared_state_digest": "dcb0369d3d033fa784ccf60d4aa5d20d00ef1ddb458817e281687679dca574c6"
+            },
+            "case": "recorded_study_light_state_drift_rejected",
+            "controlled_after_external_mutation": {
+              "brightness": 64,
+              "color_temp_kelvin": 3000,
+              "entity_id": "light.bed_light",
+              "rgb_color": [
+                255,
+                177,
+                110
+              ],
+              "state": "on"
+            },
+            "controlled_before_external_mutation": {
+              "brightness": 166,
+              "color_temp_kelvin": 3000,
+              "entity_id": "light.bed_light",
+              "rgb_color": [
+                255,
+                177,
+                110
+              ],
+              "state": "on"
+            },
+            "domain": "light",
+            "domux_evidence": {
+              "artifact": "evidence/v1/domux_raw.jsonl",
+              "artifact_sha256": "c0561bc72042dc7415d322fea90649866355dc44d2547f246d87cd87d367e966",
+              "base_id": "eval-duplicate_entity-04",
+              "line_number": 7,
+              "pair_verified": true,
+              "query_sha256": "01411704354a221b89abc4c31c1d577fa7aecce126d9fd3db966c68bcfe27973",
+              "raw_output_sha256": "6caea436fc1c6256aa56198c93270913e9323f6a0935267c55389eef078e57a4",
+              "validation": "whole_artifact_and_per_field_sha256",
+              "variant": "clear"
+            },
+            "external_mutation": {
+              "classification": "out_of_band_fault_injection",
+              "data": {
+                "brightness_pct": 25.0,
+                "entity_id": "light.bed_light"
+              },
+              "domain": "light",
+              "http_status": 200,
+              "included_in_sut_dispatch_count": false,
+              "observed_path": "/api/states/light.bed_light",
+              "request_path": "/api/services/light/turn_on",
+              "service": "turn_on",
+              "transport": "home_assistant_rest_api"
+            },
+            "grounding": {
+              "candidate_ids": [
+                "light.bed_light"
+              ],
+              "clarification_required": false,
+              "resolution": "resolve_unique_request",
+              "selected_entity_id": "light.bed_light"
+            },
+            "ha_registry_profile": "semantic_target_mapping_subset_not_full_scenario_inventory",
+            "outcome": "REJECTED_BEFORE_DISPATCH",
+            "rejection": {
+              "accepted": false,
+              "acknowledged": false,
+              "dispatched": false,
+              "outcome_unknown": false,
+              "reason": "state_changed",
+              "status": "INVALIDATED",
+              "sut_dispatch_delta": 0
+            },
+            "scenario_provenance": {
+              "artifact": "data/scenarios.jsonl",
+              "artifact_sha256": "0e27842c62d9cd4e4b1467b43e3ebcd346c79c0125c4f40cce97d363c821a0a0",
+              "base_id": "eval-duplicate_entity-04",
+              "binding_sha256": "675d850e8d4ccb07709daa3d2b644a6c03f12aa5c239cf62dce62aa72e542b42",
+              "clarification_answer": "Use the Light in the Study on the Ground Floor.",
+              "clarification_answer_sha256": "57973f7724e2aeb7919bbe4ca3deae6cf3c901d4359d13239bda446d894beb8b",
+              "confirmed_instruction": {
+                "action": "set",
+                "attribute": "brightness",
+                "device": "Light",
+                "floor": "Ground Floor",
+                "room": "Study",
+                "unit": "Percent",
+                "value": "35"
+              },
+              "confirmed_instruction_sha256": "6caea436fc1c6256aa56198c93270913e9323f6a0935267c55389eef078e57a4",
+              "expected_target_entity_id": "light.eval_de_04_study",
+              "frozen_candidate_count": 3,
+              "ha_matching_candidate_count": 1,
+              "ha_registry_profile": "semantic_target_mapping_subset_not_full_scenario_inventory",
+              "inventory_limitation": {
+                "full_scenario_inventory_reproduced": false,
+                "profile": "semantic_target_mapping_subset_not_full_scenario_inventory"
+              },
+              "line_number": 20,
+              "post_clarification_model_call": false,
+              "row_sha256": "d9b32826a3e0229d5943e69a8ba3192635194f5ba87120945a6a92274e24c78e",
+              "scenario_target_to_ha_demo_entity": {
+                "ha_demo_entity_id": "light.bed_light",
+                "scenario_target_entity_id": "light.eval_de_04_study",
+                "semantic_fields_match": true
+              },
+              "source": "frozen_synthetic_scenario_gold",
+              "target_inventory_semantics": {
+                "aliases": [],
+                "device": "Light",
+                "domain": "light",
+                "floor": "Ground Floor",
+                "room": "Study"
+              },
+              "used_for_resolution": false,
+              "variant": "clear",
+              "variant_command_sha256": "01411704354a221b89abc4c31c1d577fa7aecce126d9fd3db966c68bcfe27973"
+            },
+            "service_shape": {
+              "data": {
+                "brightness_pct": 35.0,
+                "entity_id": "light.bed_light"
+              },
+              "domain": "light",
+              "service": "turn_on"
+            }
+          }
+        ],
+        "classification": "clarify_commit_sut",
+        "domux_evidence": {
+          "artifact": "evidence/v1/domux_raw.jsonl",
+          "artifact_sha256": "c0561bc72042dc7415d322fea90649866355dc44d2547f246d87cd87d367e966",
+          "pair_count": 4,
+          "validation": "whole_artifact_and_per_field_sha256"
+        },
+        "external_fault_injection_count": 1,
+        "pipeline": [
+          "ground_domux_request",
+          "resolve_clarification_submission_or_unique",
+          "PreparedActionStore.prepare",
+          "PreparedActionStore.commit",
+          "HomeAssistantRESTAdapter.call_service"
+        ],
+        "rejected_before_dispatch_count": 1,
+        "scenario_evidence": {
+          "artifact": "data/scenarios.jsonl",
+          "artifact_sha256": "0e27842c62d9cd4e4b1467b43e3ebcd346c79c0125c4f40cce97d363c821a0a0",
+          "case_count": 4,
+          "ha_registry_profile": "semantic_target_mapping_subset_not_full_scenario_inventory"
+        },
+        "successful_transition_count": 3,
+        "sut_dispatch_total": 3
+      },
+      "teardown": {
+        "classification": "credential_cleanup",
+        "refresh_after_revoke_http": 400,
+        "refresh_revoke_http": 200
+      }
+    },
+    "readiness": {
+      "endpoint": "/api/onboarding",
+      "http": 200
+    }
+  },
+  "image": {
+    "architecture": "amd64",
+    "docker_healthcheck": false,
+    "manifest_digest": "sha256:8e9751cb66d3ba6624f5360a7d31b0c6821f7f5b3fb8ba0d10d58f0f481c540c",
+    "operating_system": "linux",
+    "repository": "ghcr.io/home-assistant/home-assistant",
+    "version": "2026.8.3"
+  },
+  "isolation": {
+    "container_count": 1,
+    "cpu_limit": 1.5,
+    "memory_limit_bytes": 2147483648,
+    "named_volume_count": 1,
+    "pids_limit": 512,
+    "random_loopback_binding": true,
+    "restart_policy": "no"
+  },
+  "schema_version": 4,
+  "status": "passed"
+}

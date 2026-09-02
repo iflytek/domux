@@ -1,0 +1,6 @@
+# Exact direct dependencies from the recorded BF16 inference environment.
+# CPU-only evaluation and all policy tests use only the Python standard library.
+accelerate==1.13.0
+huggingface-hub==1.27.0
+torch==2.10.0
+transformers==5.15.0

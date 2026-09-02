@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-08-26T16:24:39.375166+00:00",
+  "model_id": "iFlytekOpenSource/Domux",
+  "tested_revision": "6c71a32f4d624cadfd9fce9d10240d8068e53456",
+  "snapshot_revision_verified": true,
+  "snapshot_manifest_sha256": "5a13462b24fc9b00d132c42718e037bc42fc51a3c6752041998e085579f01416",
+  "download_source": "huggingface",
+  "artifact_type": "full pinned snapshot",
+  "snapshot_size_bytes": 10279032574,
+  "snapshot_files": [
+    {
+      "name": ".gitattributes",
+      "size_bytes": 1570,
+      "sha256": "34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930",
+      "hub_etag": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+    },
+    {
+      "name": "README.md",
+      "size_bytes": 8025,
+      "sha256": "6df6f95e2a87be1f0ba202d3bf5a630550876d8991d41401418f58e70c7cbd00",
+      "hub_etag": "d612ee3ed4918175d1ba5ab2d6a7e9e6993ccfc1"
+    },
+    {
+      "name": "chat_template.jinja",
+      "size_bytes": 17592,
+      "sha256": "79ee69df203d90d4fa85d289cbd38f12aa1b09d015aac9784ddce23974f47a32",
+      "hub_etag": "b2caa00ebefc1d0e2846c15fca399b95420f1b1b"
+    },
+    {
+      "name": "config.json",
+      "size_bytes": 5007,
+      "sha256": "55be922b1a46e06ba69b62215ae08d0967badf8f08eb27bee58ddc33f3182479",
+      "hub_etag": "96dae7e44d3d01c7aa039191aa4c945453979256"
+    },
+    {
+      "name": "generation_config.json",
+      "size_bytes": 203,
+      "sha256": "9a91fc781041964400bf9a92a422bce6a963723d47e56065bb6a28e0b275384d",
+      "hub_etag": "e352f58545ce62e094ac3f1729d5c8fff8c5e7d5"
+    },
+    {
+      "name": "model-00001-of-00004.safetensors",
+      "size_bytes": 1422130752,
+      "sha256": "f26e99e1fa290296828da6d00423b5557125badf7dc8d05f84dfd4f71e35b688",
+      "hub_etag": "f26e99e1fa290296828da6d00423b5557125badf7dc8d05f84dfd4f71e35b688"
+    },
+    {
+      "name": "model-00002-of-00004.safetensors",
+      "size_bytes": 4697620616,
+      "sha256": "2a4f634f5fd5b23ab365a79cf94095f2a173f0d187bfb22817c09e0730dd77aa",
+      "hub_etag": "2a4f634f5fd5b23ab365a79cf94095f2a173f0d187bfb22817c09e0730dd77aa"
+    },
+    {
+      "name": "model-00003-of-00004.safetensors",
+      "size_bytes": 2115862072,
+      "sha256": "bbad30c0bf6ccbea8282c5d79ebc6ea7ff126226239d34431d1f7ae0c5777306",
+      "hub_etag": "bbad30c0bf6ccbea8282c5d79ebc6ea7ff126226239d34431d1f7ae0c5777306"
+    },
+    {
+      "name": "model-00004-of-00004.safetensors",
+      "size_bytes": 2011006798,
+      "sha256": "e9509b71370663bdf5e3b3fe6f649f9d490bc6345857aecaaf5360ac5fea074d",
+      "hub_etag": "e9509b71370663bdf5e3b3fe6f649f9d490bc6345857aecaaf5360ac5fea074d"
+    },
+    {
+      "name": "model.safetensors.index.json",
+      "size_bytes": 205883,
+      "sha256": "7300d2c559eb88dd7f2f29da0ad661bcc173dc8446e724ed6946f0d5844093d3",
+      "hub_etag": "e84c00c17aba40c1866e65ce4c19a29675cd1e44"
+    },
+    {
+      "name": "processor_config.json",
+      "size_bytes": 1689,
+      "sha256": "32bdf45d2ad4cc29a0822ddd157a182de76644f0419a6228d151495256e9813c",
+      "hub_etag": "5465974d23e1eca2c46c2809b26c997946ce0d90"
+    },
+    {
+      "name": "tokenizer.json",
+      "size_bytes": 32169626,
+      "sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f",
+      "hub_etag": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"
+    },
+    {
+      "name": "tokenizer_config.json",
+      "size_bytes": 2741,
+      "sha256": "a284d1243b62be31faa9c13e1c28cece940c4abaa7bd9ad87b94f61b40687200",
+      "hub_etag": "af7f25861136b515f4bf64d9d0a6cf9875a6d508"
+    }
+  ],
+  "runtime": "transformers.AutoModelForMultimodalLM",
+  "python_version": "3.12.12",
+  "platform": "Linux-5.15.0-91-generic-x86_64-with-glibc2.35",
+  "torch_version": "2.10.0+cu128",
+  "transformers_version": "5.15.0",
+  "huggingface_hub_version": "1.27.0",
+  "accelerate_version": "1.13.0",
+  "bitsandbytes_version": null,
+  "precision": "bf16",
+  "compute_dtype": "torch.bfloat16",
+  "gpu": "NVIDIA A800-SXM4-80GB",
+  "gpu_total_memory_bytes": 85167243264,
+  "visible_gpu_count": 1,
+  "load_seconds": 4.564,
+  "peak_allocated_bytes": 10244988416,
+  "peak_reserved_bytes": 10284433408,
+  "dataset_sha256": "0e27842c62d9cd4e4b1467b43e3ebcd346c79c0125c4f40cce97d363c821a0a0",
+  "raw_evidence_sha256": "c0561bc72042dc7415d322fea90649866355dc44d2547f246d87cd87d367e966",
+  "runner_sha256": "bf07dff14d69bcb9eca60322636740d46f0ef6655dacaa458f7a02434db9fa35",
+  "grounding_policy_sha256": "33d6616b341469f545dc9a7c01d1acaaff35fe7d42d9cefb5741170aad966e10",
+  "evaluator_sha256": "7c79cf0976cd33260e95397fcbb55fd8ac320b199eb54379b897dd8f6a41c941",
+  "prompt_template_sha256": "79ee69df203d90d4fa85d289cbd38f12aa1b09d015aac9784ddce23974f47a32",
+  "sample_count": 96,
+  "base_count": 48,
+  "warmup_count": 2,
+  "warmup_source": "independent commands excluded from development and evaluation data",
+  "generation": {
+    "do_sample": false,
+    "temperature": 0,
+    "max_new_tokens": 128,
+    "seed": 20260826
+  },
+  "offline_inference": true,
+  "run_mode": "formal",
+  "selective_reruns": 0,
+  "sample_failures": 0,
+  "command_template": "CUDA_VISIBLE_DEVICES=<selected-id> python run_model.py --snapshot <LOCAL_PINNED_SNAPSHOT> --dataset data/scenarios.jsonl --output evidence/domux_raw.jsonl --metadata-output evidence/domux_metadata.json --mode formal --split eval --precision bf16"
+}

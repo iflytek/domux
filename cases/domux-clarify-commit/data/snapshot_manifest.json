@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "model_id": "iFlytekOpenSource/Domux",
+  "revision": "6c71a32f4d624cadfd9fce9d10240d8068e53456",
+  "source": "huggingface_hub.HfApi.model_info(files_metadata=True)",
+  "files_sha256": "5a13462b24fc9b00d132c42718e037bc42fc51a3c6752041998e085579f01416",
+  "files": [
+    {
+      "name": ".gitattributes",
+      "size_bytes": 1570,
+      "sha256": "34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930",
+      "hub_etag": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+    },
+    {
+      "name": "README.md",
+      "size_bytes": 8025,
+      "sha256": "6df6f95e2a87be1f0ba202d3bf5a630550876d8991d41401418f58e70c7cbd00",
+      "hub_etag": "d612ee3ed4918175d1ba5ab2d6a7e9e6993ccfc1"
+    },
+    {
+      "name": "chat_template.jinja",
+      "size_bytes": 17592,
+      "sha256": "79ee69df203d90d4fa85d289cbd38f12aa1b09d015aac9784ddce23974f47a32",
+      "hub_etag": "b2caa00ebefc1d0e2846c15fca399b95420f1b1b"
+    },
+    {
+      "name": "config.json",
+      "size_bytes": 5007,
+      "sha256": "55be922b1a46e06ba69b62215ae08d0967badf8f08eb27bee58ddc33f3182479",
+      "hub_etag": "96dae7e44d3d01c7aa039191aa4c945453979256"
+    },
+    {
+      "name": "generation_config.json",
+      "size_bytes": 203,
+      "sha256": "9a91fc781041964400bf9a92a422bce6a963723d47e56065bb6a28e0b275384d",
+      "hub_etag": "e352f58545ce62e094ac3f1729d5c8fff8c5e7d5"
+    },
+    {
+      "name": "model-00001-of-00004.safetensors",
+      "size_bytes": 1422130752,
+      "sha256": "f26e99e1fa290296828da6d00423b5557125badf7dc8d05f84dfd4f71e35b688",
+      "hub_etag": "f26e99e1fa290296828da6d00423b5557125badf7dc8d05f84dfd4f71e35b688"
+    },
+    {
+      "name": "model-00002-of-00004.safetensors",
+      "size_bytes": 4697620616,
+      "sha256": "2a4f634f5fd5b23ab365a79cf94095f2a173f0d187bfb22817c09e0730dd77aa",
+      "hub_etag": "2a4f634f5fd5b23ab365a79cf94095f2a173f0d187bfb22817c09e0730dd77aa"
+    },
+    {
+      "name": "model-00003-of-00004.safetensors",
+      "size_bytes": 2115862072,
+      "sha256": "bbad30c0bf6ccbea8282c5d79ebc6ea7ff126226239d34431d1f7ae0c5777306",
+      "hub_etag": "bbad30c0bf6ccbea8282c5d79ebc6ea7ff126226239d34431d1f7ae0c5777306"
+    },
+    {
+      "name": "model-00004-of-00004.safetensors",
+      "size_bytes": 2011006798,
+      "sha256": "e9509b71370663bdf5e3b3fe6f649f9d490bc6345857aecaaf5360ac5fea074d",
+      "hub_etag": "e9509b71370663bdf5e3b3fe6f649f9d490bc6345857aecaaf5360ac5fea074d"
+    },
+    {
+      "name": "model.safetensors.index.json",
+      "size_bytes": 205883,
+      "sha256": "7300d2c559eb88dd7f2f29da0ad661bcc173dc8446e724ed6946f0d5844093d3",
+      "hub_etag": "e84c00c17aba40c1866e65ce4c19a29675cd1e44"
+    },
+    {
+      "name": "processor_config.json",
+      "size_bytes": 1689,
+      "sha256": "32bdf45d2ad4cc29a0822ddd157a182de76644f0419a6228d151495256e9813c",
+      "hub_etag": "5465974d23e1eca2c46c2809b26c997946ce0d90"
+    },
+    {
+      "name": "tokenizer.json",
+      "size_bytes": 32169626,
+      "sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f",
+      "hub_etag": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"
+    },
+    {
+      "name": "tokenizer_config.json",
+      "size_bytes": 2741,
+      "sha256": "a284d1243b62be31faa9c13e1c28cece940c4abaa7bd9ad87b94f61b40687200",
+      "hub_etag": "af7f25861136b515f4bf64d9d0a6cf9875a6d508"
+    }
+  ]
+}
