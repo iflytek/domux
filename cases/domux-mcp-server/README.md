@@ -43,6 +43,30 @@ Domux 的核心能力是将自然语言指令解析为七字段结构化槽位�
 - 本案例使用基于 Domux 输出契约的 MockBackend 进行端到端演示（零 GPU、零硬件），
   并用 transformers 5.8.0 在免费 Colab T4 上完成 Domux 真实推理评测（见 Results）。
 
+## File Structure / 文件结构
+
+```
+cases/domux-mcp-server/
+├── README.md          # 本案例文档
+├── preview.png        # 演示截图
+├── preview.txt        # 预览摘要
+├── src/               # 完整可运行源码
+│   ├── requirements.txt
+│   ├── test_server.py        # MCP Server 自测（92 断言）
+│   ├── auth_middleware.py    # 四级权限 + 高危二次确认
+│   ├── home_risk_engine.py   # 家居风险评分引擎
+│   ├── ha_adapter.py         # Home Assistant 抽象层
+│   ├── insurance_api.py      # 保险评核 API
+│   ├── demo_2035_scenario.py # 端到端全链路演示
+│   ├── server.py             # MCP Server 入口
+│   ├── backend.py            # 后端抽象层（mock/vllm）
+│   └── slots.py              # 槽位契约定义
+└── evidence/          # 真实运行日志与推理产物
+    ├── demo_2035_run_log.txt
+    ├── domux_eval_result_20260826_204027.json
+    └── run_logs/             # 多轮 Demo 运行快照
+```
+
 ## Setup / 环境
 
 - **Runtime**: Python 3.10+, FastMCP, sqlite3；真实评测 transformers 5.8.0
@@ -61,17 +85,17 @@ Domux 的核心能力是将自然语言指令解析为七字段结构化槽位�
 
 ```bash
 # 环境准备
-pip install -r requirements.txt
+pip install -r src/requirements.txt
 
 # 各组件自测（92 项断言全部通过）
-cd domux-mcp-server && python test_server.py
-python auth_middleware.py      # 17 项断言
-python home_risk_engine.py     # 11 项断言
-python ha_adapter.py           # 17 项断言
-python insurance_api.py --selftest  # 17 项断言
+python src/test_server.py
+python src/auth_middleware.py      # 17 项断言
+python src/home_risk_engine.py     # 11 项断言
+python src/ha_adapter.py           # 17 项断言
+python src/insurance_api.py --selftest  # 17 项断言
 
 # 端到端演示：2035 快递机器人上门全链路
-python demo_2035_scenario.py
+python src/demo_2035_scenario.py
 ```
 
 ### 端到端演示日志（真实运行输出）
@@ -125,6 +149,13 @@ python demo_2035_scenario.py
 ```
 
 ![Demonstration running on mock backend](preview.png)
+
+### 真实运行证据
+
+完整运行日志与推理产物见 `evidence/` 目录：
+- [`evidence/demo_2035_run_log.txt`](evidence/demo_2035_run_log.txt) — 端到端 9 步全链路运行日志
+- [`evidence/domux_eval_result_20260826_204027.json`](evidence/domux_eval_result_20260826_204027.json) — 50 次真实推理评测结果（含输入、原始输出、延迟）
+- [`evidence/run_logs/`](evidence/run_logs/) — 多轮 Demo 运行 sqlite 快照（auth.db + insurance.db）
 
 ### Domux 真实推理评测（Colab T4, transformers）
 
