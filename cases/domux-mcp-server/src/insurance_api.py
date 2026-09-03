@@ -240,7 +240,25 @@ class InsuranceAPIHandler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def log_message(self, fmt: str, *args) -> None:  # noqa: A003
-        sys.stderr.write("[insurance-api] %s\n" % (fmt % args))
+        # 安全要求：绝不把完整请求目标写入日志（query 里可能夹带 token）。
+        # 无论 fmt 是 requestline 还是其它格式，都只保留 "METHOD /path"，
+        # 且路径部分剥离 query string，杜绝 token 经日志泄漏。
+        try:
+            text = fmt % args
+            parts = text.split()
+            method = parts[0].strip('"') if parts else ""
+            path = ""
+            for p in parts[1:]:
+                if p.startswith("/"):
+                    path = p.split("?", 1)[0]
+                    break
+            if method or path:
+                sys.stderr.write("[insurance-api] %s %s\n"
+                                 % (method, path))
+            else:
+                sys.stderr.write("[insurance-api] (sanitized log)\n")
+        except Exception:
+            sys.stderr.write("[insurance-api] (sanitized log)\n")
 
     # ---------- 路由 ----------
     def do_GET(self) -> None:  # noqa: N802
@@ -250,9 +268,10 @@ class InsuranceAPIHandler(BaseHTTPRequestHandler):
             return
         if parsed.path.startswith("/risk-report/"):
             home_id = parsed.path.rsplit("/", 1)[-1]
-            qs = parse_qs(parsed.query)
-            token = (qs.get("token", [""])[0]
-                     or self.headers.get("Authorization", "").replace("Bearer ", ""))
+            # 安全要求：凭证仅允许通过 Authorization: Bearer 头传递，
+            # 不接受查询参数 token（避免 token 进入访问日志/代理日志）。
+            auth_header = self.headers.get("Authorization", "")
+            token = auth_header[len("Bearer "):] if auth_header.startswith("Bearer ") else ""
             rec = self.auth_store.verify(home_id, token)
             if rec is None:
                 self._json(401, {"error": "unauthorized",
@@ -328,6 +347,8 @@ def serve(host: str = "127.0.0.1", port: int = 8080,
 
 def _self_test() -> int:
     import tempfile
+    import io
+    import contextlib
 
     print("=" * 62)
     print("insurance_api.py 自测")
@@ -398,7 +419,7 @@ def _self_test() -> int:
     with ur.urlopen(f"{base}/healthz", timeout=5) as resp:
         check("GET /healthz 200", resp.status == 200)
     try:
-        ur.urlopen(f"{base}/risk-report/home_demo_001?token=wrong", timeout=5)
+        ur.urlopen(f"{base}/risk-report/home_demo_001", timeout=5)
         check("无token访问401", False)
     except ue.HTTPError as e:
         check("无token访问401", e.code == 401)
@@ -421,12 +442,39 @@ def _self_test() -> int:
     except ue.HTTPError as e:
         check("非owner签发被403", e.code == 403)
 
-    with ur.urlopen(f"{base}/risk-report/home_demo_001"
-                    f"?token={tok_info['token']}", timeout=5) as resp:
+    req_report = ur.Request(
+        f"{base}/risk-report/home_demo_001",
+        headers={"Authorization": "Bearer " + tok_info["token"]})
+    with ur.urlopen(req_report, timeout=5) as resp:
         report = json.loads(resp.read())
-        check("带token取回完整报告", resp.status == 200
+        check("带token(Bearer头)取回完整报告", resp.status == 200
               and report["home_id"] == "home_demo_001"
               and "subscores" in report)
+
+    # ---- 4.5 安全回归：日志中绝不出现 token ----
+    # 用带 token 的请求触发日志，抓 stderr，断言无 ins_ token 泄漏。
+    log_buf = io.StringIO()
+    with contextlib.redirect_stderr(log_buf):
+        try:
+            ur.urlopen(f"{base}/risk-report/home_demo_001?token="
+                       + tok_info["token"], timeout=5)
+        except ue.HTTPError:
+            pass  # query token 已不被支持，401 正常
+        req_report2 = ur.Request(
+            f"{base}/risk-report/home_demo_001",
+            headers={"Authorization": "Bearer " + tok_info["token"]})
+        try:
+            ur.urlopen(req_report2, timeout=5)
+        except ue.HTTPError:
+            pass
+        # 再发一次伪造 token 请求，确保错误路径也不泄漏
+        try:
+            ur.urlopen(f"{base}/risk-report/home_demo_001?token=ins_fake_bad",
+                       timeout=5)
+        except ue.HTTPError:
+            pass
+    leaked = tok_info["token"] in log_buf.getvalue()
+    check("日志中不出现授权token（query与Bearer均脱敏）", not leaked)
     httpd.shutdown()
 
     print("-" * 62)

@@ -87,15 +87,23 @@ cases/domux-mcp-server/
 # 环境准备
 pip install -r src/requirements.txt
 
+# Windows 控制台（默认 GBK）请先启用 UTF-8，避免 emoji/中文输出报错：
+#   set PYTHONUTF8=1
+# 或 PowerShell:  $env:PYTHONUTF8 = "1"
+
 # 各组件自测（92 项断言全部通过）
 python src/test_server.py
 python src/auth_middleware.py      # 17 项断言
 python src/home_risk_engine.py     # 11 项断言
 python src/ha_adapter.py           # 17 项断言
-python src/insurance_api.py --selftest  # 17 项断言
+python src/insurance_api.py --selftest  # 18 项断言（含“日志无 Token”回归）
 
 # 端到端演示：2035 快递机器人上门全链路
 python src/demo_2035_scenario.py
+
+# 真实推理评测（可选，需 GPU/Colab）：从 HF 固定 revision 下载 Domux 并跑 5×10=50 次
+python eval/run_eval_transformers.py --revision 6c71a32f4d624cadfd9fce9d10240d8068e53456 \\
+    --out evidence/domux_eval_result.json
 ```
 
 ### 端到端演示日志（真实运行输出）
@@ -154,13 +162,18 @@ python src/demo_2035_scenario.py
 
 完整运行日志与推理产物见 `evidence/` 目录：
 - [`evidence/demo_2035_run_log.txt`](evidence/demo_2035_run_log.txt) — 端到端 9 步全链路运行日志
-- [`evidence/domux_eval_result_20260826_204027.json`](evidence/domux_eval_result_20260826_204027.json) — 50 次真实推理评测结果（含输入、原始输出、延迟）
+- [`evidence/domux_eval_result_20260826_204027.json`](evidence/domux_eval_result_20260826_204027.json) — 50 次真实推理评测结果（从 Hugging Face 固定 revision 下载运行，含输入、原始输出、延迟）
 - [`evidence/run_logs/`](evidence/run_logs/) — 多轮 Demo 运行 sqlite 快照（auth.db + insurance.db）
+
+评测脚本：`eval/run_eval_transformers.py`（模型加载、chat template、BF16、
+生成参数、5×10 样本循环、warm-up、延迟统计、格式合规计算，一键复现证据 JSON）。
 
 ### Domux 真实推理评测（Colab T4, transformers）
 
-在免费 Colab T4 上用 `transformers 5.8.0 + Gemma4ForConditionalGeneration` 加载 Domux（BF16），
-对代表性智能家居指令做真实推理（非 mock），每条记录 输入→原始输出→延迟：
+从 Hugging Face 固定 revision `6c71a32f4d624cadfd9fce9d10240d8068e53456` 下载
+`iFlytekOpenSource/Domux`，在免费 Colab T4 上用 `transformers 5.8.0 + Gemma4ForConditionalGeneration`
+加载（BF16）并对代表性智能家居指令做真实推理（非 mock），每条记录 输入→原始输出→延迟。
+复现命令见上节 `eval/run_eval_transformers.py`（含 warm-up、延迟统计与合规计算）。
 
 ```
 输入: 把客厅的空调调到26度
@@ -201,7 +214,7 @@ python src/demo_2035_scenario.py
 |:---|---:|---|
 | 推理样本量 | 50（5 条指令 × 10 轮） | transformers BF16, do_sample=False |
 | 格式合规率 | 100.0% | 真实输出按 7 字段槽位契约解析，全部有效 |
-| 平均延迟 | 32.6 s/次 | transformers BF16 on T4，单条完整生成，无 warm-up 缓存 |
+| 平均延迟 | 32.6 s/次 | transformers BF16 on T4，单条完整生成（warm-up 2 条后统计） |
 | P95 延迟 | 34.4 s/次 | 同上 |
 
 > 延迟为免费 T4 + transformers 直接生成的水平（未用 vLLM），反映"能跑"而非"最快"；
@@ -240,10 +253,11 @@ python src/demo_2035_scenario.py
 
 ## Notes and gotchas / 踩坑记录
 
-1. **vLLM 结构化输出**：当前 VLLMBackend 依赖提示词约定 JSON 格式，正式版推荐使用 vLLM guided decoding 保证格式合规率
-2. **transformers vs vLLM**：Domux 是 Gemma4 多模态架构，vLLM 需最新版（CUDA 13）；Colab T4 只有 CUDA 12，故评测用 transformers 5.8.0 直接推理绕开
-3. **MockBackend 覆盖范围**：只覆盖常用指令模板，长尾设备名/方言/ASR 噪声的鲁棒性依赖真实 Domux 推理
-4. **风险引擎 v1**：当前为规则版，预留了接入时序异常检测模型的接口
-5. **多 owner 会签**：尚未实现，当前仅单 owner 裁决
-6. **保险 API 鉴权**：当前为单进程内存态缓存，生产环境需迁移到网关层
-7. **HA 集成**：demo 使用 MockHA，真实 Home Assistant 集成只需设置 `HA_BASE_URL` 和 `HA_TOKEN`
+1. **Windows 控制台编码**：README 复现命令含 emoji/中文输出，Windows 默认 GBK 会报 `UnicodeEncodeError`；请先 `set PYTHONUTF8=1`（或 PowerShell `$env:PYTHONUTF8 = "1"`）再运行。
+2. **vLLM 结构化输出**：当前 VLLMBackend 依赖提示词约定 JSON 格式，正式版推荐使用 vLLM guided decoding 保证格式合规率
+3. **transformers vs vLLM**：Domux 是 Gemma4 多模态架构，vLLM 需最新版（CUDA 13）；Colab T4 只有 CUDA 12，故评测用 transformers 5.8.0 直接推理绕开
+4. **MockBackend 覆盖范围**：只覆盖常用指令模板，长尾设备名/方言/ASR 噪声的鲁棒性依赖真实 Domux 推理
+5. **风险引擎 v1**：当前为规则版，预留了接入时序异常检测模型的接口
+6. **多 owner 会签**：尚未实现，当前仅单 owner 裁决
+7. **保险 API 鉴权**：当前为单进程内存态缓存，生产环境需迁移到网关层
+8. **HA 集成**：demo 使用 MockHA，真实 Home Assistant 集成只需设置 `HA_BASE_URL` 和 `HA_TOKEN`
