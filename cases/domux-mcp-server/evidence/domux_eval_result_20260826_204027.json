@@ -1,0 +1,311 @@
+{
+  "model": "iFlytekOpenSource/Domux (via ModelScope)",
+  "runtime": "transformers 5.8.0 (Gemma4ForConditionalGeneration) on Colab T4",
+  "total_cases": 50,
+  "format_compliance": 100.0,
+  "latency_avg_ms": 32576,
+  "latency_p95_ms": 34431,
+  "timestamp_utc": "2026-08-26T20:40:27Z",
+  "samples": [
+    {
+      "input": "把客厅的空调调到26度",
+      "output": "set|AC|temperature|26|Celsius|Living Room|*",
+      "latency_ms": 32883,
+      "format_valid": true
+    },
+    {
+      "input": "关闭卧室所有灯",
+      "output": "turnOff|Light|*|*|*|Bedroom|*",
+      "latency_ms": 29561,
+      "format_valid": true
+    },
+    {
+      "input": "把二楼主卧的窗帘拉开一半",
+      "output": "set|Curtain|position|50|Percent|Bedroom|Second Floor",
+      "latency_ms": 34431,
+      "format_valid": true
+    },
+    {
+      "input": "帮我打开厨房的抽油烟机",
+      "output": "turnOn|抽油烟机|*|*|*|厨房|*",
+      "latency_ms": 33285,
+      "format_valid": true
+    },
+    {
+      "input": "不要开客厅的灯",
+      "output": "turnOff|Light|*|*|*|Living Room|*",
+      "latency_ms": 31563,
+      "format_valid": true
+    },
+    {
+      "input": "把客厅的空调调到26度",
+      "output": "set|AC|temperature|26|Celsius|Living Room|*",
+      "latency_ms": 31856,
+      "format_valid": true
+    },
+    {
+      "input": "关闭卧室所有灯",
+      "output": "turnOff|Light|*|*|*|Bedroom|*",
+      "latency_ms": 30040,
+      "format_valid": true
+    },
+    {
+      "input": "把二楼主卧的窗帘拉开一半",
+      "output": "set|Curtain|position|50|Percent|Bedroom|Second Floor",
+      "latency_ms": 33518,
+      "format_valid": true
+    },
+    {
+      "input": "帮我打开厨房的抽油烟机",
+      "output": "turnOn|抽油烟机|*|*|*|厨房|*",
+      "latency_ms": 34314,
+      "format_valid": true
+    },
+    {
+      "input": "不要开客厅的灯",
+      "output": "turnOff|Light|*|*|*|Living Room|*",
+      "latency_ms": 30492,
+      "format_valid": true
+    },
+    {
+      "input": "把客厅的空调调到26度",
+      "output": "set|AC|temperature|26|Celsius|Living Room|*",
+      "latency_ms": 34803,
+      "format_valid": true
+    },
+    {
+      "input": "关闭卧室所有灯",
+      "output": "turnOff|Light|*|*|*|Bedroom|*",
+      "latency_ms": 29550,
+      "format_valid": true
+    },
+    {
+      "input": "把二楼主卧的窗帘拉开一半",
+      "output": "set|Curtain|position|50|Percent|Bedroom|Second Floor",
+      "latency_ms": 34159,
+      "format_valid": true
+    },
+    {
+      "input": "帮我打开厨房的抽油烟机",
+      "output": "turnOn|抽油烟机|*|*|*|厨房|*",
+      "latency_ms": 33747,
+      "format_valid": true
+    },
+    {
+      "input": "不要开客厅的灯",
+      "output": "turnOff|Light|*|*|*|Living Room|*",
+      "latency_ms": 31679,
+      "format_valid": true
+    },
+    {
+      "input": "把客厅的空调调到26度",
+      "output": "set|AC|temperature|26|Celsius|Living Room|*",
+      "latency_ms": 31922,
+      "format_valid": true
+    },
+    {
+      "input": "关闭卧室所有灯",
+      "output": "turnOff|Light|*|*|*|Bedroom|*",
+      "latency_ms": 36952,
+      "format_valid": true
+    },
+    {
+      "input": "把二楼主卧的窗帘拉开一半",
+      "output": "set|Curtain|position|50|Percent|Bedroom|Second Floor",
+      "latency_ms": 33371,
+      "format_valid": true
+    },
+    {
+      "input": "帮我打开厨房的抽油烟机",
+      "output": "turnOn|抽油烟机|*|*|*|厨房|*",
+      "latency_ms": 34270,
+      "format_valid": true
+    },
+    {
+      "input": "不要开客厅的灯",
+      "output": "turnOff|Light|*|*|*|Living Room|*",
+      "latency_ms": 30623,
+      "format_valid": true
+    },
+    {
+      "input": "把客厅的空调调到26度",
+      "output": "set|AC|temperature|26|Celsius|Living Room|*",
+      "latency_ms": 34009,
+      "format_valid": true
+    },
+    {
+      "input": "关闭卧室所有灯",
+      "output": "turnOff|Light|*|*|*|Bedroom|*",
+      "latency_ms": 29753,
+      "format_valid": true
+    },
+    {
+      "input": "把二楼主卧的窗帘拉开一半",
+      "output": "set|Curtain|position|50|Percent|Bedroom|Second Floor",
+      "latency_ms": 34158,
+      "format_valid": true
+    },
+    {
+      "input": "帮我打开厨房的抽油烟机",
+      "output": "turnOn|抽油烟机|*|*|*|厨房|*",
+      "latency_ms": 33573,
+      "format_valid": true
+    },
+    {
+      "input": "不要开客厅的灯",
+      "output": "turnOff|Light|*|*|*|Living Room|*",
+      "latency_ms": 31643,
+      "format_valid": true
+    },
+    {
+      "input": "把客厅的空调调到26度",
+      "output": "set|AC|temperature|26|Celsius|Living Room|*",
+      "latency_ms": 31780,
+      "format_valid": true
+    },
+    {
+      "input": "关闭卧室所有灯",
+      "output": "turnOff|Light|*|*|*|Bedroom|*",
+      "latency_ms": 29702,
+      "format_valid": true
+    },
+    {
+      "input": "把二楼主卧的窗帘拉开一半",
+      "output": "set|Curtain|position|50|Percent|Bedroom|Second Floor",
+      "latency_ms": 33951,
+      "format_valid": true
+    },
+    {
+      "input": "帮我打开厨房的抽油烟机",
+      "output": "turnOn|抽油烟机|*|*|*|厨房|*",
+      "latency_ms": 34352,
+      "format_valid": true
+    },
+    {
+      "input": "不要开客厅的灯",
+      "output": "turnOff|Light|*|*|*|Living Room|*",
+      "latency_ms": 30435,
+      "format_valid": true
+    },
+    {
+      "input": "把客厅的空调调到26度",
+      "output": "set|AC|temperature|26|Celsius|Living Room|*",
+      "latency_ms": 32469,
+      "format_valid": true
+    },
+    {
+      "input": "关闭卧室所有灯",
+      "output": "turnOff|Light|*|*|*|Bedroom|*",
+      "latency_ms": 30105,
+      "format_valid": true
+    },
+    {
+      "input": "把二楼主卧的窗帘拉开一半",
+      "output": "set|Curtain|position|50|Percent|Bedroom|Second Floor",
+      "latency_ms": 33447,
+      "format_valid": true
+    },
+    {
+      "input": "帮我打开厨房的抽油烟机",
+      "output": "turnOn|抽油烟机|*|*|*|厨房|*",
+      "latency_ms": 34140,
+      "format_valid": true
+    },
+    {
+      "input": "不要开客厅的灯",
+      "output": "turnOff|Light|*|*|*|Living Room|*",
+      "latency_ms": 40182,
+      "format_valid": true
+    },
+    {
+      "input": "把客厅的空调调到26度",
+      "output": "set|AC|temperature|26|Celsius|Living Room|*",
+      "latency_ms": 32203,
+      "format_valid": true
+    },
+    {
+      "input": "关闭卧室所有灯",
+      "output": "turnOff|Light|*|*|*|Bedroom|*",
+      "latency_ms": 30606,
+      "format_valid": true
+    },
+    {
+      "input": "把二楼主卧的窗帘拉开一半",
+      "output": "set|Curtain|position|50|Percent|Bedroom|Second Floor",
+      "latency_ms": 32930,
+      "format_valid": true
+    },
+    {
+      "input": "帮我打开厨房的抽油烟机",
+      "output": "turnOn|抽油烟机|*|*|*|厨房|*",
+      "latency_ms": 34339,
+      "format_valid": true
+    },
+    {
+      "input": "不要开客厅的灯",
+      "output": "turnOff|Light|*|*|*|Living Room|*",
+      "latency_ms": 30484,
+      "format_valid": true
+    },
+    {
+      "input": "把客厅的空调调到26度",
+      "output": "set|AC|temperature|26|Celsius|Living Room|*",
+      "latency_ms": 32764,
+      "format_valid": true
+    },
+    {
+      "input": "关闭卧室所有灯",
+      "output": "turnOff|Light|*|*|*|Bedroom|*",
+      "latency_ms": 29573,
+      "format_valid": true
+    },
+    {
+      "input": "把二楼主卧的窗帘拉开一半",
+      "output": "set|Curtain|position|50|Percent|Bedroom|Second Floor",
+      "latency_ms": 33967,
+      "format_valid": true
+    },
+    {
+      "input": "帮我打开厨房的抽油烟机",
+      "output": "turnOn|抽油烟机|*|*|*|厨房|*",
+      "latency_ms": 33230,
+      "format_valid": true
+    },
+    {
+      "input": "不要开客厅的灯",
+      "output": "turnOff|Light|*|*|*|Living Room|*",
+      "latency_ms": 31494,
+      "format_valid": true
+    },
+    {
+      "input": "把客厅的空调调到26度",
+      "output": "set|AC|temperature|26|Celsius|Living Room|*",
+      "latency_ms": 31880,
+      "format_valid": true
+    },
+    {
+      "input": "关闭卧室所有灯",
+      "output": "turnOff|Light|*|*|*|Bedroom|*",
+      "latency_ms": 30320,
+      "format_valid": true
+    },
+    {
+      "input": "把二楼主卧的窗帘拉开一半",
+      "output": "set|Curtain|position|50|Percent|Bedroom|Second Floor",
+      "latency_ms": 33379,
+      "format_valid": true
+    },
+    {
+      "input": "帮我打开厨房的抽油烟机",
+      "output": "turnOn|抽油烟机|*|*|*|厨房|*",
+      "latency_ms": 34281,
+      "format_valid": true
+    },
+    {
+      "input": "不要开客厅的灯",
+      "output": "turnOff|Light|*|*|*|Living Room|*",
+      "latency_ms": 30620,
+      "format_valid": true
+    }
+  ]
+}

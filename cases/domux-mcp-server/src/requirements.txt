@@ -1,0 +1,18 @@
+# Domux MCP 智能家居项目依赖
+# Python >= 3.10
+#
+# 核心依赖（MCP Server 必需）
+mcp>=1.2.0            # 官方 Model Context Protocol python-sdk（含 FastMCP）
+
+# 可选依赖（按需安装，默认全部跳过 —— 保证无 GPU 环境可端到端跑通）
+#
+# vLLM 推理后端（接入真实 Domux 权重时才需要，见 backend.py 的 VLLMBackend）：
+#   vllm>=0.6.0        # 部署: vllm serve iFlytekOpenSource/Domux --port 8000
+#   openai>=1.40.0     # 若偏好用 openai SDK 而非内置 urllib 调用兼容接口
+#
+# Home Assistant 真机对接（MockHA 模式无需安装任何额外包）：
+#   本项目对 HA 的调用走标准库 urllib 的 REST API，无需 homeassistant 包
+#
+# 说明：auth_middleware / home_risk_engine / insurance_api / ha_adapter /
+#       demo_2035_scenario 全部仅使用 Python 标准库（sqlite3 / http.server /
+#       urllib / secrets），零第三方依赖。
