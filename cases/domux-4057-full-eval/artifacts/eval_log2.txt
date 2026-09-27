@@ -1,0 +1,94 @@
+loading model...
+Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]Loading weights:  22%|██▏       | 435/1951 [00:00<00:00, 4346.63it/s]Loading weights:  45%|████▍     | 870/1951 [00:00<00:00, 3715.75it/s]Loading weights:  64%|██████▍   | 1248/1951 [00:00<00:00, 3442.73it/s]Loading weights:  82%|████████▏ | 1596/1951 [00:00<00:00, 3364.14it/s]Loading weights:  99%|█████████▉| 1935/1951 [00:00<00:00, 3225.69it/s]Loading weights: 100%|██████████| 1951/1951 [00:00<00:00, 3385.18it/s]
+total samples: 4057 | batch=8 | model=iFlytekOpenSource/Domux rev=6c71a32f
+  progress 56/4057 | wall 15s
+  progress 104/4057 | wall 26s
+  progress 152/4057 | wall 36s
+  progress 200/4057 | wall 47s
+  progress 256/4057 | wall 62s
+  progress 304/4057 | wall 75s
+  progress 352/4057 | wall 85s
+  progress 400/4057 | wall 96s
+  progress 456/4057 | wall 109s
+  progress 504/4057 | wall 119s
+  progress 552/4057 | wall 131s
+  progress 600/4057 | wall 142s
+  progress 656/4057 | wall 155s
+  progress 704/4057 | wall 165s
+  progress 752/4057 | wall 176s
+  progress 800/4057 | wall 187s
+  progress 856/4057 | wall 200s
+  progress 904/4057 | wall 210s
+  progress 952/4057 | wall 220s
+  progress 1000/4057 | wall 231s
+  progress 1056/4057 | wall 243s
+  progress 1104/4057 | wall 254s
+  progress 1152/4057 | wall 265s
+  progress 1200/4057 | wall 275s
+  progress 1256/4057 | wall 287s
+  progress 1304/4057 | wall 301s
+  progress 1352/4057 | wall 313s
+  progress 1400/4057 | wall 324s
+  progress 1456/4057 | wall 336s
+  progress 1504/4057 | wall 348s
+  progress 1552/4057 | wall 358s
+  progress 1600/4057 | wall 369s
+  progress 1656/4057 | wall 384s
+  progress 1704/4057 | wall 389s
+  progress 1752/4057 | wall 396s
+  progress 1800/4057 | wall 401s
+  progress 1856/4057 | wall 407s
+  progress 1904/4057 | wall 412s
+  progress 1952/4057 | wall 417s
+  progress 2000/4057 | wall 422s
+  progress 2056/4057 | wall 429s
+  progress 2104/4057 | wall 435s
+  progress 2152/4057 | wall 441s
+  progress 2200/4057 | wall 446s
+  progress 2256/4057 | wall 452s
+  progress 2304/4057 | wall 459s
+  progress 2352/4057 | wall 465s
+  progress 2400/4057 | wall 470s
+  progress 2456/4057 | wall 476s
+  progress 2504/4057 | wall 481s
+  progress 2552/4057 | wall 486s
+  progress 2600/4057 | wall 491s
+  progress 2656/4057 | wall 497s
+  progress 2704/4057 | wall 503s
+  progress 2752/4057 | wall 508s
+  progress 2800/4057 | wall 514s
+  progress 2856/4057 | wall 520s
+  progress 2904/4057 | wall 525s
+  progress 2952/4057 | wall 530s
+  progress 3000/4057 | wall 535s
+  progress 3056/4057 | wall 542s
+  progress 3104/4057 | wall 547s
+  progress 3152/4057 | wall 552s
+  progress 3200/4057 | wall 557s
+  progress 3256/4057 | wall 564s
+  progress 3304/4057 | wall 569s
+  progress 3352/4057 | wall 575s
+  progress 3400/4057 | wall 580s
+  progress 3456/4057 | wall 586s
+  progress 3504/4057 | wall 590s
+  progress 3552/4057 | wall 595s
+  progress 3600/4057 | wall 600s
+  progress 3656/4057 | wall 606s
+  progress 3704/4057 | wall 610s
+  progress 3752/4057 | wall 615s
+  progress 3800/4057 | wall 620s
+  progress 3856/4057 | wall 626s
+  progress 3904/4057 | wall 631s
+  progress 3952/4057 | wall 636s
+  progress 4000/4057 | wall 641s
+  progress 4056/4057 | wall 646s
+  progress 4057/4057 | wall 647s
+
+=== SUMMARY ===
+Category               Samples   Format  Accuracy   SlotF1  IntentF1   Latency
+multi_intent              1641  100.00%    97.75%   99.68%    98.65%    0.231s
+non_standard_naming        559  100.00%    94.81%   99.09%    94.91%    0.118s
+omitted_attribute          735  100.00%    97.14%   99.28%    97.14%    0.111s
+single_intent             1122  100.00%    99.02%   99.82%    99.02%    0.105s
+OVERALL                   4057  100.00%    97.58%   99.60%    98.17%
+done in 647s | results -> /root/domux/eval_results.jsonl

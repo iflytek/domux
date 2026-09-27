@@ -1,0 +1,50 @@
+{
+  "model": "iFlytekOpenSource/Domux",
+  "precision": "NF4-4bit",
+  "categories": [
+    {
+      "category": "multi_intent",
+      "total": 1641,
+      "format_compliance": 0.9988,
+      "result_accuracy": 0.9159,
+      "slot_f1": 0.9864,
+      "intent_f1": 0.952,
+      "avg_latency": 0.411
+    },
+    {
+      "category": "non_standard_naming",
+      "total": 559,
+      "format_compliance": 0.9911,
+      "result_accuracy": 0.9159,
+      "slot_f1": 0.9779,
+      "intent_f1": 0.9169,
+      "avg_latency": 0.299
+    },
+    {
+      "category": "omitted_attribute",
+      "total": 735,
+      "format_compliance": 0.9973,
+      "result_accuracy": 0.9551,
+      "slot_f1": 0.9891,
+      "intent_f1": 0.9551,
+      "avg_latency": 0.238
+    },
+    {
+      "category": "single_intent",
+      "total": 1122,
+      "format_compliance": 0.9964,
+      "result_accuracy": 0.9617,
+      "slot_f1": 0.9886,
+      "intent_f1": 0.9604,
+      "avg_latency": 0.221
+    }
+  ],
+  "overall": {
+    "total": 4057,
+    "format_compliance": 0.9968,
+    "result_accuracy": 0.9357,
+    "slot_f1": 0.9863,
+    "intent_f1": 0.9506,
+    "avg_latency": 0.312
+  }
+}
