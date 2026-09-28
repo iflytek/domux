@@ -1,0 +1,32 @@
+name: Space demo check
+
+on:
+  pull_request:
+    paths:
+      - spaces/domux-demo/**
+      - .github/workflows/space-check.yml
+      - .github/workflows/sync-space.yml
+  push:
+    branches:
+      - main
+    paths:
+      - spaces/domux-demo/**
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test dependencies
+        # The model backend is not loaded here, so torch/transformers are not needed.
+        run: pip install pytest requests "gradio==6.28.0"
+      - name: Test parsing, the endpoint backend and the Gradio app
+        env:
+          DOMUX_API_BASE: http://127.0.0.1:9/v1
+        run: pytest -q spaces/domux-demo/tests

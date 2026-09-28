@@ -1,0 +1,52 @@
+name: Sync Hugging Face Space
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - spaces/domux-demo/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync-space
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      HF_SPACE_ID: ${{ vars.HF_SPACE_ID || 'iFlytekOpenSource/Domux-Demo' }}
+    steps:
+      - name: Skip when HF_TOKEN is not configured
+        if: env.HF_TOKEN == ''
+        run: echo "::notice::HF_TOKEN secret is not set; skipping the Space sync."
+      - uses: actions/checkout@v6
+        if: env.HF_TOKEN != ''
+      - uses: actions/setup-python@v5
+        if: env.HF_TOKEN != ''
+        with:
+          python-version: '3.12'
+      - name: Upload spaces/domux-demo to the Space
+        if: env.HF_TOKEN != ''
+        run: |
+          pip install --quiet "huggingface_hub>=1.0"
+          python - <<'PY'
+          import os
+          from huggingface_hub import HfApi
+
+          api = HfApi(token=os.environ["HF_TOKEN"])
+          api.upload_folder(
+              repo_id=os.environ["HF_SPACE_ID"],
+              repo_type="space",
+              folder_path="spaces/domux-demo",
+              ignore_patterns=["tests/**", "__pycache__/**"],
+              delete_patterns=["*.py", "requirements.txt", "README.md"],
+              commit_message=f"Sync from iflytek/domux@{os.environ['GITHUB_SHA'][:7]}",
+          )
+          print(f"Synced to https://huggingface.co/spaces/{os.environ['HF_SPACE_ID']}")
+          PY

@@ -92,6 +92,8 @@ As an early exploration, Domux is still evolving. We're focusing on three direct
 
 ## 🎬 Demo
 
+> 🖥️ **Try it in the browser:** [`spaces/domux-demo`](spaces/domux-demo) is a Gradio demo that runs as a Hugging Face Space (ZeroGPU) or locally, and can also front your own vLLM/SGLang endpoint.
+
 The model outputs pipe-delimited slots with 7 fields:
 
 ```
