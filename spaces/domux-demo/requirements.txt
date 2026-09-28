@@ -1,0 +1,5 @@
+# transformers matches the runtime used for cases/domux-4057-full-eval (97.58% on the full test set).
+transformers==5.15.1
+torch
+requests
+spaces

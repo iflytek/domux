@@ -92,6 +92,8 @@ Domux 基于具备泛化能力的基座模型，**不依赖固定的设备白名
 
 ## 🎬 示例演示
 
+> 🖥️ **在线体验：** [`spaces/domux-demo`](spaces/domux-demo) 提供 Gradio 演示，可部署为 Hugging Face Space（ZeroGPU）或在本地运行，也可以接入你自己的 vLLM/SGLang 服务。
+
 模型输出包含 7 个字段的竖线分隔槽位：
 
 ```

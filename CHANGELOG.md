@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Gradio demo for Hugging Face Spaces (`spaces/domux-demo`), with a local
+  ZeroGPU backend or an OpenAI-compatible endpoint backend, and a workflow that
+  syncs it to the Space
+
 ## [0.1.0] - 2026-06-30
 
 First public release of Domux (`Domux-Gemma-4-E2B-it`), a lightweight,
