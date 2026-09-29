@@ -188,6 +188,20 @@ python -c "from modelscope import snapshot_download; snapshot_download('iflytek/
 
 ## 🚀 Quick Start
 
+### Local GGUF / Ollama
+
+Inspect a local GGUF without loading tensor weights, or connect to Ollama:
+
+```bash
+python -m domux_runtime.cli inspect /models/domux-q4_k_m.gguf
+python -m domux_runtime.cli pull gemma3 --load
+python -m domux_runtime.cli run gemma3 "Turn on the living room light"
+```
+
+GGUF v2/v3 and Q4_0, Q4_K_M, Q5_K_M, Q6_K, and Q8_0 metadata are supported.
+See the [Ollama and GGUF guide](docs/ollama-gguf.md) for local import, remote
+server configuration, progress reporting, and storage behavior.
+
 ### Hardware
 
 The model runs in **BF16 precision** and requires **20GB+ of VRAM** for single-GPU deployment.

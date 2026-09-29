@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Memory-efficient GGUF v2/v3 metadata inspection with Q4_0, Q4_K_M,
+  Q5_K_M, Q6_K, and Q8_0 recognition.
+- Local/remote Ollama REST support for model listing, pulling with progress,
+  loading, and inference.
+- A CLI for local GGUF discovery/import and Ollama-managed models, with
+  explicit separation from Safetensors training storage.
+
 ## [0.1.0] - 2026-06-30
 
 First public release of Domux (`Domux-Gemma-4-E2B-it`), a lightweight,
@@ -21,4 +32,5 @@ Gemma-4-E2B-it.
   Gemma Terms of Use governing the model weights
 - Bilingual README (English / 简体中文)
 
+[Unreleased]: https://github.com/iflytek/domux/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/iflytek/domux/releases/tag/v0.1.0
