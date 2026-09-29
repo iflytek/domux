@@ -9,7 +9,7 @@
 ---
 <div align="center">
   <h1>Domux</h1>
-  <p><b>面向智能家居控制的轻量级低延迟指令理解模型</b></p>
+  <p><b>开源、轻量、低延迟的智能家居指令解析模型</b></p>
 
   <p>
     <a href="https://huggingface.co/iFlytekOpenSource/Domux"><img src="https://img.shields.io/badge/🤗%20Hugging%20Face-模型-yellow"></a>
@@ -27,11 +27,22 @@
 
 > 🚀 **一次尝试，也是一份邀请。** Domux 探索了一个新思路：在追求极致响应速度的目标下（端到端响应耗时控制在 **150ms 以内**），文本的语义处理能做到什么程度？这还是非常早期的探索，我们把它分享出来，希望有更多人一起尝试。如果你也对这个方向感兴趣，欢迎关注，一起探索新思路。
 
-Domux (`Domux-Gemma-4-E2B-it`) 是基于 **Gemma-4-E2B-it** 微调的语言模型。它将自然语言智能家居指令转换为结构化的竖线分隔槽位。训练结合了监督微调（SFT）与基于组相对策略优化（GRPO）的强化学习和自定义奖励函数。
+Domux 是面向家庭自动化的开源**智能家居指令理解模型**，支持意图识别、语义解析和槽位填充，可将自然语言设备控制请求转换为可执行、可评测的确定性结构化数据。
+
+Domux (`Domux-Gemma-4-E2B-it`) 基于 **Gemma-4-E2B-it** 微调，将智能家居指令转换为结构化的竖线分隔槽位。训练结合了监督微调（SFT）与基于组相对策略优化（GRPO）的强化学习和自定义奖励函数。
+
+## 快速导航
+
+| 资源 | 说明 |
+| --- | --- |
+| [Hugging Face](https://huggingface.co/iFlytekOpenSource/Domux) / [ModelScope](https://modelscope.cn/models/iflytek/domux) | 下载 Domux 模型权重 |
+| [中文 benchmark 报告](docs/benchmark-report.zh.pdf) / [English benchmark report](docs/benchmark-report.pdf) | 查看完整评测方法与结果 |
+| [评测数据集与脚本](eval/DATASET_README.md) | 复现 4,057 条样本评测，或测试其他 OpenAI 兼容模型 |
+| [输出格式说明](docs/output-spec.zh.md) / [English spec](docs/output-spec.md) | 集成 7 字段智能家居控制格式 |
 
 ## 📰 更新动态
 
-- **2026.06.30** — 🎉 发布 **v0.1.0**，首个开源版本。详见 [CHANGELOG](CHANGELOG.md)。
+- **2026.06.30** — 开源 **v0.1.0** 代码；正式 GitHub 标签与 Release 的发布进度见 [#18](https://github.com/iflytek/domux/issues/18)。详见 [CHANGELOG](CHANGELOG.md)。
 - **2026.06.29** — 发布训练代码、奖励插件和示例数据集。
 - **2026.06.25** — 基于 Gemma-4-E2B-it 的 Domux 首次发布。
 
@@ -45,6 +56,13 @@ Domux (`Domux-Gemma-4-E2B-it`) 是基于 **Gemma-4-E2B-it** 微调的语言模�
 - **轻量级基座** — 构建于紧凑的 Gemma-4-E2B-it 之上，适合设备端和边缘部署。
 - **多动作支持** — 处理映射到多个槽位行的复合指令。
 - **跨设备泛化** — 处理每个类别下的任意设备名，而非固定白名单。
+
+## 适用场景
+
+- 将语音助手或文本指令解析为确定性的家庭自动化操作。
+- 为边缘端或服务端应用增加轻量级意图识别与槽位填充能力。
+- 使用内置的 4,057 条样本 benchmark 评测指令理解模型。
+- 构建需要 OpenAI 兼容 API 与稳定 7 字段输出格式的集成。
 
 ## 🏠 支持的控制能力
 

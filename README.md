@@ -9,7 +9,7 @@
 ---
 <div align="center">
   <h1>Domux</h1>
-  <p><b>A lightweight, low-latency command understanding model for smart-home control.</b></p>
+  <p><b>An open-source, lightweight smart-home command parser for low-latency home automation.</b></p>
 
   <p>
     <a href="https://huggingface.co/iFlytekOpenSource/Domux"><img src="https://img.shields.io/badge/🤗%20Hugging%20Face-Model-yellow"></a>
@@ -27,11 +27,22 @@
 
 > 🚀 **An experiment, and an open invitation.** Domux explores a new idea: how far can text semantic parsing go under an aggressive latency budget — keeping end-to-end response under **150ms**? This is an early-stage exploration, and we're sharing it in the hope that others will try it too. If this direction interests you, we'd love for you to follow along and explore it together.
 
-Domux (`Domux-Gemma-4-E2B-it`) is a fine-tuned language model built on **Gemma-4-E2B-it**. It turns natural-language smart-home commands into structured, pipe-delimited slots. Training combines supervised fine-tuning (SFT) with reinforcement learning via Group Relative Policy Optimization (GRPO) and custom reward functions.
+Domux is an open-source **smart-home command understanding model** for home automation, intent detection, semantic parsing, and slot filling. It converts natural-language device-control requests into deterministic, structured data that applications can execute or evaluate.
+
+Domux (`Domux-Gemma-4-E2B-it`) is fine-tuned from **Gemma-4-E2B-it**. It turns smart-home commands into structured, pipe-delimited slots. Training combines supervised fine-tuning (SFT) with reinforcement learning via Group Relative Policy Optimization (GRPO) and custom reward functions.
+
+## Start Here
+
+| Resource | Description |
+| --- | --- |
+| [Hugging Face](https://huggingface.co/iFlytekOpenSource/Domux) / [ModelScope](https://modelscope.cn/models/iflytek/domux) | Download the Domux model weights |
+| [English benchmark report](docs/benchmark-report.pdf) / [Chinese benchmark report](docs/benchmark-report.zh.pdf) | Review the full benchmark methodology and results |
+| [Evaluation dataset and script](eval/DATASET_README.md) | Reproduce the 4,057-sample evaluation or test another OpenAI-compatible model |
+| [Output schema](docs/output-spec.md) / [Chinese spec](docs/output-spec.zh.md) | Integrate the 7-field smart-home control format |
 
 ## 📰 News
 
-- **2026.06.30** — 🎉 Released **v0.1.0**, the first open-source release. See [CHANGELOG](CHANGELOG.md).
+- **2026.06.30** — Open-sourced the **v0.1.0** codebase; the formal GitHub tag and Release are tracked in [#18](https://github.com/iflytek/domux/issues/18). See [CHANGELOG](CHANGELOG.md).
 - **2026.06.29** — Released training code, reward plugins, and example datasets.
 - **2026.06.25** — Initial release of Domux based on Gemma-4-E2B-it.
 
@@ -45,6 +56,13 @@ Domux (`Domux-Gemma-4-E2B-it`) is a fine-tuned language model built on **Gemma-4
 - **Lightweight base** — Built on the compact Gemma-4-E2B-it, suitable for on-device and edge deployment.
 - **Multi-action support** — Handles compound commands that map to multiple slot lines.
 - **Generalizes across devices** — Handles arbitrary device names within each category, not a fixed whitelist.
+
+## Use Cases
+
+- Parse voice-assistant or text commands into deterministic home-automation actions.
+- Add lightweight intent understanding and slot filling to edge or server applications.
+- Evaluate command-understanding models with the included 4,057-sample benchmark.
+- Build integrations that need an OpenAI-compatible API and a stable 7-field output schema.
 
 ## 🏠 Supported Control Capabilities
 
