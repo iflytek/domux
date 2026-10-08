@@ -6,7 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
@@ -108,7 +108,8 @@ def failure_examples(analysis: dict[str, Any], count: int = 5) -> str:
 
 
 def validate_artifacts(
-    download: dict[str, Any], smoke: dict[str, Any], run: dict[str, Any], summary: dict[str, Any], latency: dict[str, Any]
+    download: dict[str, Any], smoke: dict[str, Any], run: dict[str, Any], summary: dict[str, Any], latency: dict[str, Any],
+    environment: str,
 ) -> None:
     revision = str(download.get("revision", ""))
     if not REVISION_RE.fullmatch(revision):
@@ -123,6 +124,44 @@ def validate_artifacts(
         raise ValueError("latency benchmark contains errors")
     if not latency.get("overall"):
         raise ValueError("latency benchmark summary is empty")
+
+    # Starting a server writes new download metadata before the evaluation runs.
+    # Never attach that runtime to results left over from an earlier run.
+    environment_fields = dict(line.split("=", 1) for line in environment.splitlines() if "=" in line)
+    for metadata_key, environment_key, prefix in (
+        ("runtime", "vllm", "vllm-"),
+        ("transformers", "transformers", ""),
+        ("cuda_compiler", "nvidia-cuda-nvcc", ""),
+    ):
+        recorded = environment_fields.get(environment_key)
+        if not recorded or download.get(metadata_key) != prefix + recorded:
+            raise ValueError(f"download metadata {metadata_key} does not match environment.txt; rerun the pipeline")
+
+    def timestamp(value: Any, label: str) -> datetime:
+        try:
+            parsed = datetime.fromisoformat(str(value))
+        except ValueError as exc:
+            raise ValueError(f"missing or invalid {label}; rerun the pipeline") from exc
+        if parsed.tzinfo is None:
+            raise ValueError(f"{label} must include a timezone")
+        return parsed
+
+    prepared = timestamp(download.get("created_at_utc"), "download timestamp")
+    collected = timestamp(environment_fields.get("collected_at_utc"), "environment timestamp")
+    if collected < prepared:
+        raise ValueError("environment.txt predates download metadata; rerun the pipeline")
+    previous = prepared
+    for label, value in (
+        ("smoke result", smoke.get("created_at_utc")),
+        ("evaluation start", run.get("started_at_utc")),
+        ("evaluation finish", run.get("finished_at_utc")),
+        ("latency start", latency.get("started_at_utc")),
+        ("latency finish", latency.get("finished_at_utc")),
+    ):
+        current = timestamp(value, f"{label} timestamp")
+        if current < previous:
+            raise ValueError(f"{label} predates the current run or an earlier pipeline stage; rerun the pipeline")
+        previous = current
 
 
 def build_body(
@@ -280,7 +319,7 @@ def main() -> int:
         line.rstrip()
         for line in redact_text(environment_path.read_text(encoding="utf-8", errors="replace")).splitlines()
     )
-    validate_artifacts(download, smoke, run, summary, latency)
+    validate_artifacts(download, smoke, run, summary, latency, environment)
     body = build_body(
         discussion_url=args.discussion_url or "",
         download=download,

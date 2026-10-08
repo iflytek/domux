@@ -100,6 +100,12 @@ Raw JSONL and raw console logs remain ignored under `artifacts/raw/`. Aggregated
 JSON, Markdown, environment information, and sanitized console excerpts are
 intended for review and commit.
 
+Both renderers verify that the recorded runtime, Transformers, and CUDA compiler
+match `environment.txt`, and that smoke, evaluation, and latency timestamps follow
+the download metadata in pipeline order. If server startup or the pipeline stops
+early, finish a new pipeline run before rendering; do not mix the new runtime
+metadata with previously committed results or edit timestamps to bypass the gate.
+
 ## 4. Review for privacy
 
 Before publishing, search the case directory for secrets, private addresses,
