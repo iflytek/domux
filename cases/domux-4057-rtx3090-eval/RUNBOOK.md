@@ -4,29 +4,31 @@ This runbook keeps Hugging Face credentials and private server details outside
 the repository. Run every command from a clone of your GitHub Fork on the Linux
 GPU server.
 
+New runs use vLLM 0.31.0 to include the published security fixes through
+[GHSA-h3rc-6mm3-gc2m](https://github.com/vllm-project/vllm/security/advisories/GHSA-h3rc-6mm3-gc2m).
+The committed README metrics and artifacts describe the original vLLM 0.22.0
+run; they are not validation of the upgraded runtime. Before publishing updated
+results, run all smoke, correctness, and latency gates below on the RTX 3090.
+
 ## 1. One-time account and environment setup
 
 Accept the Gemma terms on the Domux Hugging Face model page, then authenticate
 interactively on the server:
 
 ```bash
-python3 -m venv .venv
+python3.11 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
 pip install -r cases/domux-4057-rtx3090-eval/requirements-case.txt
-pip install "transformers==5.5.1"
-pip install \
-  "nvidia-cuda-nvcc==13.0.88" \
-  "nvidia-cuda-crt==13.0.88" \
-  "nvidia-nvvm==13.0.88"
+python -m pip check
 hf auth login
 ```
 
-The second install is intentional: vLLM 0.22.0 can otherwise resolve to
-Transformers 4.57.x through its optional structured-output dependency, while
-Domux uses the newer `gemma4` configuration. This case does not use structured
-decoding; it requires Transformers 5.5.1 and verifies the version before model
-startup.
+Use a fresh Python 3.11 environment instead of upgrading the historical
+environment in place. The requirements resolve vLLM, Transformers 5.10.4, and
+the CUDA compiler together. Transformers 5.10.4 satisfies vLLM 0.31.0's minimum
+version and supports Domux's `gemma4` configuration; the old second install of
+Transformers 5.5.1 is no longer needed. The startup script verifies the pins.
 
 The CUDA compiler pins keep FlashInfer JIT on CUDA 13.0. The unpinned CUDA
 compiler packages can otherwise resolve to a newer 13.x toolchain than the 580
@@ -40,7 +42,8 @@ Never pass a token on the command line and never enable shell tracing with
 nvidia-smi
 ```
 
-The official `vllm==0.22.0` wheel uses CUDA 13, so its NVIDIA driver must be
+The official [vLLM 0.31.0 PyPI wheel](https://github.com/vllm-project/vllm/releases/tag/v0.31.0)
+uses CUDA 13, so its NVIDIA driver must be
 580 or newer. Driver installation and reboot are host-administration tasks and
 must be completed before this runbook when the server has an older driver.
 
@@ -59,7 +62,8 @@ export CUDA_VISIBLE_DEVICES=0
 
 The script downloads the pinned Hugging Face revision
 `6c71a32f4d624cadfd9fce9d10240d8068e53456`, records only sanitized metadata
-(including the effective download endpoint), and starts vLLM 0.22.0 on
+(including the effective download endpoint and installed package versions),
+and starts vLLM 0.31.0 on
 `127.0.0.1:8000`. The private snapshot path stays out of public artifacts.
 
 Wait for the server to report that it is ready before continuing.

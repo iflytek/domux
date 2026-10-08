@@ -13,6 +13,10 @@ channels:
 
 # Domux 4,057-sample open evaluation on RTX 3090
 
+The results below record the original vLLM 0.22.0 experiment. New installations
+use the security-updated runtime in [RUNBOOK.md](RUNBOOK.md); those versions need
+a new GPU evaluation before their results can replace this historical evidence.
+
 ## Task / 真实任务
 
 I reproduced the complete public Domux evaluation on a consumer RTX 3090, then

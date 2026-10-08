@@ -1,4 +1,8 @@
 huggingface_hub
 Pillow>=10
 requests>=2.31,<3
-vllm==0.22.0
+vllm==0.31.0
+transformers==5.10.4
+nvidia-cuda-nvcc==13.0.88
+nvidia-cuda-crt==13.0.88
+nvidia-nvvm==13.0.88

@@ -153,6 +153,10 @@ def build_body(
     )
     return f"""# Domux 4,057-sample open evaluation on RTX 3090
 
+The results below record the {download['runtime']} experiment. New installations
+use the security-updated runtime in [RUNBOOK.md](RUNBOOK.md); rerun the GPU
+evaluation before replacing this evidence with results from another runtime.
+
 ## Task / 真实任务
 
 I reproduced the complete public Domux evaluation on a consumer RTX 3090, then
@@ -174,7 +178,7 @@ value、unit、room、floor、多意图数量及格式错误重新聚类，避�
 
 ## Setup / 环境
 
-- Runtime: vLLM 0.22.0, Transformers {download['transformers']}, OpenAI-compatible `/v1/chat/completions`
+- Runtime: {download['runtime']}, Transformers {download['transformers']}, OpenAI-compatible `/v1/chat/completions`
 - CUDA compiler used for FlashInfer JIT: {download['cuda_compiler']}; the driver and CUDA runtime are recorded below
 - Hardware: one NVIDIA GeForce RTX 3090 24 GB; the second installed RTX 3090 was not used
 - Precision: BF16
@@ -245,9 +249,8 @@ full structured outputs rather than relying on format compliance alone.
 
 - Pin the 40-character Hugging Face revision before downloading and record it again in the case frontmatter.
 - The official evaluator defaults to concurrency 20; its latency is not directly comparable with sequential latency.
-- On this host, vLLM 0.22.0 installed a CUDA 13 runtime, which required upgrading the NVIDIA driver to the 580 series.
-- The dependency resolver selected Transformers 4.x because xgrammar 0.2.4 declares `transformers<5`, but that version did not recognize the checkpoint's `gemma4` architecture. Transformers 5.5.1 was installed explicitly. Structured decoding was not used in this experiment.
-- FlashInfer JIT initially found the host CUDA 11.5 compiler. The run scripts point `CUDA_HOME` and `CUDACXX` to the environment's pinned CUDA 13.0 compiler instead.
+- Follow [RUNBOOK.md](RUNBOOK.md) for the current runtime, Transformers, and CUDA requirements. The versions recorded above belong to this measured run.
+- The run scripts point `CUDA_HOME` and `CUDACXX` to the environment's pinned CUDA 13.0 compiler for FlashInfer JIT.
 - Preserve raw per-sample output locally for audit, but publish only the aggregate metrics and representative examples.
 - Run `python scripts/validate_cases.py` before opening the PR.
 """
@@ -295,7 +298,7 @@ author: {args.author}
 date: {args.date}
 category: evaluation
 testedRevision: {download['revision']}
-runtime: vllm-0.22.0
+runtime: {download['runtime']}
 hardware: NVIDIA-GeForce-RTX-3090-24GB-Linux-single-GPU
 downloadSource: huggingface
 channels:

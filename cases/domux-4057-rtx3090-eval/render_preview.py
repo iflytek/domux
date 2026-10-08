@@ -86,7 +86,7 @@ def main() -> int:
                 strong,
             ),
             ("", "#f8fafc", small),
-            ("RTX 3090 24 GB | BF16 | vLLM 0.22.0 | temperature 0", "#94a3b8", small),
+            (f"RTX 3090 24 GB | BF16 | {download['runtime']} | temperature 0", "#94a3b8", small),
             ("Rendered from committed sanitized JSON artifacts; this is not a raw terminal capture.", "#64748b", small),
         ]
     )
