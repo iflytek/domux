@@ -14,7 +14,7 @@ for command_name in python hf nvidia-smi; do
   fi
 done
 
-if ! python -c "import importlib.metadata as m, transformers, vllm; assert vllm.__version__ == '0.22.0', vllm.__version__; assert transformers.__version__ == '5.5.1', transformers.__version__; assert m.version('nvidia-cuda-nvcc') == '13.0.88', m.version('nvidia-cuda-nvcc')"; then
+if ! python -c "import importlib.metadata as m, transformers, vllm; assert vllm.__version__ == '0.31.0', vllm.__version__; assert transformers.__version__ == '5.10.4', transformers.__version__; assert m.version('nvidia-cuda-nvcc') == '13.0.88', m.version('nvidia-cuda-nvcc')"; then
   echo "ERROR: activate the pinned vLLM, Transformers, and CUDA 13.0 environment from RUNBOOK.md" >&2
   exit 1
 fi
@@ -37,7 +37,7 @@ export PATH="${cuda_home}/bin:${PATH}"
 driver_version="$(nvidia-smi --query-gpu=driver_version --format=csv,noheader | head -n 1 | tr -d '[:space:]')"
 driver_major="${driver_version%%.*}"
 if [[ ! "${driver_major}" =~ ^[0-9]+$ ]] || (( driver_major < 580 )); then
-  echo "ERROR: the official vllm==0.22.0 wheel uses CUDA 13 and requires NVIDIA driver 580 or newer; found ${driver_version}" >&2
+  echo "ERROR: the official vllm==0.31.0 wheel uses CUDA 13 and requires NVIDIA driver 580 or newer; found ${driver_version}" >&2
   exit 1
 fi
 
@@ -75,6 +75,7 @@ import json
 import os
 import sys
 from datetime import datetime, timezone
+from importlib.metadata import version
 from pathlib import Path
 
 payload = {
@@ -85,9 +86,9 @@ payload = {
     "snapshot_bytes": int(os.environ["DOMUX_SNAPSHOT_BYTES"]),
     "download_source": os.environ["DOMUX_DOWNLOAD_ENDPOINT"],
     "artifact_type": "full BF16 snapshot",
-    "runtime": "vllm-0.22.0",
-    "transformers": "5.5.1",
-    "cuda_compiler": "13.0.88",
+    "runtime": f"vllm-{version('vllm')}",
+    "transformers": version("transformers"),
+    "cuda_compiler": version("nvidia-cuda-nvcc"),
     "precision": "bfloat16",
     "visible_gpu": os.environ.get("CUDA_VISIBLE_DEVICES", "0"),
 }

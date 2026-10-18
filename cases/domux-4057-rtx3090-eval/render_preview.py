@@ -5,8 +5,12 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from PIL import Image, ImageDraw, ImageFont
+from render_case import validate_artifacts
+
+if TYPE_CHECKING:
+    from PIL import ImageFont
 
 
 CASE_DIR = Path(__file__).resolve().parent
@@ -18,6 +22,8 @@ def load_json(name: str) -> dict:
 
 
 def font(size: int, *, bold: bool = False) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
+    from PIL import ImageFont
+
     names = (
         "C:/Windows/Fonts/consolab.ttf" if bold else "C:/Windows/Fonts/consola.ttf",
         "/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf"
@@ -33,8 +39,15 @@ def font(size: int, *, bold: bool = False) -> ImageFont.FreeTypeFont | ImageFont
 def main() -> int:
     summary = load_json("eval_summary.json")
     run = load_json("eval_run_metadata.json")
-    latency = load_json("latency_summary.json")["overall"]
+    latency_artifact = load_json("latency_summary.json")
     download = load_json("download_metadata.json")
+    smoke = load_json("smoke_results.json")
+    environment = (ARTIFACTS_DIR / "environment.txt").read_text(encoding="utf-8")
+    validate_artifacts(download, smoke, run, summary, latency_artifact, environment)
+
+    from PIL import Image, ImageDraw
+
+    latency = latency_artifact["overall"]
 
     image = Image.new("RGB", (1600, 1200), "#0b1020")
     draw = ImageDraw.Draw(image)
@@ -86,7 +99,7 @@ def main() -> int:
                 strong,
             ),
             ("", "#f8fafc", small),
-            ("RTX 3090 24 GB | BF16 | vLLM 0.22.0 | temperature 0", "#94a3b8", small),
+            (f"RTX 3090 24 GB | BF16 | {download['runtime']} | temperature 0", "#94a3b8", small),
             ("Rendered from committed sanitized JSON artifacts; this is not a raw terminal capture.", "#64748b", small),
         ]
     )

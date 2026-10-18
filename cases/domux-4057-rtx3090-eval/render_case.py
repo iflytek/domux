@@ -6,7 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
@@ -108,7 +108,8 @@ def failure_examples(analysis: dict[str, Any], count: int = 5) -> str:
 
 
 def validate_artifacts(
-    download: dict[str, Any], smoke: dict[str, Any], run: dict[str, Any], summary: dict[str, Any], latency: dict[str, Any]
+    download: dict[str, Any], smoke: dict[str, Any], run: dict[str, Any], summary: dict[str, Any], latency: dict[str, Any],
+    environment: str,
 ) -> None:
     revision = str(download.get("revision", ""))
     if not REVISION_RE.fullmatch(revision):
@@ -123,6 +124,44 @@ def validate_artifacts(
         raise ValueError("latency benchmark contains errors")
     if not latency.get("overall"):
         raise ValueError("latency benchmark summary is empty")
+
+    # Starting a server writes new download metadata before the evaluation runs.
+    # Never attach that runtime to results left over from an earlier run.
+    environment_fields = dict(line.split("=", 1) for line in environment.splitlines() if "=" in line)
+    for metadata_key, environment_key, prefix in (
+        ("runtime", "vllm", "vllm-"),
+        ("transformers", "transformers", ""),
+        ("cuda_compiler", "nvidia-cuda-nvcc", ""),
+    ):
+        recorded = environment_fields.get(environment_key)
+        if not recorded or download.get(metadata_key) != prefix + recorded:
+            raise ValueError(f"download metadata {metadata_key} does not match environment.txt; rerun the pipeline")
+
+    def timestamp(value: Any, label: str) -> datetime:
+        try:
+            parsed = datetime.fromisoformat(str(value))
+        except ValueError as exc:
+            raise ValueError(f"missing or invalid {label}; rerun the pipeline") from exc
+        if parsed.tzinfo is None:
+            raise ValueError(f"{label} must include a timezone")
+        return parsed
+
+    prepared = timestamp(download.get("created_at_utc"), "download timestamp")
+    collected = timestamp(environment_fields.get("collected_at_utc"), "environment timestamp")
+    if collected < prepared:
+        raise ValueError("environment.txt predates download metadata; rerun the pipeline")
+    previous = prepared
+    for label, value in (
+        ("smoke result", smoke.get("created_at_utc")),
+        ("evaluation start", run.get("started_at_utc")),
+        ("evaluation finish", run.get("finished_at_utc")),
+        ("latency start", latency.get("started_at_utc")),
+        ("latency finish", latency.get("finished_at_utc")),
+    ):
+        current = timestamp(value, f"{label} timestamp")
+        if current < previous:
+            raise ValueError(f"{label} predates the current run or an earlier pipeline stage; rerun the pipeline")
+        previous = current
 
 
 def build_body(
@@ -153,6 +192,10 @@ def build_body(
     )
     return f"""# Domux 4,057-sample open evaluation on RTX 3090
 
+The results below record the {download['runtime']} experiment. New installations
+use the security-updated runtime in [RUNBOOK.md](RUNBOOK.md); rerun the GPU
+evaluation before replacing this evidence with results from another runtime.
+
 ## Task / 真实任务
 
 I reproduced the complete public Domux evaluation on a consumer RTX 3090, then
@@ -174,7 +217,7 @@ value、unit、room、floor、多意图数量及格式错误重新聚类，避�
 
 ## Setup / 环境
 
-- Runtime: vLLM 0.22.0, Transformers {download['transformers']}, OpenAI-compatible `/v1/chat/completions`
+- Runtime: {download['runtime']}, Transformers {download['transformers']}, OpenAI-compatible `/v1/chat/completions`
 - CUDA compiler used for FlashInfer JIT: {download['cuda_compiler']}; the driver and CUDA runtime are recorded below
 - Hardware: one NVIDIA GeForce RTX 3090 24 GB; the second installed RTX 3090 was not used
 - Precision: BF16
@@ -245,9 +288,8 @@ full structured outputs rather than relying on format compliance alone.
 
 - Pin the 40-character Hugging Face revision before downloading and record it again in the case frontmatter.
 - The official evaluator defaults to concurrency 20; its latency is not directly comparable with sequential latency.
-- On this host, vLLM 0.22.0 installed a CUDA 13 runtime, which required upgrading the NVIDIA driver to the 580 series.
-- The dependency resolver selected Transformers 4.x because xgrammar 0.2.4 declares `transformers<5`, but that version did not recognize the checkpoint's `gemma4` architecture. Transformers 5.5.1 was installed explicitly. Structured decoding was not used in this experiment.
-- FlashInfer JIT initially found the host CUDA 11.5 compiler. The run scripts point `CUDA_HOME` and `CUDACXX` to the environment's pinned CUDA 13.0 compiler instead.
+- Follow [RUNBOOK.md](RUNBOOK.md) for the current runtime, Transformers, and CUDA requirements. The versions recorded above belong to this measured run.
+- The run scripts point `CUDA_HOME` and `CUDACXX` to the environment's pinned CUDA 13.0 compiler for FlashInfer JIT.
 - Preserve raw per-sample output locally for audit, but publish only the aggregate metrics and representative examples.
 - Run `python scripts/validate_cases.py` before opening the PR.
 """
@@ -277,7 +319,7 @@ def main() -> int:
         line.rstrip()
         for line in redact_text(environment_path.read_text(encoding="utf-8", errors="replace")).splitlines()
     )
-    validate_artifacts(download, smoke, run, summary, latency)
+    validate_artifacts(download, smoke, run, summary, latency, environment)
     body = build_body(
         discussion_url=args.discussion_url or "",
         download=download,
@@ -295,7 +337,7 @@ author: {args.author}
 date: {args.date}
 category: evaluation
 testedRevision: {download['revision']}
-runtime: vllm-0.22.0
+runtime: {download['runtime']}
 hardware: NVIDIA-GeForce-RTX-3090-24GB-Linux-single-GPU
 downloadSource: huggingface
 channels:

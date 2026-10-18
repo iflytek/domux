@@ -35,3 +35,5 @@ jobs:
           python -m py_compile scripts/validate_cases.py
           python scripts/validate_cases.py --self-test
           python scripts/validate_cases.py
+      - name: Validate RTX 3090 case tools (offline; no GPU required)
+        run: python -m unittest discover -s cases/domux-4057-rtx3090-eval -p 'test_*.py' -v

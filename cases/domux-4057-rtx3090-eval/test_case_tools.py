@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import json
 import sys
 import unittest
 from collections import Counter
+from datetime import datetime, timedelta
 from pathlib import Path
+from unittest.mock import patch
 
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -18,6 +21,8 @@ from common import (  # noqa: E402
     redact_text,
     stratified_samples,
 )
+import render_case  # noqa: E402
+import render_preview  # noqa: E402
 from render_case import validate_artifacts  # noqa: E402
 
 
@@ -115,16 +120,102 @@ class RenderGateTest(unittest.TestCase):
         summary = {"overall": {"total": 4057}}
         latency = {"errors": [], "overall": {"count": 300}}
         with self.assertRaisesRegex(ValueError, "4,057"):
-            validate_artifacts(download, smoke, run, summary, latency)
+            validate_artifacts(download, smoke, run, summary, latency, "")
 
-    def test_accepts_complete_artifact_gate(self) -> None:
+
+class RenderProvenanceTest(unittest.TestCase):
+    def setUp(self) -> None:
+        self.artifacts = {
+            name: json.loads((render_case.ARTIFACTS_DIR / name).read_text(encoding="utf-8"))
+            for name in (
+                "download_metadata.json", "smoke_results.json", "eval_run_metadata.json",
+                "eval_summary.json", "failure_analysis.json", "latency_summary.json",
+            )
+        }
+        self.environment = (render_case.ARTIFACTS_DIR / "environment.txt").read_text(encoding="utf-8")
+
+    def validate(self) -> None:
         validate_artifacts(
-            {"revision": "a" * 40},
-            {"all_passed": True},
-            {"completed_samples": 4057, "api_error_count": 0},
-            {"overall": {"total": 4057}},
-            {"errors": [], "overall": {"count": 300}},
+            *(self.artifacts[name] for name in (
+                "download_metadata.json", "smoke_results.json", "eval_run_metadata.json",
+                "eval_summary.json", "latency_summary.json",
+            )),
+            self.environment,
         )
+
+    def upgrade_metadata(self) -> None:
+        self.artifacts["download_metadata.json"].update(
+            runtime="vllm-0.31.0", transformers="5.10.4", created_at_utc="2026-10-08T03:09:29+00:00",
+        )
+
+    def upgrade_environment(self) -> None:
+        self.environment = self.environment.replace("vllm=0.22.0", "vllm=0.31.0").replace(
+            "transformers=5.5.1", "transformers=5.10.4",
+        ).replace("2026-08-25", "2026-10-08")
+
+    def assert_renderers_reject(self, message: str) -> None:
+        for renderer in (render_case, render_preview):
+            with self.subTest(renderer=renderer.__name__), \
+                 patch.object(renderer, "load_json", side_effect=self.artifacts.__getitem__), \
+                 patch.object(Path, "read_text", return_value=self.environment), \
+                 patch.object(sys, "argv", ["render_case.py"]), \
+                 patch.object(render_case, "write_text_lf") as write:
+                with self.assertRaisesRegex(ValueError, message):
+                    renderer.main()
+                write.assert_not_called()
+
+    def test_accepts_committed_historical_artifacts(self) -> None:
+        self.validate()
+
+    def test_accepts_consistent_new_run(self) -> None:
+        self.upgrade_metadata()
+        self.upgrade_environment()
+        for name in ("smoke_results.json", "eval_run_metadata.json", "latency_summary.json"):
+            for key in ("created_at_utc", "started_at_utc", "finished_at_utc"):
+                if key in self.artifacts[name]:
+                    original = datetime.fromisoformat(self.artifacts[name][key])
+                    self.artifacts[name][key] = (original + timedelta(days=44)).isoformat()
+        self.validate()
+
+    def test_new_download_metadata_cannot_relabel_historical_results(self) -> None:
+        self.upgrade_metadata()
+        self.assert_renderers_reject("runtime does not match environment")
+
+    def test_new_environment_cannot_relabel_historical_results(self) -> None:
+        self.upgrade_metadata()
+        self.upgrade_environment()
+        self.assert_renderers_reject("smoke result predates")
+
+    def test_partial_pipeline_cannot_reuse_old_evaluation(self) -> None:
+        self.upgrade_metadata()
+        self.upgrade_environment()
+        self.artifacts["smoke_results.json"]["created_at_utc"] = "2026-10-08T03:18:34+00:00"
+        self.assert_renderers_reject("evaluation start predates")
+
+    def test_partial_pipeline_cannot_reuse_old_latency(self) -> None:
+        self.upgrade_metadata()
+        self.upgrade_environment()
+        self.artifacts["smoke_results.json"]["created_at_utc"] = "2026-10-08T03:18:34+00:00"
+        self.artifacts["eval_run_metadata.json"].update(
+            started_at_utc="2026-10-08T03:18:35+00:00", finished_at_utc="2026-10-08T03:19:31+00:00",
+        )
+        self.assert_renderers_reject("latency start predates")
+
+    def test_rejects_missing_or_timezone_free_timestamps(self) -> None:
+        for value in (None, "2026-08-25T03:18:34"):
+            with self.subTest(timestamp=value):
+                self.artifacts["smoke_results.json"]["created_at_utc"] = value
+                with self.assertRaises(ValueError):
+                    self.validate()
+
+    def test_rejects_mismatched_transformers_or_cuda_versions(self) -> None:
+        for field in ("transformers", "cuda_compiler"):
+            with self.subTest(field=field):
+                original = self.artifacts["download_metadata.json"][field]
+                self.artifacts["download_metadata.json"][field] = "0.0.0"
+                with self.assertRaisesRegex(ValueError, f"{field} does not match environment"):
+                    self.validate()
+                self.artifacts["download_metadata.json"][field] = original
 
 
 if __name__ == "__main__":
